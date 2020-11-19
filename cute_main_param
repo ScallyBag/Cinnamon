@@ -1,0 +1,10 @@
+#export concurrency=1
+#export opening_epd=/home/geko/chess960.epd
+#export second_param=option.GaviotaTbPath=/gtb4
+#export second_param=option.SyzygyPath=/syzygy
+#export second_param=option.UCI_Chess960=true
+#export second_param=option.Threads=4
+#export first="/home/geko/cinnamon_test/test/dev/cinnamon/src/cinnamon name=a option.UCI_Chess960=true"
+#export tc="0/5:1+0.0"
+#export TOT_MATCH=500
+#export variant="-variant fischerandom"

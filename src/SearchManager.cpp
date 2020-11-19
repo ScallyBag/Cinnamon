@@ -366,7 +366,7 @@ bool SearchManager::setNthread(int nthread) {
 }
 
 void SearchManager::stopAllThread() {
-    threadPool->getThread(0).setRunningThread(false);
+    threadPool->getThread(0).setRunningThread(false);//is static TODO Search::setRunningThread(false);
 }
 
 bool SearchManager::setParameter(String param, int value) {

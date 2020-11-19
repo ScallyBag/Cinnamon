@@ -6,18 +6,12 @@ Cinnamon is a chess program for Windows, Linux, Mac OS, Android and Raspberry Pi
 
 Version
 ----------
-2.3.4
+2.4.0
 
 News
 ----------
-- Chess 960
-- Killer heuristics
-- Improved move ordering
-- Improved Gaviota Tablebase search
-- Syzygy Tablebases
-- BMI2 Instructions
-- Bug fix in enpassant
-- Bug fix parallel perft
+- Reverse Futility Pruning
+
 Features
 ----------
 

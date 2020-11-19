@@ -825,7 +825,15 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     bool futilPrune = false;
     int futilScore = 0;
     if (depth <= 3 && !is_incheck_side) {
-        int matBalance = lazyEval<side>();
+        const int matBalance = lazyEval<side>();
+        /******** static null move ***********/
+        if (depth < 3 && !pvNode && !is_incheck_side && abs(beta - 1) > -_INFINITE + MAX_PLY) {
+            const int eval_margin = 120 * depth;
+            if (matBalance - eval_margin >= beta) {
+                return matBalance - eval_margin;
+            }
+        }
+        /******** end static null move ***********/
         if ((futilScore = matBalance + FUTIL_MARGIN) <= alpha) {
             if (depth == 3 && (matBalance + RAZOR_MARGIN) <= alpha &&
                 board::getNpiecesNoPawnNoKing<side ^ 1>(chessboard) > 3) {
@@ -1056,8 +1064,4 @@ bool Search::setParameter(String param, int value) {
     return false;
 #endif
 }
-
-
-
-
 
