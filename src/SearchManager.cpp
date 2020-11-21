@@ -23,7 +23,7 @@ using namespace _logger;
 SearchManager::SearchManager() {
 
     threadPool = new ThreadPool<Search>(1);
-
+#if defined(CLOP) || defined(DEBUG_MODE)
     IniFile iniFile("cinnamon.ini");
 
     while (true) {
@@ -33,8 +33,7 @@ SearchManager::SearchManager() {
         }
         string param = parameters->first;
         int value = stoi(parameters->second);
-        cout << param << endl;
-        cout << value << endl;
+        cout << param << "=" << value << endl;
 
         if (param == "threads") {
             setNthread(value);
@@ -44,6 +43,7 @@ SearchManager::SearchManager() {
             }
         }
     }
+#endif
 }
 
 #if defined(FULL_TEST)
@@ -117,12 +117,12 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
         pvvTmp.clear();
         pvvTmp +=
                 decodeBoardinv(lineWin.argmove[t].s.type,
-                                      lineWin.argmove[t].s.from,
-                                      board::getSide(threadPool->getThread(0).getChessboard()));
+                               lineWin.argmove[t].s.from,
+                               board::getSide(threadPool->getThread(0).getChessboard()));
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
             pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type,
-                                            lineWin.argmove[t].s.to,
-                                            board::getSide(threadPool->getThread(0).getChessboard()));
+                                     lineWin.argmove[t].s.to,
+                                     board::getSide(threadPool->getThread(0).getChessboard()));
         }
         pvv.append(pvvTmp);
         if (t == 1) {
@@ -196,11 +196,11 @@ void SearchManager::clearHeuristic() {
     }
 }
 
-int SearchManager::getForceCheck() {
+int SearchManager::getForceCheck() const {
     return threadPool->getThread(0).getForceCheck();
 }
 
-u64 SearchManager::getZobristKey(int id) {
+u64 SearchManager::getZobristKey(int id) const {
     return threadPool->getThread(id).getZobristKey();
 }
 
@@ -209,7 +209,7 @@ void SearchManager::setForceCheck(bool a) {
 }
 
 void SearchManager::setRunningThread(bool r) {
-    threadPool->getThread(0).setRunningThread(r);
+    Search::setRunningThread(r);
 }
 
 void SearchManager::setRunning(int i) {
@@ -218,15 +218,15 @@ void SearchManager::setRunning(int i) {
     }
 }
 
-int SearchManager::getRunning(int i) {
+int SearchManager::getRunning(int i) const {
     return threadPool->getThread(i).getRunning();
 }
 
-void SearchManager::display() {
+void SearchManager::display() const {
     threadPool->getThread(0).display();
 }
 
-string SearchManager::getFen() {
+string SearchManager::getFen() const {
     return threadPool->getThread(0).getFen();
 }
 
@@ -275,7 +275,7 @@ int SearchManager::getScore(int side, const bool trace) {
     return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, trace);
 }
 
-int SearchManager::getMaxTimeMillsec() {
+int SearchManager::getMaxTimeMillsec() const {
     return threadPool->getThread(0).getMaxTimeMillsec();
 }
 
@@ -366,7 +366,7 @@ bool SearchManager::setNthread(int nthread) {
 }
 
 void SearchManager::stopAllThread() {
-    threadPool->getThread(0).setRunningThread(false);//is static TODO Search::setRunningThread(false);
+    Search::setRunningThread(false);
 }
 
 bool SearchManager::setParameter(String param, int value) {

@@ -65,7 +65,6 @@ namespace _def {
 
 #endif
 
-
 #ifdef HAS_POPCNT
 #ifdef HAS_64BIT
 

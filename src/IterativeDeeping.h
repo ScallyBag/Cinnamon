@@ -37,8 +37,6 @@ public:
 
     virtual ~ IterativeDeeping();
 
-    string go();
-
     void run();
 
     void endRun() {};
@@ -58,12 +56,6 @@ public:
     bool setParameter(String param, int value);
 
     int loadFen(const string fen = "");
-
-    string getFen() {
-        return searchManager.getFen();
-    }
-
-    bool setNthread(const int i);
 
     int getRunning() const {
         return running;

@@ -24,6 +24,7 @@ Features
 - Rotated bitboards
 - Null moves
 - Futility pruning
+- Reverse Futility Pruning
 - Delta pruning
 - Razoring
 - Interruptible multithread Perft test [standard][9] [chess960][10]

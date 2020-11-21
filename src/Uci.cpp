@@ -27,7 +27,7 @@ Uci::Uci() {
     startListner();
 }
 
-void Uci::getToken(istringstream &uip, String &token) {
+void Uci::getToken(istringstream &uip, String &token) const {
     token.clear();
     uip >> token;
 }
@@ -238,6 +238,15 @@ void Uci::listner(IterativeDeeping *it) {
                     if (token.toLower() == "hash") {
                         knowCommand = true;
                         hash.clearHash();
+                    }
+                } else {// free params
+                    String paramName = token;
+                    getToken(uip, token);
+                    String value;
+                    if (token.toLower() == "value") {
+                        getToken(uip, value);
+                        knowCommand = true;
+                        _assert(searchManager.setParameter(paramName, stoi(value)));
                     }
                 }
             }

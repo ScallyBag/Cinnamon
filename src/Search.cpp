@@ -757,8 +757,8 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     ASSERT(chessboard[KING_WHITE])
 
     int extension = 0;
-    const int is_incheck_side = board::inCheck1<side>(chessboard);
-    if (!is_incheck_side && depth != mainDepth) {
+    const int isIncheckSide = board::inCheck1<side>(chessboard);
+    if (!isIncheckSide && depth != mainDepth) {
         if (board::checkInsufficientMaterial(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
             if (board::inCheck1<side ^ 1>(chessboard)) {
                 return _INFINITE - (mainDepth - depth + 1);
@@ -766,9 +766,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             return -lazyEval<side>() * 2;
         }
     }
-    if (is_incheck_side) {
-        extension++;
-    }
+    if (isIncheckSide) extension++;
     depth += extension;
     if (depth == 0) {
         return quiescence<side>(alpha, beta, -1, 0);
@@ -795,7 +793,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     line.cmove = 0;
 
     // ********* null move ***********
-    if (!nullSearch && !pvNode && !is_incheck_side) {
+    if (!nullSearch && !pvNode && !isIncheckSide) {
         int n_depth = (n_root_moves > 17 || depth > 3) ? 1 : 3;
         if (n_depth == 3) {
             const u64 pieces = board::getPiecesNoKing<side>(chessboard);
@@ -824,16 +822,14 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     /**************Futility Pruning razor at pre-pre-frontier*****/
     bool futilPrune = false;
     int futilScore = 0;
-    if (depth <= 3 && !is_incheck_side) {
+    if (depth <= 3 && !isIncheckSide) {
         const int matBalance = lazyEval<side>();
-        /******** static null move ***********/
-        if (depth < 3 && !pvNode && !is_incheck_side && abs(beta - 1) > -_INFINITE + MAX_PLY) {
-            const int eval_margin = 120 * depth;
-            if (matBalance - eval_margin >= beta) {
-                return matBalance - eval_margin;
-            }
+        /******** reverse futility pruning ***********/
+        if (depth < 3 && !pvNode && !isIncheckSide && abs(beta) > -_INFINITE + MAX_PLY) {
+            const int evalMargin = matBalance - REVERSE_FUTIL_MARGIN * depth;
+            if (evalMargin >= beta) return evalMargin;
         }
-        /******** end static null move ***********/
+        /*********************************************/
         if ((futilScore = matBalance + FUTIL_MARGIN) <= alpha) {
             if (depth == 3 && (matBalance + RAZOR_MARGIN) <= alpha &&
                 board::getNpiecesNoPawnNoKing<side ^ 1>(chessboard) > 3) {
@@ -867,7 +863,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     const int listcount = getListSize();
     if (!listcount) {
         --listId;
-        if (is_incheck_side) {
+        if (isIncheckSide) {
             return -_INFINITE + (mainDepth - depth + 1);
         } else {
             return -lazyEval<side>() * 2;
@@ -904,7 +900,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         }
         //Late Move Reduction
         int val = INT_MAX;
-        if (countMove > 4 && !is_incheck_side && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
+        if (countMove > 4 && !isIncheckSide && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
             move->s.promotionPiece == NO_PROMOTION) {
             currentPly++;
             val = -search<side ^ 1, checkMoves>(depth - 2, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
@@ -983,7 +979,7 @@ void Search::updatePv(_TpvLine *pline, const _TpvLine *line, const _Tmove *move)
     pline->cmove = line->cmove + 1;
 }
 
-u64 Search::getZobristKey() {
+u64 Search::getZobristKey() const {
     return chessboard[ZOBRISTKEY_IDX];
 }
 
@@ -999,8 +995,11 @@ bool Search::setParameter(String param, int value) {
 #if defined(CLOP) || defined(DEBUG_MODE)
     param.toUpper();
     bool res = true;
+    cout << "setParameter " << param << " " << value << endl;
     if (param == "FUTIL_MARGIN") {
         FUTIL_MARGIN = value;
+    } else if (param == "REVERSE_FUTIL_MARGIN") {
+        REVERSE_FUTIL_MARGIN = value;
     } else if (param == "EXT_FUTILY_MARGIN") {
         EXT_FUTILY_MARGIN = value;
     } else if (param == "RAZOR_MARGIN") {

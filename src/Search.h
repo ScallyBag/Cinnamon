@@ -92,7 +92,7 @@ public:
     STATIC_CONST int NULL_DEPTH = 3;
     STATIC_CONST int VAL_WINDOW = 50;
 
-    void setRunningThread(bool t) {
+    static void setRunningThread(bool t) {
         runningThread = t;
     }
 
@@ -104,7 +104,7 @@ public:
         return valWindow;
     }
 
-    u64 getZobristKey();
+    u64 getZobristKey() const;
 
 #ifdef DEBUG_MODE
     unsigned cumulativeMovesCount;
@@ -132,6 +132,7 @@ private:
     _TpvLine pvLine;
 
     bool ponder;
+
 #ifdef BENCH_MODE
     Times *times = &Times::getInstance();
 #endif
@@ -148,7 +149,7 @@ private:
     bool checkDraw(u64);
 
     template<int side, bool checkMoves>
-    int search(int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,               const int n_root_moves);
+    int search(int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE, const int n_root_moves);
 
     template<bool checkMoves>
     bool checkSearchMoves(_Tmove *move) const;

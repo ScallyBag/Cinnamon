@@ -15,7 +15,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 COMP=g++
-
+CLOP=
 ifndef SystemRoot
 	# *nix
 	ifeq ($(shell uname -s),Darwin)
@@ -41,7 +41,11 @@ else
 	STRIP=strip.exe
 endif
 
-CFLAGS=" -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops "
+ifeq ($(CLOP),yes)
+	DCLOP=-DCLOP
+endif
+
+CFLAGS=" -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops $(DCLOP) "
 
 help:
 
@@ -89,6 +93,9 @@ cinnamon32-modern:
 
 cinnamon32-ARM:
 	$(MAKE) -j4  LIBS="$(LIBS) lib/ARM/32/libgtb.a" ARC="$(ARC) -DHAS_POPCNT -fno-gcse -DHAS_BSF" build
+
+cinnamon32-ARM-CLOP:
+	$(MAKE) -j4  LIBS="$(LIBS) lib/ARM/32/libgtb.a" ARC="$(ARC) -DHAS_POPCNT -DCLOP -fno-gcse -DHAS_BSF" build
 
 cinnamon64-ARM:
 	$(MAKE) LIBS="$(LIBS) lib/ARM/64/libgtb.a" ARC="$(ARC) -DHAS_64BIT " build

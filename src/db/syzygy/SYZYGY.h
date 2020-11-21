@@ -87,6 +87,6 @@ private:
 
     SYZYGY();
 
-    static u64 decode(u64 d) ;
+    static u64 decode(u64 d);
 };
 
