@@ -427,11 +427,11 @@ int Search::search(const int depth, const int alpha, const int beta) {
                                                                    &pvLine,
                                                                    bitCount(board::getBitmap<WHITE>(chessboard) |
                                                                             board::getBitmap<BLACK>(chessboard)),
-                                                                   n_root_moves)
+                                                                   n_root_moves, false)
                                       : search<BLACK, searchMoves>(depth, alpha, beta, &pvLine,
                                                                    bitCount(board::getBitmap<WHITE>(chessboard) |
                                                                             board::getBitmap<BLACK>(chessboard)),
-                                                                   n_root_moves);
+                                                                   n_root_moves, false);
 }
 
 bool Search::probeRootTB(_Tmove *res) {
@@ -735,7 +735,7 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
 
 template<int side, bool checkMoves>
 int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
-                   const int n_root_moves) {
+                   const int n_root_moves, const bool excludedMove) {
     ASSERT_RANGE(depth, 0, MAX_PLY);
     ASSERT_RANGE(side, 0, 1);
     if (!getRunning()) return 0;
@@ -805,7 +805,8 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
             const int nullScore =
                     (depth - R - 1 > 0) ?
-                    -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves)
+                    -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves,
+                                                  excludedMove)
                                         :
                     -quiescence<side ^ 1>(-beta, -beta + 1, -1, 0);
             nullSearch = false;
@@ -870,12 +871,12 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         }
     }
     ASSERT(gen_list[listId].size > 0)
-    Hash::_ThashData *c = nullptr;
+    Hash::_ThashData *ttMove = nullptr;
     _Tmove *best = &gen_list[listId].moveList[0];
     if (hashGreaterItem.second.phasheType[Hash::HASH_GREATER].dataS.flags & 0x3) {
-        c = &hashGreaterItem.second.phasheType[Hash::HASH_GREATER];
+        ttMove = &hashGreaterItem.second.phasheType[Hash::HASH_GREATER];
     } else if (hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS].dataS.flags & 0x3) {
-        c = &hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS];
+        ttMove = &hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS];
     }
     INC(totGen);
     _Tmove *move;
@@ -883,7 +884,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     int countMove = 0;
     char hashf = Hash::hashfALPHA;
     int first = 0;
-    while ((move = getNextMove(&gen_list[listId], depth, c, first++))) {
+    while ((move = getNextMove(&gen_list[listId], depth, ttMove, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;
         INC(betaEfficiencyCount);
@@ -903,7 +904,8 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         if (countMove > 4 && !isIncheckSide && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
             move->s.promotionPiece == NO_PROMOTION) {
             currentPly++;
-            val = -search<side ^ 1, checkMoves>(depth - 2, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
+            val = -search<side ^ 1, checkMoves>(depth - 2, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves,
+                                                excludedMove);
             ASSERT(val != INT_MAX);
             currentPly--;
         }
@@ -914,14 +916,14 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             currentPly++;
             val = -search<side ^ 1, checkMoves>(depth - 1, -upb, -lwb, &line,
                                                 move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                n_root_moves);
+                                                n_root_moves, excludedMove);
             currentPly--;
             if (doMws && (lwb < val) && (val < beta)) {
                 currentPly++;
                 val = -search<side ^ 1, checkMoves>(depth - 1, -beta, -val + 1,
                                                     &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                    n_root_moves);
+                                                    n_root_moves, excludedMove);
                 if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION &&
                     val < -(_INFINITE - 100)) {
                     setKiller(move->s.from, move->s.to, depth, true);
@@ -939,6 +941,28 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
 
+        /***** singular extension TODO stockfish *******/
+        if (depth >= 7 && ttMove != nullptr
+            && move->s.from == ttMove->dataS.from
+            && move->s.to == ttMove->dataS.to
+            && depth != 1
+            && !excludedMove
+            && abs(ttMove->dataS.score) < 10000
+            && (ttMove->dataS.flags == Hash::hashfBETA)
+            && ttMove->dataS.depth >= depth - 3) {
+            const auto singularBeta = ttMove->dataS.score - ((!pvNode + 4) * depth) / 2;
+            const auto singularDepth = (depth - 1 + 3 * !pvNode) / 2;
+
+
+            const auto value = search<side ^ 1, checkMoves>(singularDepth, singularDepth, singularBeta - 1, &line,
+                                                            move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE -
+                                                                                                              1,
+                                                            n_root_moves, true);
+
+            if (value < singularBeta) extension++;
+
+        }
+        /********************************/
         if (score > alpha) {
             if (score >= beta) {
                 decListId();
