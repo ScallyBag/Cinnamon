@@ -64,9 +64,9 @@ TEST(search, test2) {
 TEST(search, twoCore) {
     const set<string> v = {"d2d4", "e2e4", "e2e3", "b1c3", "g1f3"};
     IterativeDeeping it;
-    it.setNthread(2);
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     searchManager.setMaxTimeMillsec(250);
+    searchManager.setNthread(2);
     it.setMaxDepth(MAX_PLY);
     it.start();
     it.join();

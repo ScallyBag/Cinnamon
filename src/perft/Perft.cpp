@@ -237,11 +237,6 @@ void Perft::endRun() {
 
     cerr << flush;
 
-#ifdef BENCH_MODE
-
-    Times *times = &Times::getInstance();
-    times->print();
-
-#endif
+    BENCH((&Times::getInstance())->print())
 
 }

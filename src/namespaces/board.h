@@ -192,10 +192,10 @@ public:
     }
 
     template<int side>
-    static u64 getBitmapNoPawns(const _Tchessboard &chessboard) {
+    static u64 getBitmapNoPawnsNoKing(const _Tchessboard &chessboard) {
         BENCH(Times::getInstance().start("getBitmapNoPawns"))
         auto a = chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
-                 chessboard[KING_BLACK + side] | chessboard[QUEEN_BLACK + side];
+                 chessboard[QUEEN_BLACK + side];
         BENCH(Times::getInstance().stop("getBitmapNoPawns"))
         return a;
     }
@@ -207,12 +207,6 @@ public:
                chessboard[PAWN_BLACK + side] | chessboard[QUEEN_BLACK + side];
     }
 
-    template<int side>
-    static int getNpiecesNoPawnNoKing(const _Tchessboard &chessboard) {
-        return bitCount(
-                chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
-                chessboard[QUEEN_BLACK + side]);
-    }
 
 };
 

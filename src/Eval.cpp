@@ -38,7 +38,7 @@ Eval::~Eval() {
  * 4. add ATTACK_KING * number of attacking pawn to other king
  * 5. space - in OPEN phase PAWN_CENTER * CENTER_MASK
  * 7. *king security* - in OPEN phase add at kingSecurity FRIEND_NEAR_KING * each pawn near to king and substracts ENEMY_NEAR_KING * each enemy pawn near to king
- * 8. pawn in 8th - if pawn is in 7' add PAWN_7H. If pawn can go forward add PAWN_IN_8TH for each pawn
+ * 8. pawn in promotion - if pawn is in 7' add PAWN_7H. If pawn can go forward add PAWN_IN_PROMOTION for each pawn
  * 9. unprotected - no friends pawn protect it
  * 10. blocked - pawn can't go on
  * 11. isolated - there aren't friend pawns on the two sides - subtracts PAWN_ISOLATED for each pawn
@@ -80,8 +80,8 @@ int Eval::evaluatePawn() {
                              (structureEval.allPiecesSide[xside] &
                               (shiftForward<side, 7>(pawnsIn7) | shiftForward<side, 9>(pawnsIn7)));
 
-        result += PAWN_IN_8TH * bitCount(pawnsIn8); //try to decrease PAWN_IN_8TH
-        ADD(SCORE_DEBUG.PAWN_IN_8TH[side], PAWN_IN_8TH * (bitCount(pawnsIn8)));
+        result += PAWN_IN_PROMOTION * bitCount(pawnsIn8); //try to decrease PAWN_IN_PROMOTION
+        ADD(SCORE_DEBUG.PAWN_IN_PROMOTION[side], PAWN_IN_PROMOTION * (bitCount(pawnsIn8)));
 
     }
 
@@ -455,7 +455,7 @@ int Eval::evaluateKing(int side, u64 squares) {
         ADD(SCORE_DEBUG.DISTANCE_KING[side], DISTANCE_KING_OPENING[pos_king]);
         result = DISTANCE_KING_OPENING[pos_king];
     }
-    
+
     //mobility
     ASSERT(bitCount(squares & NEAR_MASK1[pos_king]) < (int) (sizeof(MOB_KING[phase]) / sizeof(int)))
     result += MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])];
@@ -503,8 +503,10 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
     evaluationCount[WHITE] = evaluationCount[BLACK] = 0;
     memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG));
 #endif
-    memset(structureEval.kingSecurity, 0, sizeof(structureEval.kingSecurity));
-    int npieces = board::getNpiecesNoPawnNoKing<WHITE>(chessboard) + board::getNpiecesNoPawnNoKing<BLACK>(chessboard);
+    structureEval.kingSecurity[WHITE] = structureEval.kingSecurity[BLACK] = 0;
+    const auto w = board::getBitmapNoPawnsNoKing<WHITE>(chessboard);
+    const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);
+    const int npieces = bitCount(w | b);
     _Tphase phase;
     if (npieces < 6) {
         phase = END;
@@ -513,8 +515,8 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
     } else {
         phase = OPEN;
     }
-    structureEval.allPiecesNoPawns[BLACK] = board::getBitmapNoPawns<BLACK>(chessboard);
-    structureEval.allPiecesNoPawns[WHITE] = board::getBitmapNoPawns<WHITE>(chessboard);
+    structureEval.allPiecesNoPawns[BLACK] = b | chessboard[KING_BLACK];
+    structureEval.allPiecesNoPawns[WHITE] = w | chessboard[KING_WHITE];
     structureEval.allPiecesSide[BLACK] = structureEval.allPiecesNoPawns[BLACK] | chessboard[PAWN_BLACK];
     structureEval.allPiecesSide[WHITE] = structureEval.allPiecesNoPawns[WHITE] | chessboard[PAWN_WHITE];
     structureEval.allPieces = structureEval.allPiecesSide[BLACK] | structureEval.allPiecesSide[WHITE];
@@ -600,9 +602,9 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
              setw(10) << (double) (SCORE_DEBUG.PAWN_CENTER[BLACK]) / 100.0 << "\n";
         cout << "|       in 7th:                   " << setw(10) << (double) (SCORE_DEBUG.PAWN_7H[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.PAWN_7H[BLACK]) / 100.0 << "\n";
-        cout << "|       in 8th:                   " << setw(10) <<
-             (double) (SCORE_DEBUG.PAWN_IN_8TH[WHITE]) / 100.0 <<
-             setw(10) << (double) (SCORE_DEBUG.PAWN_IN_8TH[BLACK]) / 100.0 << "\n";
+        cout << "|       in promotion:             " << setw(10) <<
+             (double) (SCORE_DEBUG.PAWN_IN_PROMOTION[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.PAWN_IN_PROMOTION[BLACK]) / 100.0 << "\n";
         cout << "|       blocked:                  " << setw(10) <<
              (double) (SCORE_DEBUG.PAWN_BLOCKED[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.PAWN_BLOCKED[BLACK]) / 100.0 << "\n";

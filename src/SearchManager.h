@@ -55,9 +55,9 @@ public:
 
     void clearHeuristic();
 
-    int getForceCheck();
+    int getForceCheck() const;
 
-    u64 getZobristKey(int id);
+    u64 getZobristKey(int id) const;
 
     void setForceCheck(bool a);
 
@@ -67,11 +67,11 @@ public:
 
     void setRunning(int i);
 
-    int getRunning(int i);
+    int getRunning(int i) const;
 
-    void display();
+    void display() const;
 
-    string getFen();
+    string getFen() const;
 
     void setMaxTimeMillsec(int i);
 
@@ -85,7 +85,7 @@ public:
 
     int getScore(int side, const bool trace);
 
-    int getMaxTimeMillsec();
+    int getMaxTimeMillsec() const;
 
     void setNullMove(bool i);
 
@@ -139,7 +139,7 @@ public:
 
 #ifdef DEBUG_MODE
 
-    unsigned getCumulativeMovesCount() {
+    unsigned getCumulativeMovesCount() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->cumulativeMovesCount;
@@ -147,7 +147,7 @@ public:
         return i;
     }
 
-    unsigned getNCutAB() {
+    unsigned getNCutAB() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutAB;
@@ -155,7 +155,7 @@ public:
         return i;
     }
 
-    double getBetaEfficiency() {
+    double getBetaEfficiency() const {
         double i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->betaEfficiency;
@@ -163,7 +163,7 @@ public:
         return i;
     }
 
-    unsigned getLazyEvalCuts() {
+    unsigned getLazyEvalCuts() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->lazyEvalCuts;
@@ -171,7 +171,7 @@ public:
         return i;
     }
 
-    unsigned getNCutFp() {
+    unsigned getNCutFp() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutFp;
@@ -179,7 +179,7 @@ public:
         return i;
     }
 
-    unsigned getNCutRazor() {
+    unsigned getNCutRazor() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutRazor;
@@ -187,7 +187,7 @@ public:
         return i;
     }
 
-    unsigned getTotGen() {
+    unsigned getTotGen() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->totGen;

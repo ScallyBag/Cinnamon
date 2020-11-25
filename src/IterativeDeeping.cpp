@@ -58,11 +58,6 @@ void IterativeDeeping::setUseBook(const bool b) {
     }
 }
 
-string IterativeDeeping::go() {
-    run();
-    return getBestmove();
-}
-
 void IterativeDeeping::run() {
 
     if (LOCK_TEST_AND_SET(running)) {
@@ -122,7 +117,6 @@ void IterativeDeeping::run() {
 
     string pvv;
     _Tmove resultMove;
-
 
     DEBUG(u64 totMovesPrec = -1)
 
@@ -193,11 +187,10 @@ void IterativeDeeping::run() {
         cout << "info string futility pruning cut: " << nCutFp << endl;
         cout << "info string razor cut: " << nCutRazor << endl;
         cout << "info string null move cut: " << nNullMoveCut << endl;
-
         cout << "info string hash write collisions : " << collisions * 100 / totStoreHash << "%" << endl;
         cout << "info string hash read collisions : " << readCollisions * 100 / totStoreHash << "%" << endl;
 #endif
-        ///is a valid move?
+
         bool trace = true;
         if (abs(sc) > _INFINITE - MAX_PLY) {
             const bool b = searchManager.getForceCheck();
@@ -249,13 +242,7 @@ void IterativeDeeping::run() {
         }
     }
 
-#ifdef BENCH_MODE
-
-    Times *times = &Times::getInstance();
-    times->print();
-
-
-#endif
+    BENCH((&Times::getInstance())->print())
 
     cout << "bestmove " << bestmove;
     if (ponderEnabled && ponderMove.size()) {
@@ -270,8 +257,4 @@ void IterativeDeeping::run() {
 
 int IterativeDeeping::loadFen(const string fen) {
     return searchManager.loadFen(fen);
-}
-
-bool IterativeDeeping::setNthread(const int i) {
-    return searchManager.setNthread(i);
 }

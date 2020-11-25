@@ -15,7 +15,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 COMP=g++
-
 ifndef SystemRoot
 	# *nix
 	ifeq ($(shell uname -s),Darwin)
@@ -41,7 +40,11 @@ else
 	STRIP=strip.exe
 endif
 
-CFLAGS=" -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops "
+ifeq ($(CLOP),yes)
+	DCLOP=-DCLOP
+endif
+
+CFLAGS=" -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops $(DCLOP) "
 
 help:
 

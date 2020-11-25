@@ -762,6 +762,7 @@ protected:
                 pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
         }
     }
+
     template<uchar type, int side>
     bool pushmove(const int from, const int to, const int promotionPiece, const int pieceFrom, const bool isCapture) {
 #ifdef DEBUG_MODE

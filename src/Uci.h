@@ -22,13 +22,13 @@
 #include <cstring>
 #include "util/String.h"
 
-class Uci: public Singleton<Uci> {
+class Uci : public Singleton<Uci> {
     friend class Singleton<Uci>;
 
 private:
     Uci();
 
-    Hash& hash = Hash::getInstance();
+    Hash &hash = Hash::getInstance();
 
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
 
@@ -36,7 +36,7 @@ private:
 
     void listner(IterativeDeeping *it);
 
-    void getToken(istringstream &uip, String &token);
+    void getToken(istringstream &uip, String &token) const;
 
     void startListner();
 
