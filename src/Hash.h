@@ -24,8 +24,6 @@
 #include "namespaces/constants.h"
 #include "util/Singleton.h"
 #include "util/logger.h"
-#include "threadPool/Spinlock.h"
-#include <mutex>
 
 using namespace constants;
 using namespace _logger;

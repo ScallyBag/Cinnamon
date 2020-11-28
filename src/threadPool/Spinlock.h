@@ -27,7 +27,6 @@ using namespace std;
 
 #ifdef _WIN32
 #include <intrin.h>
-#pragma intrinsic(_InterlockedExchange)
 #define LOCK_TEST_AND_SET(_lock) _InterlockedExchange(&_lock, 1)
 #define LOCK_RELEASE(_lock) _InterlockedExchange(&_lock, 0)
 #else
