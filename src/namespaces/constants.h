@@ -365,7 +365,7 @@ namespace constants {
     static constexpr array<char, 64> FILE_AT =
         {0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4,
          5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2, 3, 4, 5, 6, 7};
-
+#ifndef USE_BMI2
     static constexpr array<char, 64> RANK_ATx8 =
         {0x0ULL, 0x0ULL, 0x0ULL, 0x0ULL, 0x0ULL, 0x0ULL, 0x0ULL, 0x0ULL, 0x8ULL, 0x8ULL, 0x8ULL, 0x8ULL, 0x8ULL, 0x8ULL,
          0x8ULL, 0x8ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x10ULL, 0x18ULL, 0x18ULL,
@@ -373,7 +373,7 @@ namespace constants {
          0x20ULL, 0x20ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x28ULL, 0x30ULL, 0x30ULL,
          0x30ULL, 0x30ULL, 0x30ULL, 0x30ULL, 0x30ULL, 0x30ULL, 0x38ULL, 0x38ULL, 0x38ULL, 0x38ULL, 0x38ULL, 0x38ULL,
          0x38ULL, 0x38ULL};
-
+#endif
     static constexpr array<char, 64> RANK_AT =
         {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4,
          4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7, 7};
