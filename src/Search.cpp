@@ -900,10 +900,11 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         }
         //Late Move Reduction
         int val = INT_MAX;
-        if (countMove > 4 && !isIncheckSide && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
+        if (countMove > 3 && !isIncheckSide && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
             move->s.promotionPiece == NO_PROMOTION) {
             currentPly++;
-            val = -search<side ^ 1, checkMoves>(depth - 2, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
+            const int R = countMove > 6 ? 3 : 2;
+            val = -search<side ^ 1, checkMoves>(depth - R, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
             ASSERT(val != INT_MAX);
             currentPly--;
         }
