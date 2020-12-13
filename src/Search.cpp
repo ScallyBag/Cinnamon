@@ -748,7 +748,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
 
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     int score = -_INFINITE;
-    const int pvNode = alpha != beta - 1;
+    const bool pvNode = alpha != beta - 1;
 
 
     DEBUG(double betaEfficiencyCount = 0.0)
