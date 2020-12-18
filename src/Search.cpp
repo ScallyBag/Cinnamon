@@ -266,8 +266,9 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
 
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     int score = getScore(zobristKeyR, side, alpha, beta, false);
-    if (score >= beta) {
-        return beta;
+    if (score > alpha) {
+        if (score >= beta) return score;
+        alpha = score;
     }
     ///************* hash ****************
     char hashf = Hash::hashfALPHA;
