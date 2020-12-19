@@ -244,6 +244,8 @@ void IterativeDeeping::run() {
 
     BENCH((&Times::getInstance())->print())
 
+    if (bestmove.empty())cout << "bestmove (none)";
+    else
     cout << "bestmove " << bestmove;
     if (ponderEnabled && ponderMove.size()) {
         cout << " ponder " << ponderMove;

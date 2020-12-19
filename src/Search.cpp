@@ -757,7 +757,6 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     ASSERT(chessboard[KING_BLACK])
     ASSERT(chessboard[KING_WHITE])
 
-    int extension = 0;
     const int isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
         if (board::checkInsufficientMaterial(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
@@ -767,7 +766,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             return -lazyEval<side>() * 2;
         }
     }
-    if (isIncheckSide) extension++;
+    const int extension = !isIncheckSide ? 0 : 1;
     depth += extension;
     if (depth == 0) {
         return quiescence<side>(alpha, beta, -1, 0);
@@ -857,8 +856,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     const u64 enemies = board::getBitmap<side ^ 1>(chessboard);
     if (generateCaptures<side>(enemies, friends)) {
         decListId();
-        score = _INFINITE - (mainDepth - depth + 1);
-        return score;
+        return _INFINITE - (mainDepth - depth + 1);
     }
     generateMoves<side>(friends | enemies);
     const int listcount = getListSize();
