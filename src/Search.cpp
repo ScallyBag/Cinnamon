@@ -263,7 +263,7 @@ template<int side>
 int Search::quiescence(int alpha, const int beta, const char promotionPiece, const int depth) {
 
     if (!getRunning()) return 0;
-
+    ++numMovesq;
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     int score = getScore(zobristKeyR, side, alpha, beta, false);
     if (score > alpha) {
