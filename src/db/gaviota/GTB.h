@@ -23,8 +23,6 @@
 #include "../../ChessBoard.h"
 #include "../../util/Singleton.h"
 
-#define GTB_WHITE 0
-#define GTB_BLACK 1
 #define GTB_STM(a) ((a)^1)
 
 struct GTBchessboard {

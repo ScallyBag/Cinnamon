@@ -49,7 +49,7 @@ u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies,
 
 
 int board::getDiagShiftCount(const int position, const u64 allpieces) {
-    ASSERT_RANGE(position, 0, 63);
+    ASSERT_RANGE(position, 0, 63)
     return bitCount(Bitboard::getDiagonalAntiDiagonal(position, allpieces) & ~allpieces);
 }
 
@@ -84,7 +84,7 @@ bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &che
 }
 
 u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces) {
-    ASSERT_RANGE(position, 0, 63);
+    ASSERT_RANGE(position, 0, 63)
     u64 nuovo = Bitboard::getDiagonalAntiDiagonal(position, allpieces);
     return (nuovo & enemies) | (nuovo & ~allpieces);
 }
@@ -116,26 +116,12 @@ bool board::isCastleRight_BlackQueen(const _Tchessboard &chessboard) {
     return chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_BLACK_MASK;
 }
 
-char board::decodeBoard(string a) {
-    for (int i = 0; i < 64; i++) {
-        if (!a.compare(BOARD[i])) return i;
-    }
-    error(a);
-    ASSERT(0);
-    return -1;
-}
-
 int board::getFile(const char cc) {
     return 104 - tolower(cc);
 }
 
 bool board::isOccupied(const uchar pos, const u64 allpieces) {
     return allpieces & POW2[pos];
-}
-
-
-string board::getCell(const int file, const int rank) {
-    return BOARD[FILE_AT[file] * 8 + rank];
 }
 
 bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {

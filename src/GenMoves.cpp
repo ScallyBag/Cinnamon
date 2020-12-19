@@ -66,9 +66,9 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             if (mos.s.capturedPiece == KING_BLACK + (mos.s.side ^ 1)) {
                 score = _INFINITE;
             } else {
-                ASSERT_RANGE(mos.s.pieceFrom, 0, 11);
-                ASSERT_RANGE(mos.s.to, 0, 63);
-                ASSERT_RANGE(mos.s.from, 0, 63);
+                ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
+                ASSERT_RANGE(mos.s.to, 0, 63)
+                ASSERT_RANGE(mos.s.from, 0, 63)
 
                 if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
                     score = _INFINITE / 2;
@@ -83,7 +83,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 
             }
         } else if (mos.s.type & 0xc) {    //castle
-            ASSERT(chessboard[RIGHT_CASTLE_IDX]);
+            ASSERT(chessboard[RIGHT_CASTLE_IDX])
             score = 100;
         }
         if (score > bestScore) {

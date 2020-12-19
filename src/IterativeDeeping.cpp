@@ -65,13 +65,13 @@ void IterativeDeeping::run() {
     }
     bestmove.clear();
     INC(checkSmp2);
-    int timeTaken = 0;
+    int timeTaken;
     searchManager.setRunning(2);
     searchManager.setRunningThread(true);
 
     //openbook
     if (openBook) {
-        ASSERT(openBook);
+        ASSERT(openBook)
         string obMove = openBook->search(searchManager.boardToFen());
         if (!obMove.empty()) {
             _Tmove move;
@@ -79,7 +79,7 @@ void IterativeDeeping::run() {
             searchManager.makemove(&move);
             cout << "bestmove " << obMove << endl;
             ADD(checkSmp2, -1);
-            ASSERT(!checkSmp2);
+            ASSERT(!checkSmp2)
             LOCK_RELEASE(running);
             return;
         }
@@ -95,7 +95,7 @@ void IterativeDeeping::run() {
         searchManager.makemove(&move);
         cout << "bestmove " << tb << endl;
         ADD(checkSmp2, -1);
-        ASSERT(!checkSmp2);
+        ASSERT(!checkSmp2)
         LOCK_RELEASE(running);
         return;
     }
@@ -251,7 +251,7 @@ void IterativeDeeping::run() {
 
     cout << endl;
     ADD(checkSmp2, -1);
-    ASSERT(!checkSmp2);
+    ASSERT(!checkSmp2)
     LOCK_RELEASE(running);
 }
 

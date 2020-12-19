@@ -199,7 +199,7 @@ private:
                             }
                             break;
                         default:
-                            fatal("error checkHash");
+                            fatal("error checkHash")
                             break;
                     }
                 }

@@ -71,8 +71,6 @@ public:
 
     void display() const;
 
-    string getFen() const;
-
     void setMaxTimeMillsec(int i);
 
     void unsetSearchMoves();

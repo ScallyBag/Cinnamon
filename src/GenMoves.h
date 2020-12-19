@@ -42,9 +42,9 @@ public:
 
     template<int side>
     void generateMoves(const u64 allpieces) {
-        ASSERT_RANGE(side, 0, 1);
-        ASSERT(chessboard[KING_BLACK]);
-        ASSERT(chessboard[KING_WHITE]);
+        ASSERT_RANGE(side, 0, 1)
+        ASSERT(chessboard[KING_BLACK])
+        ASSERT(chessboard[KING_WHITE])
         tryAllCastle<side>(allpieces);
         performDiagShift<side>(BISHOP_BLACK + side, allpieces);
         performRankFileShift<side>(ROOK_BLACK + side, allpieces);
@@ -57,9 +57,9 @@ public:
 
     template<int side>
     bool generateCaptures(const u64 enemies, const u64 friends) {
-        ASSERT_RANGE(side, 0, 1);
-        ASSERT(chessboard[KING_BLACK]);
-        ASSERT(chessboard[KING_WHITE]);
+        ASSERT_RANGE(side, 0, 1)
+        ASSERT(chessboard[KING_BLACK])
+        ASSERT(chessboard[KING_WHITE])
         const u64 allpieces = enemies | friends;
 
         if (perftMode) {
@@ -107,7 +107,7 @@ public:
     int loadFen(string fen = "");
 
     inline u64 getDiagCapture(const int position, const u64 allpieces, const u64 enemies) const {
-        ASSERT_RANGE(position, 0, 63);
+        ASSERT_RANGE(position, 0, 63)
         return Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies;
     }
 
@@ -309,8 +309,8 @@ public:
         BENCH(times->stop("pawnShift"))
         for (; x; RESET_LSB(x)) {
             const int o = BITScanForward(x);
-            ASSERT(board::getPieceAt<side>(POW2[o + sh], chessboard) != SQUARE_EMPTY);
-            ASSERT(board::board::getBitmap(side, chessboard) & POW2[o + sh]);
+            ASSERT(board::getPieceAt<side>(POW2[o + sh], chessboard) != SQUARE_EMPTY)
+            ASSERT(board::board::getBitmap(side, chessboard) & POW2[o + sh])
             if (o > A7 || o < H2) {
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, QUEEN_BLACK + side, side, false);
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, KNIGHT_BLACK + side, side, false);
@@ -363,12 +363,12 @@ public:
 
     void incListId() {
         listId++;
-        ASSERT(listId >= 0);
-        ASSERT(listId < MAX_PLY);
+        ASSERT(listId >= 0)
+        ASSERT(listId < MAX_PLY)
     }
 
     void decListId() {
-        ASSERT(listId > -1);
+        ASSERT(listId > -1)
         gen_list[listId--].size = 0;
     }
 
@@ -387,9 +387,9 @@ public:
     bool generatePuzzle(const string type);
 
     void incHistoryHeuristic(const int from, const int to, const int value) {
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
-        ASSERT(historyHeuristic[from][to] <= historyHeuristic[from][to] + value);
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
+        ASSERT(historyHeuristic[from][to] <= historyHeuristic[from][to] + value)
         historyHeuristic[from][to] += value;
     }
 
@@ -453,18 +453,18 @@ protected:
         switch (type & 0x3) {
             case STANDARD_MOVE_MASK: {
                 u64 from1, to1 = -1;
-                ASSERT(pieceFrom != SQUARE_EMPTY);
-                ASSERT(pieceTo != KING_BLACK);
-                ASSERT(pieceTo != KING_WHITE);
+                ASSERT(pieceFrom != SQUARE_EMPTY)
+                ASSERT(pieceTo != KING_BLACK)
+                ASSERT(pieceTo != KING_WHITE)
                 from1 = chessboard[pieceFrom];
                 if (pieceTo != SQUARE_EMPTY) {
                     to1 = chessboard[pieceTo];
                     chessboard[pieceTo] &= NOTPOW2[to];
-                };
+                }
                 chessboard[pieceFrom] &= NOTPOW2[from];
                 chessboard[pieceFrom] |= POW2[to];
-                ASSERT(chessboard[KING_BLACK]);
-                ASSERT(chessboard[KING_WHITE]);
+                ASSERT(chessboard[KING_BLACK])
+                ASSERT(chessboard[KING_WHITE])
 
                 result = board::isAttacked<side>(BITScanForward(chessboard[KING_BLACK + side]),
                                                  board::getBitmap<BLACK>(chessboard) |
@@ -511,11 +511,11 @@ protected:
                                                  board::getBitmap<BLACK>(chessboard) |
                                                  board::getBitmap<WHITE>(chessboard), chessboard);
                 chessboard[side ^ 1] = to1;
-                chessboard[side] = from1;;
+                chessboard[side] = from1;
                 break;
             }
             default:
-                _assert(0);
+                _assert(0)
         }
 
         return result;
@@ -530,22 +530,22 @@ protected:
         _Tchessboard a;
         memcpy(&a, chessboard, sizeof(_Tchessboard));
 #endif
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
-        ASSERT_RANGE(side, 0, 1);
-        ASSERT_RANGE(pieceFrom, 0, 12);
-        ASSERT_RANGE(pieceTo, 0, 12);
-        ASSERT(perftMode || forceCheck);
-        ASSERT(!(type & 0xc));
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
+        ASSERT_RANGE(side, 0, 1)
+        ASSERT_RANGE(pieceFrom, 0, 12)
+        ASSERT_RANGE(pieceTo, 0, 12)
+        ASSERT(perftMode || forceCheck)
+        ASSERT(!(type & 0xc))
         if (perftMode) {
 
             if ((KING_BLACK + side) != pieceFrom && !isInCheck) {
                 if (!(pinned & POW2[from]) || (LINES[from][to] & chessboard[KING_BLACK + side])) {
-                    ASSERT(!(inCheckSlow<side, type>(from, to, pieceFrom, pieceTo, promotionPiece)));
+                    ASSERT(!(inCheckSlow<side, type>(from, to, pieceFrom, pieceTo, promotionPiece)))
                     BENCH(times->stop("inCheck"))
                     return false;
                 } else {
-                    ASSERT ((inCheckSlow<side, type>(from, to, pieceFrom, pieceTo, promotionPiece)));
+                    ASSERT ((inCheckSlow<side, type>(from, to, pieceFrom, pieceTo, promotionPiece)))
                     BENCH(times->stop("inCheck"))
                     return true;
                 }
@@ -557,18 +557,18 @@ protected:
         switch (type & 0x3) {
             case STANDARD_MOVE_MASK: {
                 u64 from1, to1 = -1;
-                ASSERT(pieceFrom != SQUARE_EMPTY);
-                ASSERT(pieceTo != KING_BLACK);
-                ASSERT(pieceTo != KING_WHITE);
+                ASSERT(pieceFrom != SQUARE_EMPTY)
+                ASSERT(pieceTo != KING_BLACK)
+                ASSERT(pieceTo != KING_WHITE)
                 from1 = chessboard[pieceFrom];
                 if (pieceTo != SQUARE_EMPTY) {
                     to1 = chessboard[pieceTo];
                     chessboard[pieceTo] &= NOTPOW2[to];
-                };
+                }
                 chessboard[pieceFrom] &= NOTPOW2[from];
                 chessboard[pieceFrom] |= POW2[to];
-                ASSERT(chessboard[KING_BLACK]);
-                ASSERT(chessboard[KING_WHITE]);
+                ASSERT(chessboard[KING_BLACK])
+                ASSERT(chessboard[KING_WHITE])
 
                 result = board::isAttacked<side>(BITScanForward(chessboard[KING_BLACK + side]),
                                                  board::getBitmap<BLACK>(chessboard) |
@@ -615,14 +615,14 @@ protected:
                                                  board::getBitmap<BLACK>(chessboard) |
                                                  board::getBitmap<WHITE>(chessboard), chessboard);
                 chessboard[side ^ 1] = to1;
-                chessboard[side] = from1;;
+                chessboard[side] = from1;
                 break;
             }
             default:
-                _assert(0);
+                _assert(0)
         }
 
-        ASSERT(!memcmp(&a, chessboard, sizeof(_Tchessboard)));
+        ASSERT(!memcmp(&a, chessboard, sizeof(_Tchessboard)))
         BENCH(times->stop("inCheck"))
         return result;
     }
@@ -778,8 +778,8 @@ protected:
         }
 #endif
         BENCH(times->start("pushmove"))
-        ASSERT(chessboard[KING_BLACK]);
-        ASSERT(chessboard[KING_WHITE]);
+        ASSERT(chessboard[KING_BLACK])
+        ASSERT(chessboard[KING_WHITE])
         int piece_captured = SQUARE_EMPTY;
         bool res = false;
         if (((type & 0x3) != ENPASSANT_MOVE_MASK) && !(type & 0xc)) {
@@ -795,12 +795,12 @@ protected:
         if (!(type & 0xc) && (forceCheck || perftMode)) {
             BENCH(times->subProcess("pushmove", "inCheck"))
             if (inCheck<type, side>(from, to, pieceFrom, piece_captured, promotionPiece)) {
-                BENCH(times->stop("pushmove"));
+                BENCH(times->stop("pushmove"))
                 return false;
             }
         }
-        ASSERT_RANGE(listId, 0, MAX_PLY - 1);
-        ASSERT(getListSize() < MAX_MOVE);
+        ASSERT_RANGE(listId, 0, MAX_PLY - 1)
+        ASSERT(getListSize() < MAX_MOVE)
         auto mos = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
         mos->s.type = (uchar) chessboard[RIGHT_CASTLE_IDX] | type;
@@ -813,8 +813,8 @@ protected:
             mos->s.promotionPiece = (char) promotionPiece;
 
         }
-        ASSERT(getListSize() < MAX_MOVE);
-        BENCH(times->stop("pushmove"));
+        ASSERT(getListSize() < MAX_MOVE)
+        BENCH(times->stop("pushmove"))
         return res;
     }
 
@@ -822,23 +822,23 @@ protected:
         return &gen_list[listId].moveList[i];
     }
 
-    void setRunning(const int t) {
+    virtual void setRunning(const int t) {
         running = t;
     }
 
-    int getRunning() const {
+    virtual int getRunning() const {
         return running;
     }
 
     void setHistoryHeuristic(const int from, const int to, const int value) {
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
         historyHeuristic[from][to] = value;
     }
 
     void setKiller(const int from, const int to, const int ply, const bool isMate) {
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
         if (isMate) killer[2][ply] = from | (to << 8);
         else {
             killer[1][ply] = killer[0][ply];
@@ -847,16 +847,16 @@ protected:
     }
 
     bool isKiller(const int idx, const int from, const int to, const int ply) {
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
         unsigned short v = from | (to << 8);
         if (v == killer[idx][ply])return true;
         return false;
     }
 
     bool isKillerMate(const int from, const int to, const int ply) {
-        ASSERT_RANGE(from, 0, 63);
-        ASSERT_RANGE(to, 0, 63);
+        ASSERT_RANGE(from, 0, 63)
+        ASSERT_RANGE(to, 0, 63)
         unsigned short v = from | (to << 8);
         if (v == killer[2][ply])return true;
         return false;
@@ -876,7 +876,7 @@ private:
 
         x &= TABJUMPPAWN;
         if (!x) {
-            BENCH(times->stop("checkJumpPawn"));
+            BENCH(times->stop("checkJumpPawn"))
             return;
         }
         if (side) {
@@ -893,14 +893,14 @@ private:
     }
 
     void popStackMove() {
-        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1);
+        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1)
         if (--repetitionMapCount && repetitionMap[repetitionMapCount - 1] == 0) {
             repetitionMapCount--;
         }
     }
 
     void pushStackMove(const u64 key) {
-        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1);
+        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1)
         repetitionMap[repetitionMapCount++] = key;
     }
 

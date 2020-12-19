@@ -226,10 +226,6 @@ void SearchManager::display() const {
     threadPool->getThread(0).display();
 }
 
-string SearchManager::getFen() const {
-    return threadPool->getThread(0).getFen();
-}
-
 void SearchManager::setMaxTimeMillsec(int i) {
     for (Search *s:threadPool->getPool()) {
         s->setMaxTimeMillsec(i);

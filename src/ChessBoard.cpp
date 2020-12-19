@@ -22,7 +22,7 @@ ChessBoard::ChessBoard() {
     fenString = string(STARTPOS);
     memset(&structureEval, 0, sizeof(_Tboard));
     if ((chessboard[SIDETOMOVE_IDX] = loadFen(fenString)) == 2) {
-        fatal("Bad FEN position format ", fenString);
+        fatal("Bad FEN position format ", fenString)
         std::exit(1);
     }
 }
@@ -130,7 +130,7 @@ string ChessBoard::boardToFen() const {
 void ChessBoard::display() const {
     cout << endl << "     a   b   c   d   e   f   g   h";
     for (int t = 0; t <= 63; t++) {
-        char x = ' ';
+        char x;
         if (t % 8 == 0) {
             cout << endl << "   ----+---+---+---+---+---+---+----" << endl;
             cout << " " << 8 - RANK_AT[t] << " | ";
@@ -140,7 +140,7 @@ void ChessBoard::display() const {
                         POW2[63 - t], chessboard)]) == '-' ? ' ' : x;
         x != ' ' ? cout << x : POW2[t] & WHITE_SQUARES ? cout << " " : cout << ".";
         cout << " | ";
-    };
+    }
     cout << endl << "   ----+---+---+---+---+---+---+----" << endl;
     cout << "     a   b   c   d   e   f   g   h" << endl << endl << "fen:\t\t" << boardToFen() << endl;
 
@@ -188,11 +188,11 @@ string ChessBoard::decodeBoardinv(const uchar type, const int a, const int side)
     if (type & KING_SIDE_CASTLE_MOVE_MASK && side == BLACK) {
         return isChess960() ? BOARD[startPosBlackKing] + BOARD[startPosBlackRookKingSide] : "e8g8";
     }
-    ASSERT(!(type & 0xC));
+    ASSERT(!(type & 0xC))
     if (a >= 0 && a < 64) {
         return BOARD[a];
     }
-    _assert(0);
+    _assert(0)
 }
 
 int ChessBoard::loadFen(const string &fen) {
@@ -237,7 +237,7 @@ int ChessBoard::loadFen(const string &fen) {
                 }
             } else {
                 return 2;
-            };
+            }
         }
     }
     if (ix != 64) {
@@ -265,28 +265,28 @@ int ChessBoard::loadFen(const string &fen) {
     auto whiteRookKingSide = [&](const char c) {
         startPosWhiteRookKingSide = BITScanForward(chessboard[ROOK_WHITE] & 0xffULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 4);
-        ASSERT(4 == BITScanForward(RIGHT_KING_CASTLE_WHITE_MASK));
+        ASSERT(4 == BITScanForward(RIGHT_KING_CASTLE_WHITE_MASK))
         chessboard[RIGHT_CASTLE_IDX] |= RIGHT_KING_CASTLE_WHITE_MASK;
         whiteRookKingSideCastle = c;
     };
     auto blackRookKingSide = [&](const char c) {
         startPosBlackRookKingSide = BITScanForward(chessboard[ROOK_BLACK] & 0xff00000000000000ULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 6);
-        ASSERT(6 == BITScanForward(RIGHT_KING_CASTLE_BLACK_MASK));
+        ASSERT(6 == BITScanForward(RIGHT_KING_CASTLE_BLACK_MASK))
         chessboard[RIGHT_CASTLE_IDX] |= RIGHT_KING_CASTLE_BLACK_MASK;
         blackRookKingSideCastle = c;
     };
     auto whiteRookQueenSide = [&](const char c) {
         startPosWhiteRookQueenSide = BITScanReverse(chessboard[ROOK_WHITE] & 0xffULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 5);
-        ASSERT(5 == BITScanForward(RIGHT_QUEEN_CASTLE_WHITE_MASK));
+        ASSERT(5 == BITScanForward(RIGHT_QUEEN_CASTLE_WHITE_MASK))
         chessboard[RIGHT_CASTLE_IDX] |= RIGHT_QUEEN_CASTLE_WHITE_MASK;
         whiteRookQueenSideCastle = c;
     };
     auto blackRookQueenSide = [&](const char c) {
         startPosBlackRookQueenSide = BITScanReverse(chessboard[ROOK_BLACK] & 0xff00000000000000ULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 7);
-        ASSERT(7 == BITScanForward(RIGHT_QUEEN_CASTLE_BLACK_MASK));
+        ASSERT(7 == BITScanForward(RIGHT_QUEEN_CASTLE_BLACK_MASK))
         chessboard[RIGHT_CASTLE_IDX] |= RIGHT_QUEEN_CASTLE_BLACK_MASK;
         blackRookQueenSideCastle = c;
     };

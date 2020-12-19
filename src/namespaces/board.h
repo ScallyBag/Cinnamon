@@ -46,7 +46,7 @@ public:
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
         BENCH(Times::getInstance().start("pinTime"))
         u64 result = 0;
-        ASSERT_RANGE(kingPosition, 0, 63);
+        ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
         constexpr int xside = side ^1;
         u64 attacked = DIAGONAL_ANTIDIAGONAL[kingPosition] &
@@ -58,7 +58,7 @@ public:
             const u64 b = *(s + pos) & allpieces;
 #ifdef DEBUG_MODE
             u64 x = *(s + pos) & (allpieces & NOTPOW2[kingPosition]);
-            ASSERT(b == x);
+            ASSERT(b == x)
 #endif
             if (!(b & (b - 1))) {
                 result |= b & friends;
@@ -83,10 +83,6 @@ public:
     static bool isCastleRight_WhiteQueen(const _Tchessboard &chessboard);
 
     static bool isCastleRight_BlackQueen(const _Tchessboard &chessboard);
-
-    static char decodeBoard(string a);
-
-    static string getCell(const int file, const int rank);
 
     static bool isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard);
 
@@ -125,8 +121,8 @@ public:
     template<int side, bool exitOnFirst>
     static u64 getAttackers(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
         BENCH(Times::getInstance().start("getAttackers"))
-        ASSERT_RANGE(position, 0, 63);
-        ASSERT_RANGE(side, 0, 1);
+        ASSERT_RANGE(position, 0, 63)
+        ASSERT_RANGE(side, 0, 1)
 
         ///knight
         u64 attackers = KNIGHT_MASK[position] & chessboard[KNIGHT_BLACK + (side ^ 1)];

@@ -53,20 +53,19 @@ public:
 
     void loadBook(const string);
 
-    bool setParameter(String param, int value);
-
     int loadFen(const string fen = "");
 
     int getRunning() const {
         return running;
     }
 
+#if defined(FULL_TEST)
     const string &getBestmove() const {
         return bestmove;
     }
+#endif
 
 private:
-
 
     DEBUG(atomic_int checkSmp2)
 
@@ -74,7 +73,7 @@ private:
     int maxDepth;
     string bestmove;
     Hash& hash = Hash::getInstance();
-    volatile long running;
+    volatile int running;
     OpenBook *openBook = nullptr;
     bool ponderEnabled;
 

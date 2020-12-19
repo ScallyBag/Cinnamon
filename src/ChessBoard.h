@@ -100,8 +100,8 @@ protected:
 #ifdef DEBUG_MODE
 
     void updateZobristKey(int piece, int position) {
-        ASSERT_RANGE(position, 0, 63);
-        ASSERT_RANGE(piece, 0, 14);
+        ASSERT_RANGE(position, 0, 63)
+        ASSERT_RANGE(piece, 0, 14)
         chessboard[ZOBRISTKEY_IDX] ^= _random::RANDOM_KEY[piece][position];
     }
 
