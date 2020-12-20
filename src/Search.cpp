@@ -946,10 +946,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
                     Hash::_ThashData data(score, depth - extension, move->s.from, move->s.to, 0, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data);
                 }
-                if (depth < 31)
-                    setHistoryHeuristic(move->s.from, move->s.to, 1 << depth);
-                else
-                    setHistoryHeuristic(move->s.from, move->s.to, 0x40000000);
+                setHistoryHeuristic(move->s.from, move->s.to, depth);
                 if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION)
                     setKiller(move->s.from, move->s.to, depth, false);
                 return score;

@@ -830,9 +830,10 @@ protected:
         return running;
     }
 
-    void setHistoryHeuristic(const int from, const int to, const int value) {
+    void setHistoryHeuristic(const int from, const int to, const int depth) {
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
+        const int value = (depth < 31) ? 1 << depth : 0x40000000;
         historyHeuristic[from][to] = value;
     }
 
