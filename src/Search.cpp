@@ -751,9 +751,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 
-
     DEBUG(double betaEfficiencyCount = 0.0)
-
     ASSERT(chessboard[KING_BLACK])
     ASSERT(chessboard[KING_WHITE])
 
@@ -771,7 +769,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     if (depth == 0) {
         return quiescence<side>(alpha, beta, -1, 0);
     }
-
+    ++numMoves;
     //************* hash ****************
     u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
 
@@ -788,7 +786,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
 
     if (!(numMoves % 2048)) setRunning(checkTime());
 
-    ++numMoves;
+
     _TpvLine line;
     line.cmove = 0;
 
