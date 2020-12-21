@@ -958,6 +958,10 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         }
     }
     if (getRunning()) {
+        if (hashf == Hash::hashfEXACT) {
+            setHistoryHeuristic(best->s.from, best->s.to, depth - extension);
+            setKiller(best->s.from, best->s.to, depth - extension, false);
+        }
         Hash::_ThashData data(score, depth - extension, best->s.from, best->s.to, 0, hashf);
         hash.recordHash(zobristKeyR, data);
     }
