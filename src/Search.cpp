@@ -769,7 +769,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     if (depth == 0) {
         return quiescence<side>(alpha, beta, -1, 0);
     }
-    ++numMoves;
+
     //************* hash ****************
     u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
 
@@ -785,8 +785,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     ///********** end hash ***************
 
     if (!(numMoves % 2048)) setRunning(checkTime());
-
-
+    ++numMoves;
     _TpvLine line;
     line.cmove = 0;
 
@@ -801,11 +800,19 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         if (depth > n_depth) {
             nullSearch = true;
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
-            const int nullScore =
-                    (depth - R - 1 > 0) ?
-                    -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves)
-                                        :
-                    -quiescence<side ^ 1>(-beta, -beta + 1, -1, 0);
+            int nullScore;
+            if (depth - R - 1 > 0) {
+                nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves);
+                if (!forceCheck && abs(nullScore) > _INFINITE - MAX_PLY) {
+                    currentPly++;
+                    forceCheck = true;
+                    nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves);
+                    forceCheck = false;
+                    currentPly--;
+                }
+            } else {
+                nullScore = -quiescence<side ^ 1>(-beta, -beta + 1, -1, 0);
+            }
             nullSearch = false;
             if (nullScore >= beta) {
                 INC(nNullMoveCut);
@@ -902,8 +909,14 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             currentPly++;
             const int R = countMove > 6 ? 3 : 2;
             val = -search<side ^ 1, checkMoves>(depth - R, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
-            ASSERT(val != INT_MAX);
             currentPly--;
+            if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
+                currentPly++;
+                forceCheck = true;
+                val = -search<side ^ 1, checkMoves>(depth - R, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
+                forceCheck = false;
+                currentPly--;
+            }
         }
         if (val > alpha) {
             const int doMws = (score > -_INFINITE + MAX_PLY);
@@ -914,17 +927,37 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
                                                 move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                 n_root_moves);
             currentPly--;
+            if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
+                currentPly++;
+                forceCheck = true;
+                val = -search<side ^ 1, checkMoves>(depth - 1, -upb, -lwb, &line,
+                                                    move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                    n_root_moves);
+                forceCheck = false;
+                currentPly--;
+            }
             if (doMws && (lwb < val) && (val < beta)) {
                 currentPly++;
                 val = -search<side ^ 1, checkMoves>(depth - 1, -beta, -val + 1,
                                                     &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                     n_root_moves);
+                currentPly--;
+                if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
+                    currentPly++;
+                    forceCheck = true;
+                    val = -search<side ^ 1, checkMoves>(depth - 1, -beta, -val + 1,
+                                                        &line,
+                                                        move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                        n_root_moves);
+                    forceCheck = false;
+                    currentPly--;
+                }
                 if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION &&
                     val < -(_INFINITE - 100)) {
                     setKiller(move->s.from, move->s.to, depth, true);
                 }
-                currentPly--;
+
             } else {
                 if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION &&
                     val < -(_INFINITE - 100)) {
@@ -1062,4 +1095,5 @@ bool Search::setParameter(String param, int value) {
     return false;
 #endif
 }
+
 

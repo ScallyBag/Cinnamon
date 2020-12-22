@@ -11,6 +11,7 @@ Version
 News
 ----------
 - Reverse Futility Pruning
+- Stalemate improvement
 
 Features
 ----------

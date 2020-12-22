@@ -96,7 +96,7 @@ public:
         return forceCheck;
     }
 
-    void setForceCheck(bool b) const {
+    void setForceCheck(bool b) {
         forceCheck = b;
     }
 
@@ -525,6 +525,7 @@ protected:
 
     template<int type, uchar side>
     bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
+        if (pieceTo == KING_BLACK || pieceTo == KING_WHITE) return false;
         BENCH(times->start("inCheck"))
 #ifdef DEBUG_MODE
         _Tchessboard a;
@@ -863,10 +864,10 @@ protected:
         return false;
     }
 
+    bool forceCheck;
 private:
     int running;
     bool isInCheck;
-    static bool forceCheck;
     static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;
 
     void writeRandomFen(const vector<int>);

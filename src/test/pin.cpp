@@ -21,7 +21,7 @@
 #include <gtest/gtest.h>
 #include "../IterativeDeeping.h"
 
-TEST(pin, test1) {
+TEST(pin, pin1) {
     IterativeDeeping it;
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     u64 friends, enemies, p;

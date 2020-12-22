@@ -205,7 +205,9 @@ u64 SearchManager::getZobristKey(int id) const {
 }
 
 void SearchManager::setForceCheck(bool a) {
-    threadPool->getThread(0).setForceCheck(a);
+    for (Search *s:threadPool->getPool()) {
+        s->setForceCheck(a);
+    }
 }
 
 void SearchManager::setRunningThread(bool r) {
