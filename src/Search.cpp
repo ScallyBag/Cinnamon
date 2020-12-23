@@ -270,20 +270,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
         if (score >= beta) return score;
         alpha = score;
     }
-    ///************* hash ****************
-    char hashf = Hash::hashfALPHA;
 
-    pair<int, _TcheckHash> hashAlwaysItem = checkHash(Hash::HASH_ALWAYS, true, alpha, beta, depth, zobristKeyR);
-    if (hashAlwaysItem.first != INT_MAX) {
-        return hashAlwaysItem.first;
-    }
-
-    pair<int, _TcheckHash> hashGreaterItem = checkHash(Hash::HASH_GREATER, true, alpha, beta, depth, zobristKeyR);
-    if (hashGreaterItem.first != INT_MAX) {
-        return hashGreaterItem.first;
-    }
-
-///********** end hash ***************
 /**************Delta Pruning ****************/
     char fprune = 0;
     int fscore;
@@ -311,15 +298,10 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
     _Tmove *move;
     _Tmove *best = &gen_list[listId].moveList[0];
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
-    Hash::_ThashData *c = nullptr;
-    if (hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS].dataS.flags & 0x3) {
-        c = &hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS];
-    } else if (hashGreaterItem.second.phasheType[Hash::HASH_GREATER].dataS.flags & 0x3) {
-        c = &hashGreaterItem.second.phasheType[Hash::HASH_GREATER];
-    }
+
     int first = 0;
     if (!(numMoves % 2048)) setRunning(checkTime());
-    while ((move = getNextMove(&gen_list[listId], depth, c, first++))) {
+    while ((move = getNextMove(&gen_list[listId], depth, nullptr, first++))) {
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;
@@ -346,13 +328,10 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
             }
             best = move;
             alpha = score;
-            hashf = Hash::hashfEXACT;
+
         }
     }
-    if (getRunning()) {
-        Hash::_ThashData data(score, depth, best->s.from, best->s.to, 0, hashf);
-        hash.recordHash(zobristKeyR, data);
-    }
+
     decListId();
 
     return score;
@@ -773,12 +752,12 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     //************* hash ****************
     u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
 
-    pair<int, _TcheckHash> hashGreaterItem = checkHash(Hash::HASH_GREATER, false, alpha, beta, depth, zobristKeyR);
+    pair<int, _TcheckHash> hashGreaterItem = checkHash(Hash::HASH_GREATER, alpha, beta, depth, zobristKeyR);
     if (hashGreaterItem.first != INT_MAX) {
         return hashGreaterItem.first;
     }
 
-    pair<int, _TcheckHash> hashAlwaysItem = checkHash(Hash::HASH_ALWAYS, false, alpha, beta, depth, zobristKeyR);
+    pair<int, _TcheckHash> hashAlwaysItem = checkHash(Hash::HASH_ALWAYS, alpha, beta, depth, zobristKeyR);
     if (hashAlwaysItem.first != INT_MAX) {
         return hashAlwaysItem.first;
     }
