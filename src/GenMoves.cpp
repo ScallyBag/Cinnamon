@@ -58,28 +58,29 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
     int bestScore = -1;
 
     for (int i = first; i < list->size; i++) {
-        auto mos = list->moveList[i];
+        const auto mos = list->moveList[i];
         int score = 0;
         if (mos.s.type & 0x3) {
-            if (mos.s.capturedPiece == KING_BLACK + (mos.s.side ^ 1)) {
-                score = _INFINITE;
-            } else {
-                ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
-                ASSERT_RANGE(mos.s.to, 0, 63)
-                ASSERT_RANGE(mos.s.from, 0, 63)
 
-                if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
-                    score = _INFINITE / 2;
-                }
-                score += historyHeuristic[mos.s.from][mos.s.to];
-                score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
-                         (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
-                                                                                             : PIECES_VALUE[mos.s.capturedPiece];
-                if (isKillerMate(mos.s.from, mos.s.to, depth)) score += 100;
-                else if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
-                else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
+            ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
+            ASSERT_RANGE(mos.s.to, 0, 63)
+            ASSERT_RANGE(mos.s.from, 0, 63)
 
+            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
+                const auto tmp = list->moveList[first].u;
+                list->moveList[first].u = list->moveList[i].u;
+                list->moveList[i].u = tmp;
+                BENCH(times->stop("getNextMove"))
+                return &list->moveList[first];
             }
+            score += historyHeuristic[mos.s.from][mos.s.to];
+            score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
+                     (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
+                                                                                         : PIECES_VALUE[mos.s.capturedPiece];
+            if (isKillerMate(mos.s.from, mos.s.to, depth)) score += 100;
+            else if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
+            else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
+
         } else if (mos.s.type & 0xc) {    //castle
             ASSERT(chessboard[RIGHT_CASTLE_IDX])
             score = 100;
@@ -93,7 +94,6 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
         BENCH(times->stop("getNextMove"))
         return nullptr;
     }
-//    swap(list->moveList[first], list->moveList[bestId]);
     const auto tmp = list->moveList[first].u;
     list->moveList[first].u = list->moveList[bestId].u;
     list->moveList[bestId].u = tmp;
