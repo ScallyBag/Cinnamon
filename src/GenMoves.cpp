@@ -50,7 +50,14 @@ void GenMoves::clearHeuristic() {
     memset(historyHeuristic, 0, sizeof(historyHeuristic));
     memset(killer, 0, sizeof(killer));
 }
-
+/* TODO
+_Tmove *GenMoves::swapFirst(_TmoveP *list, const int first, const int i) {
+    const auto tmp = list->moveList[first].u;
+    list->moveList[first].u = list->moveList[i].u;
+    list->moveList[i].u = tmp;
+    return &list->moveList[first];
+}
+*/
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
     BENCH(times->start("getNextMove"))
 
@@ -66,7 +73,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             ASSERT_RANGE(mos.s.to, 0, 63)
             ASSERT_RANGE(mos.s.from, 0, 63)
 
-            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
+            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) { //TODO usare swapFirst
                 const auto tmp = list->moveList[first].u;
                 list->moveList[first].u = list->moveList[i].u;
                 list->moveList[i].u = tmp;
@@ -94,7 +101,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
         BENCH(times->stop("getNextMove"))
         return nullptr;
     }
-    const auto tmp = list->moveList[first].u;
+    const auto tmp = list->moveList[first].u;//TODO usare swapFirst
     list->moveList[first].u = list->moveList[bestId].u;
     list->moveList[bestId].u = tmp;
 
