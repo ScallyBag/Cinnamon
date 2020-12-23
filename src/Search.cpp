@@ -802,11 +802,13 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
             int nullScore;
             if (depth - R - 1 > 0) {
-                nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves);
+                nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE,
+                                                          n_root_moves);
                 if (!forceCheck && abs(nullScore) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
-                    nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE, n_root_moves);
+                    nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE,
+                                                              n_root_moves);
                     forceCheck = false;
                     currentPly--;
                 }
@@ -953,16 +955,6 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
                     forceCheck = false;
                     currentPly--;
                 }
-                if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION &&
-                    val < -(_INFINITE - 100)) {
-                    setKiller(move->s.from, move->s.to, depth, true);
-                }
-
-            } else {
-                if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION &&
-                    val < -(_INFINITE - 100)) {
-                    setKiller(move->s.from, move->s.to, depth, true);
-                }
             }
         }
         score = max(score, val);
@@ -979,9 +971,11 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
                     Hash::_ThashData data(score, depth - extension, move->s.from, move->s.to, 0, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data);
                 }
-                setHistoryHeuristic(move->s.from, move->s.to, depth);
-                if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION)
+
+                if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
+                    setHistoryHeuristic(move->s.from, move->s.to, depth);
                     setKiller(move->s.from, move->s.to, depth, false);
+                }
                 return score;
             }
             alpha = score;
@@ -991,7 +985,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
         }
     }
     if (getRunning()) {
-        if (hashf == Hash::hashfEXACT) {
+        if (best->s.capturedPiece == SQUARE_EMPTY && best->s.promotionPiece == NO_PROMOTION) {
             setHistoryHeuristic(best->s.from, best->s.to, depth - extension);
             setKiller(best->s.from, best->s.to, depth - extension, false);
         }

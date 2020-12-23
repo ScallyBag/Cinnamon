@@ -173,11 +173,7 @@ private:
         if ((phashe->dataU = hash.readHash(type, zobristKeyR))) {
             if (phashe->dataS.depth >= depth) {
                 INC(hash.probeHash);
-                if (!currentPly) {
-                    if (phashe->dataS.flags == Hash::hashfBETA) {
-                        incHistoryHeuristic(phashe->dataS.from, phashe->dataS.to, 1);
-                    }
-                } else {
+                if (currentPly) {
                     switch (phashe->dataS.flags) {
                         case Hash::hashfEXACT:
                             if (phashe->dataS.score >= beta) {
@@ -186,7 +182,6 @@ private:
                             }
                             break;
                         case Hash::hashfBETA:
-                            if (!quies)incHistoryHeuristic(phashe->dataS.from, phashe->dataS.to, 1);
                             if (phashe->dataS.score >= beta) {
                                 INC(hash.n_cut_hashB);
                                 return pair<int, _TcheckHash>(beta, checkHashStruct);
