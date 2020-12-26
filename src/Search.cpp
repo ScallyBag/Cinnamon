@@ -346,7 +346,6 @@ void Search::setRunning(int r) {
 int Search::getRunning() const {
     if (!runningThread)return 0;
     return GenMoves::getRunning();
-
 }
 
 void Search::setMaxTimeMillsec(int n) {
@@ -709,12 +708,11 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
 #endif
 
 template<int side, bool checkMoves>
-int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
-                   const int n_root_moves) {
+int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
+                   const int nRootMoves) {
     ASSERT_RANGE(depth, 0, MAX_PLY);
     ASSERT_RANGE(side, 0, 1);
     if (!getRunning()) return 0;
-
     INC(cumulativeMovesCount);
 #ifndef JS_MODE
     int wdl = probeWdl(depth, side, N_PIECE);
@@ -729,7 +727,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
     ASSERT(chessboard[KING_BLACK])
     ASSERT(chessboard[KING_WHITE])
 
-    const int isIncheckSide = board::inCheck1<side>(chessboard);
+    const bool isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
         if (board::checkInsufficientMaterial(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
             if (board::inCheck1<side ^ 1>(chessboard)) {
@@ -738,9 +736,8 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             return -lazyEval<side>() * 2;
         }
     }
-    const int extension = !isIncheckSide ? 0 : 1;
-    depth += extension;
-    if (depth == 0) {
+    int extension = isIncheckSide;
+    if (depth + extension == 0) {
         return quiescence<side>(alpha, beta, -1, 0);
     }
 
@@ -765,7 +762,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
 
     // ********* null move ***********
     if (!nullSearch && !pvNode && !isIncheckSide) {
-        int n_depth = (n_root_moves > 17 || depth > 3) ? 1 : 3;
+        int n_depth = (nRootMoves > 17 || depth > 3) ? 1 : 3;
         if (n_depth == 3) {
             const u64 pieces = board::getPiecesNoKing<side>(chessboard);
             if (pieces != chessboard[PAWN_BLACK + side] || bitCount(pieces) > 9)
@@ -776,13 +773,14 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
             int nullScore;
             if (depth - R - 1 > 0) {
-                nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE,
-                                                          n_root_moves);
+                nullScore = -search<side ^ 1, checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line, N_PIECE,
+                                                          nRootMoves);
                 if (!forceCheck && abs(nullScore) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
-                    nullScore = -search<side ^ 1, checkMoves>(depth - R - 1, -beta, -beta + 1, &line, N_PIECE,
-                                                              n_root_moves);
+                    nullScore = -search<side ^ 1, checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line,
+                                                              N_PIECE,
+                                                              nRootMoves);
                     forceCheck = false;
                     currentPly--;
                 }
@@ -815,7 +813,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             if (depth == 3 && (matBalance + RAZOR_MARGIN) <= alpha &&
                 bitCount(board::getBitmapNoPawnsNoKing<side ^ 1>(chessboard)) > 3) {
                 INC(nCutRazor);
-                depth--;
+                extension--;
             } else
                 ///**************Futility Pruning at pre-frontier*****
             if (depth == 2 && (futilScore = matBalance + EXT_FUTIL_MARGIN) <= alpha) {
@@ -884,12 +882,14 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             move->s.promotionPiece == NO_PROMOTION) {
             currentPly++;
             const int R = countMove > 6 ? 3 : 2;
-            val = -search<side ^ 1, checkMoves>(depth - R, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
+            val = -search<side ^ 1, checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
+                                                nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
-                val = -search<side ^ 1, checkMoves>(depth - R, -(alpha + 1), -alpha, &line, N_PIECE, n_root_moves);
+                val = -search<side ^ 1, checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
+                                                    nRootMoves);
                 forceCheck = false;
                 currentPly--;
             }
@@ -899,33 +899,33 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
             const int lwb = max(alpha, score);
             const int upb = (doMws ? (lwb + 1) : beta);
             currentPly++;
-            val = -search<side ^ 1, checkMoves>(depth - 1, -upb, -lwb, &line,
+            val = -search<side ^ 1, checkMoves>(depth + extension - 1, -upb, -lwb, &line,
                                                 move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                n_root_moves);
+                                                nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
-                val = -search<side ^ 1, checkMoves>(depth - 1, -upb, -lwb, &line,
+                val = -search<side ^ 1, checkMoves>(depth + extension - 1, -upb, -lwb, &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                    n_root_moves);
+                                                    nRootMoves);
                 forceCheck = false;
                 currentPly--;
             }
             if (doMws && (lwb < val) && (val < beta)) {
                 currentPly++;
-                val = -search<side ^ 1, checkMoves>(depth - 1, -beta, -val + 1,
+                val = -search<side ^ 1, checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                     &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                    n_root_moves);
+                                                    nRootMoves);
                 currentPly--;
                 if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
-                    val = -search<side ^ 1, checkMoves>(depth - 1, -beta, -val + 1,
+                    val = -search<side ^ 1, checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                         &line,
                                                         move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                        n_root_moves);
+                                                        nRootMoves);
                     forceCheck = false;
                     currentPly--;
                 }
@@ -942,7 +942,7 @@ int Search::search(int depth, int alpha, const int beta, _TpvLine *pline, const 
                 INC(nCutAB);
                 ADD(betaEfficiency, betaEfficiencyCount / (double) listcount * 100.0);
                 if (getRunning()) {
-                    Hash::_ThashData data(score, depth - extension, move->s.from, move->s.to, 0, Hash::hashfBETA);
+                    Hash::_ThashData data(score, depth, move->s.from, move->s.to, 0, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data);
                 }
 
