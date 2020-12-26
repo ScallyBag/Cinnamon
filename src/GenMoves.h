@@ -23,7 +23,7 @@
 #include "util/Bitboard.h"
 #include <vector>
 #include "namespaces/board.h"
-
+//#include "namespaces/see.h"
 
 class GenMoves : public ChessBoard {
 
@@ -133,7 +133,6 @@ public:
         BENCH(times->stop("kingShiftCapture"))
         return false;
     }
-
 
     template<int side>
     bool performKnightShiftCapture(const int piece, const u64 enemies, const bool isCapture) {

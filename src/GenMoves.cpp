@@ -68,12 +68,16 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 
             if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
                 BENCH(times->stop("getNextMove"))
-                return swap(list,first,i);
+                return swap(list, first, i);
             }
             score += historyHeuristic[mos.s.from][mos.s.to];
             score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
                      (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
                                                                                          : PIECES_VALUE[mos.s.capturedPiece];
+
+//            BENCH(times->start("seeTime"))
+//            See::see(mos, chessboard);
+//            BENCH(times->stop("seeTime"))
             if (isKillerMate(mos.s.from, mos.s.to, depth)) score += 100;
             else if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
             else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
@@ -91,7 +95,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
     if (bestId == -1) {
         return nullptr;
     }
-    return swap(list,first,bestId);
+    return swap(list, first, bestId);
 }
 
 GenMoves::~GenMoves() {
