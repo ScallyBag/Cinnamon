@@ -296,7 +296,6 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
         return score;
     }
     _Tmove *move;
-    _Tmove *best = &gen_list[listId].moveList[0];
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
     int first = 0;
@@ -326,14 +325,10 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
                 }
                 return beta;
             }
-            best = move;
             alpha = score;
-
         }
     }
-
     decListId();
-
     return score;
 }
 
