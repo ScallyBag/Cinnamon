@@ -872,6 +872,11 @@ private:
 
     void writeRandomFen(const vector<int>);
 
+    _Tmove *swap(_TmoveP *list, const int i, const int j) {
+        std::swap(list->moveList[i], list->moveList[j]);
+        return &list->moveList[i];
+    }
+
     template<int side>
     void checkJumpPawn(u64 x, const u64 xallpieces) {
         BENCH(times->start("checkJumpPawn"))

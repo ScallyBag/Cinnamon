@@ -50,14 +50,7 @@ void GenMoves::clearHeuristic() {
     memset(historyHeuristic, 0, sizeof(historyHeuristic));
     memset(killer, 0, sizeof(killer));
 }
-/* TODO
-_Tmove *GenMoves::swapFirst(_TmoveP *list, const int first, const int i) {
-    const auto tmp = list->moveList[first].u;
-    list->moveList[first].u = list->moveList[i].u;
-    list->moveList[i].u = tmp;
-    return &list->moveList[first];
-}
-*/
+
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
     BENCH(times->start("getNextMove"))
 
@@ -73,12 +66,9 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             ASSERT_RANGE(mos.s.to, 0, 63)
             ASSERT_RANGE(mos.s.from, 0, 63)
 
-            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) { //TODO usare swapFirst
-                const auto tmp = list->moveList[first].u;
-                list->moveList[first].u = list->moveList[i].u;
-                list->moveList[i].u = tmp;
+            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
                 BENCH(times->stop("getNextMove"))
-                return &list->moveList[first];
+                return swap(list,first,i);
             }
             score += historyHeuristic[mos.s.from][mos.s.to];
             score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
@@ -97,16 +87,11 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             bestId = i;
         }
     }
+    BENCH(times->stop("getNextMove"))
     if (bestId == -1) {
-        BENCH(times->stop("getNextMove"))
         return nullptr;
     }
-    const auto tmp = list->moveList[first].u;//TODO usare swapFirst
-    list->moveList[first].u = list->moveList[bestId].u;
-    list->moveList[bestId].u = tmp;
-
-    BENCH(times->stop("getNextMove"))
-    return &list->moveList[first];
+    return swap(list,first,bestId);
 }
 
 GenMoves::~GenMoves() {
