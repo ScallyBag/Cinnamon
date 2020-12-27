@@ -22,13 +22,11 @@ using namespace constants;
 
 class See { // TODO
 public:
-    static int see(const _Tmove &move, const _Tchessboard &chessboard) {
-
+    static int see(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
         const int side = move.s.side;
         const int position = move.s.to;
         const int capturedPiece = move.s.capturedPiece;
-
-        const u64 allpieces = board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard);
+        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)));
         int yourCap[15];
         int yourCount = _see(side, position, allpieces, yourCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
         const int pieceValue = PIECES_VALUE[capturedPiece];

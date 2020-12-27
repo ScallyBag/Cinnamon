@@ -17,6 +17,7 @@
 */
 
 #include "GenMoves.h"
+#include "namespaces/see.h"
 
 GenMoves::GenMoves() : perftMode(false), listId(-1) {
     currentPly = 0;
@@ -56,11 +57,10 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int depth, const int first) 
 
     int bestId = -1;
     int bestScore = -INT_MAX;
-
+//    const u64 allpieces = board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard);
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
         _assert(mos.s.type & 0x3) //TODO
-
         ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
@@ -68,9 +68,9 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int depth, const int first) 
         const int score = (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
                           (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
                                                                                               : PIECES_VALUE[mos.s.capturedPiece];
-//            BENCH(times->start("seeTime"))
-//            See::see(mos, chessboard);
-//            BENCH(times->stop("seeTime"))
+//        BENCH(times->start("seeTime"))
+//        See::see(mos, chessboard, allpieces);
+//        BENCH(times->stop("seeTime"))
         if (score > bestScore) {
             bestScore = score;
             bestId = i;

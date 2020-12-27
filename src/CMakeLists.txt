@@ -16,6 +16,7 @@ set(SOURCE_FILES
         namespaces/debug.h
         namespaces/bits.h
         namespaces/random.h
+        namespaces/see.h
         namespaces/board.h
         namespaces/board.cpp
         perft/_TPerftRes.h
