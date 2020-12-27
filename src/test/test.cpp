@@ -18,6 +18,7 @@
 
 #if defined(FULL_TEST)
 
+#include "see.cpp"
 #include "pin.cpp"
 #include "eval.cpp"
 //#include "spinlockShared.cpp"

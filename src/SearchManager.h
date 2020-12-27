@@ -124,7 +124,7 @@ public:
                     : board::getBitmap<BLACK>(threadPool->getPool()[n]->getChessboard());
     }
 
-    const _Tchessboard &getChessboard(const int n) const {
+    const _Tchessboard &getChessboard(const int n = 0) const {
         return threadPool->getPool()[n]->getChessboard();
     }
 
