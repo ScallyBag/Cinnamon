@@ -288,7 +288,6 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
     u64 enemies = board::getBitmap<side ^ 1>(chessboard);
     if (generateCaptures<side>(enemies, friends)) {
         decListId();
-
         return _INFINITE - (mainDepth + depth);
     }
     if (!getListSize()) {
@@ -300,7 +299,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
 
     int first = 0;
     if (!(numMoves % 2048)) setRunning(checkTime());
-    while ((move = getNextMove(&gen_list[listId], depth, nullptr, first++))) {
+    while ((move = getNextMoveQ(&gen_list[listId], depth, first++))) {
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;
@@ -710,16 +709,19 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
 template<int side, bool checkMoves>
 int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
                    const int nRootMoves) {
-    ASSERT_RANGE(depth, 0, MAX_PLY);
+
     ASSERT_RANGE(side, 0, 1);
     if (!getRunning()) return 0;
+    u64 oldKey = chessboard[ZOBRISTKEY_IDX];
+    if (depth > MAX_PLY) {
+        return getScore(oldKey, side, alpha, beta, false);
+    }
     INC(cumulativeMovesCount);
 #ifndef JS_MODE
     int wdl = probeWdl(depth, side, N_PIECE);
     if (wdl != INT_MAX) return wdl;
 #endif
 
-    u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 

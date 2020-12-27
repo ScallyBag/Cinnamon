@@ -51,6 +51,38 @@ void GenMoves::clearHeuristic() {
     memset(killer, 0, sizeof(killer));
 }
 
+_Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int depth, const int first) {
+    BENCH(times->start("getNextMove"))
+
+    int bestId = -1;
+    int bestScore = -INT_MAX;
+
+    for (int i = first; i < list->size; i++) {
+        const auto mos = list->moveList[i];
+        _assert(mos.s.type & 0x3) //TODO
+
+        ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
+        ASSERT_RANGE(mos.s.to, 0, 63)
+        ASSERT_RANGE(mos.s.from, 0, 63)
+
+        const int score = (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
+                          (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
+                                                                                              : PIECES_VALUE[mos.s.capturedPiece];
+//            BENCH(times->start("seeTime"))
+//            See::see(mos, chessboard);
+//            BENCH(times->stop("seeTime"))
+        if (score > bestScore) {
+            bestScore = score;
+            bestId = i;
+        }
+    }
+    BENCH(times->stop("getNextMove"))
+    if (bestId == -1) {
+        return nullptr;
+    }
+    return swap(list, first, bestId);
+}
+
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
     BENCH(times->start("getNextMove"))
 

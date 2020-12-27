@@ -424,6 +424,8 @@ protected:
     u64 numMoves = 0;
     u64 numMovesq = 0;
 
+    _Tmove *getNextMoveQ(_TmoveP *list, const int depth, const int first);
+
     _Tmove *getNextMove(decltype(gen_list), const int depth, const Hash::_ThashData *c, const int first);
 
     template<int side>
