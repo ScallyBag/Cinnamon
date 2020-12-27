@@ -88,7 +88,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 
     int bestId = -1;
     int bestScore = -1;
-
+//    const u64 allpieces = board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard);
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
         int score = 0;
@@ -108,7 +108,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
                                                                                          : PIECES_VALUE[mos.s.capturedPiece];
 
 //            BENCH(times->start("seeTime"))
-//            See::see(mos, chessboard);
+//            See::see(mos, chessboard, allpieces);
 //            BENCH(times->stop("seeTime"))
             if (isKillerMate(mos.s.from, mos.s.to, depth)) score += 100;
             else if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
