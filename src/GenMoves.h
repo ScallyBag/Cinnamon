@@ -55,6 +55,11 @@ public:
         performKingShiftCapture<side>(~allpieces, false);
     }
 
+    static bool see1(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
+        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)));
+        return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
+    }
+
     template<int side>
     bool generateCaptures(const u64 enemies, const u64 friends) {
         ASSERT_RANGE(side, 0, 1)

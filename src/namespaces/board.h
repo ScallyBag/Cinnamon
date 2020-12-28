@@ -148,6 +148,11 @@ public:
         return attackers;
     }
 
+    static bool isAttacked(const int side, const int position, const u64 allpieces, const _Tchessboard &chessboard) {
+        if (side == WHITE)return isAttacked<WHITE>(position, allpieces, chessboard);
+        return isAttacked<BLACK>(position, allpieces, chessboard);
+    }
+
     template<int side>
     static bool isAttacked(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
         BENCH(Times::getInstance().start("isAttacked"))
