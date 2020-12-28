@@ -299,7 +299,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
 
     int first = 0;
     if (!(numMoves % 2048)) setRunning(checkTime());
-    while ((move = getNextMoveQ(&gen_list[listId], depth, first++))) {
+    while ((move = getNextMoveQ(&gen_list[listId], first++))) {
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;

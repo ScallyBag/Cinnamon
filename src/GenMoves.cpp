@@ -52,7 +52,7 @@ void GenMoves::clearHeuristic() {
     memset(killer, 0, sizeof(killer));
 }
 
-_Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int depth, const int first) {
+_Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
     BENCH(times->start("getNextMove"))
 
     int bestId = -1;

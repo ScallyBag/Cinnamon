@@ -66,23 +66,10 @@ namespace constants {
     static constexpr uchar KING_SIDE_CASTLE_MOVE_MASK = 0x4;
     static constexpr uchar QUEEN_SIDE_CASTLE_MOVE_MASK = 0x8;
 
-#define PAWN_BLACK 0
-#define PAWN_WHITE 1
-#define ROOK_BLACK 2
-#define ROOK_WHITE 3
-#define BISHOP_BLACK 4
-#define BISHOP_WHITE 5
-#define KNIGHT_BLACK 6
-#define KNIGHT_WHITE 7
-#define KING_BLACK 8
-#define KING_WHITE 9
-#define QUEEN_BLACK 10
-#define QUEEN_WHITE 11
-
-#define RIGHT_CASTLE_IDX 12
-#define ENPASSANT_IDX 13
-#define SIDETOMOVE_IDX 14
-#define ZOBRISTKEY_IDX 15
+    static constexpr int RIGHT_CASTLE_IDX = 12;
+    static constexpr int ENPASSANT_IDX = 13;
+    static constexpr int SIDETOMOVE_IDX = 14;
+    static constexpr int ZOBRISTKEY_IDX = 15;
 
     static constexpr u64 A7bit = 0x80000000000000ULL;
     static constexpr u64 B7bit = 0x40000000000000ULL;
