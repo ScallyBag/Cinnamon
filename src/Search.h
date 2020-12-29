@@ -175,11 +175,6 @@ private:
                 if (currentPly) {
                     switch (phashe->dataS.flags) {
                         case Hash::hashfEXACT:
-                            if (phashe->dataS.score >= beta) {
-                                INC(hash.n_cut_hashB);
-                                return pair<int, _TcheckHash>(beta, checkHashStruct);
-                            }
-                            break;
                         case Hash::hashfBETA:
                             if (phashe->dataS.score >= beta) {
                                 INC(hash.n_cut_hashB);
