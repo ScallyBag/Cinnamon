@@ -278,9 +278,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
         fprune = 1;
     }
 /************ end Delta Pruning *************/
-    if (score > alpha) {
-        alpha = score;
-    }
+    if (score > alpha) alpha = score; //TODO ?
 
     incListId();
 
