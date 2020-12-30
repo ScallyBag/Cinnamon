@@ -277,19 +277,19 @@ int SearchManager::getMaxTimeMillsec() const {
     return threadPool->getThread(0).getMaxTimeMillsec();
 }
 
-void SearchManager::setNullMove(bool i) {
+void SearchManager::setNullMove(const bool i) {
     for (Search *s:threadPool->getPool()) {
         s->setNullMove(i);
     }
 }
 
-void SearchManager::setChess960(bool i) {
+void SearchManager::setChess960(const bool i) {
     for (Search *s:threadPool->getPool()) {
         s->setChess960(i);
     }
 }
 
-bool SearchManager::makemove(_Tmove *i) {
+bool SearchManager::makemove(const _Tmove *i) {
     bool b = false;
     for (Search *s:threadPool->getPool()) {
         b = s->makemove(i, true, false);
@@ -301,7 +301,7 @@ string SearchManager::decodeBoardinv(const uchar type, const int a, const int si
     return threadPool->getThread(0).decodeBoardinv(type, a, side);
 }
 
-void SearchManager::takeback(_Tmove *move, const u64 oldkey, bool rep) {
+void SearchManager::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     for (Search *s:threadPool->getPool()) {
         s->takeback(move, oldkey, rep);
     }
@@ -329,7 +329,7 @@ void SearchManager::printWdlSyzygy() {
 
 #endif
 
-int SearchManager::getMoveFromSan(String string, _Tmove *ptr) const {
+int SearchManager::getMoveFromSan(const String& string, _Tmove *ptr) const {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {
@@ -351,14 +351,14 @@ void SearchManager::init() {
     }
 }
 
-void SearchManager::setRepetitionMapCount(int i) {
+void SearchManager::setRepetitionMapCount(const int i) {
     for (Search *s:threadPool->getPool()) {
         s->setRepetitionMapCount(i);
     }
 }
 
 
-bool SearchManager::setNthread(int nthread) {
+bool SearchManager::setNthread(const int nthread) {
     if (!threadPool->setNthread(nthread))return false;
     return true;
 }

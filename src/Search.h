@@ -46,15 +46,15 @@ public:
 
     virtual ~Search();
 
-    void setRunning(int);
+    void setRunning(const int);
 
-    void setPonder(bool);
+    void setPonder(const bool);
 
-    void setNullMove(bool);
+    void setNullMove(const bool);
 
-    void setMaxTimeMillsec(int);
+    void setMaxTimeMillsec(const int);
 
-    bool setParameter(String param, int value);
+    bool setParameter(String& param,const int value);
 
     int getMaxTimeMillsec() const;
 
@@ -92,7 +92,7 @@ public:
     STATIC_CONST int NULL_DEPTH = 3;
     STATIC_CONST int VAL_WINDOW = 50;
 
-    static void setRunningThread(bool t) {
+    static void setRunningThread(const bool t) {
         runningThread = t;
     }
 
@@ -114,7 +114,7 @@ public:
 
     void unsetSearchMoves();
 
-    void setSearchMoves(vector<int> &v);
+    void setSearchMoves(const vector<int> &v);
 
 private:
 
@@ -152,7 +152,7 @@ private:
     int search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE, const int nRootMoves);
 
     template<bool checkMoves>
-    bool checkSearchMoves(_Tmove *move) const;
+    bool checkSearchMoves(const _Tmove *move) const;
 
     template<int side>
     int quiescence(int alpha, const int beta, const char promotionPiece, const int depth);
@@ -194,6 +194,5 @@ private:
         }
         INC(hash.cutFailed);
         return INT_MAX;
-
     }
 };

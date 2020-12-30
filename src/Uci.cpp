@@ -90,7 +90,7 @@ void Uci::listner(IterativeDeeping *it) {
             cout << "option name TB Restart type button" << endl;
             cout << "option name SyzygyPath type string default <empty>" << endl;
             cout << "uciok" << endl;
-        } else if (token.toLower() == "score") {
+        } else if (token.toLower() == "score" || token.toLower() == "eval") {
             int side = searchManager.getSide();
             int t = searchManager.getScore(side, true);
 

@@ -444,7 +444,7 @@ int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
 }
 
 template<Eval::_Tphase phase>
-int Eval::evaluateKing(int side, u64 squares) {
+int Eval::evaluateKing(const int side, const u64 squares) {
     ASSERT(evaluationCount[side] == 5)
     int result = 0;
     uchar pos_king = structureEval.posKing[side];
@@ -485,15 +485,13 @@ short Eval::getHashValue(const u64 key) {
 
 short Eval::getScore(const u64 key, const int side, const int alpha, const int beta, const bool trace) {
     const short hashValue = getHashValue(key);
-    if (hashValue != noHashValue) {
+    if (hashValue != noHashValue && !trace) {
         return side ? -hashValue : hashValue;
     }
     int lazyscore_white = lazyEvalSide<WHITE>();
     int lazyscore_black = lazyEvalSide<BLACK>();
-    int lazyscore = lazyscore_black - lazyscore_white;
-    if (side) {
-        lazyscore = -lazyscore;
-    }
+    const int lazyscore = side ? lazyscore_white - lazyscore_black : lazyscore_black - lazyscore_white;
+
     if (lazyscore > (beta + FUTIL_MARGIN) || lazyscore < (alpha - FUTIL_MARGIN)) {
         INC(lazyEvalCuts);
         return lazyscore;
@@ -540,26 +538,25 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
         default:
             break;
     }
-    int bonus_attack_king_black = 0;
-    int bonus_attack_king_white = 0;
-    if (phase != OPEN) {
-        bonus_attack_king_black = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
-        bonus_attack_king_white = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
-    }
+    const int bonus_attack_king_black =
+            phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
+    const int bonus_attack_king_white =
+            phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
     ASSERT(getMobilityCastle<WHITE>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
     ASSERT(getMobilityCastle<BLACK>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
-    int mobWhite = MOB_CASTLE[phase][getMobilityCastle<WHITE>(structureEval.allPieces)];
-    int mobBlack = MOB_CASTLE[phase][getMobilityCastle<BLACK>(structureEval.allPieces)];
-    int attack_king_white = ATTACK_KING * bitCount(structureEval.kingAttackers[BLACK]);
-    int attack_king_black = ATTACK_KING * bitCount(structureEval.kingAttackers[WHITE]);
+    const int mobWhite = MOB_CASTLE[phase][getMobilityCastle<WHITE>(structureEval.allPieces)];
+    const int mobBlack = MOB_CASTLE[phase][getMobilityCastle<BLACK>(structureEval.allPieces)];
+    const int attack_king_white = ATTACK_KING * bitCount(structureEval.kingAttackers[BLACK]);
+    const int attack_king_black = ATTACK_KING * bitCount(structureEval.kingAttackers[WHITE]);
     side == WHITE ? lazyscore_black -= 5 : lazyscore_white += 5;
-    int result = (mobBlack + attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
-                  Tresult.knights[BLACK] + Tresult.bishop[BLACK] + Tresult.rooks[BLACK] + Tresult.queens[BLACK] +
-                  Tresult.kings[BLACK]) -
-                 (mobWhite + attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
-                  Tresult.knights[WHITE] + Tresult.bishop[WHITE] + Tresult.rooks[WHITE] + Tresult.queens[WHITE] +
-                  Tresult.kings[WHITE]);
+    const int result =
+            (mobBlack + attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
+             Tresult.knights[BLACK] + Tresult.bishop[BLACK] + Tresult.rooks[BLACK] + Tresult.queens[BLACK] +
+             Tresult.kings[BLACK]) -
+            (mobWhite + attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
+             Tresult.knights[WHITE] + Tresult.bishop[WHITE] + Tresult.rooks[WHITE] + Tresult.queens[WHITE] +
+             Tresult.kings[WHITE]);
 
 #ifdef DEBUG_MODE
     if (trace) {

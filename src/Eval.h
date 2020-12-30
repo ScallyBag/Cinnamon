@@ -41,7 +41,7 @@ public:
 
     ~Eval() override;
 
-    short getScore(const u64 key, const int side, const int alpha, const int beta, const bool trace);
+    short getScore(const u64 key, const int side, const int alpha, const int beta, const bool trace = false);
 
     template<int side>
     int lazyEval() const {
@@ -213,7 +213,7 @@ private:
     int evaluateRook(const u64, u64 enemies, u64 friends);
 
     template<_Tphase phase>
-    int evaluateKing(int side, u64 squares);
+    int evaluateKing(const int side, const u64 squares);
 
     template<int side>
     int lazyEvalSide() const {

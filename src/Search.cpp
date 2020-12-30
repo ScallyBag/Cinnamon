@@ -265,7 +265,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
     if (!getRunning()) return 0;
     ++numMovesq;
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
-    int score = getScore(zobristKeyR, side, alpha, beta, false);
+    int score = getScore(zobristKeyR, side, alpha, beta);
     if (score > alpha) {
         if (score >= beta) return score;
         alpha = score;
@@ -329,11 +329,11 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
     return score;
 }
 
-void Search::setPonder(bool r) {
+void Search::setPonder(const bool r) {
     ponder = r;
 }
 
-void Search::setRunning(int r) {
+void Search::setRunning(const int r) {
     GenMoves::setRunning(r);
     if (!r) {
         maxTimeMillsec = 0;
@@ -345,7 +345,7 @@ int Search::getRunning() const {
     return GenMoves::getRunning();
 }
 
-void Search::setMaxTimeMillsec(int n) {
+void Search::setMaxTimeMillsec(const int n) {
     maxTimeMillsec = n;
 }
 
@@ -353,7 +353,7 @@ int Search::getMaxTimeMillsec() const {
     return maxTimeMillsec;
 }
 
-bool Search::checkDraw(u64 key) {
+bool Search::checkDraw(const u64 key) {
     int o = 0;
     int count = 0;
     for (int i = repetitionMapCount - 1; i >= 0; i--) {
@@ -646,7 +646,7 @@ bool Search::probeRootTB(_Tmove *res) {
 }
 
 template<bool checkMoves>
-bool Search::checkSearchMoves(_Tmove *move) const {
+bool Search::checkSearchMoves(const _Tmove *move) const {
     if (!checkMoves)return true;
     int m = move->s.to | (move->s.from << 8);
     if (std::find(searchMovesVector.begin(), searchMovesVector.end(), m) != searchMovesVector.end()) {
@@ -712,7 +712,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     if (!getRunning()) return 0;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     if (depth > MAX_PLY) {
-        return getScore(oldKey, side, alpha, beta, false);
+        return getScore(oldKey, side, alpha, beta);
     }
     INC(cumulativeMovesCount);
 #ifndef JS_MODE
@@ -988,11 +988,11 @@ void Search::unsetSearchMoves() {
     searchMovesVector.clear();
 }
 
-void Search::setSearchMoves(vector<int> &s) {
+void Search::setSearchMoves(const vector<int> &s) {
     searchMovesVector = s;
 }
 
-bool Search::setParameter(String param, int value) {
+bool Search::setParameter(String& param,const int value) {
 #if defined(CLOP) || defined(DEBUG_MODE)
     param.toUpper();
     bool res = true;

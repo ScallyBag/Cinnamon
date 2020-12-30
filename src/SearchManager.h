@@ -81,21 +81,21 @@ public:
 
     int getSide() const;
 
-    int getScore(int side, const bool trace);
+    int getScore(const int side, const bool trace);
 
     int getMaxTimeMillsec() const;
 
-    void setNullMove(bool i);
+    void setNullMove(const bool i);
 
-    void setChess960(bool i);
+    void setChess960(const bool i);
 
-    bool makemove(_Tmove *i);
+    bool makemove(const _Tmove *i);
 
-    void takeback(_Tmove *move, const u64 oldkey, bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey,const bool rep);
 
-    void setSide(bool i);
+    void setSide(const bool i);
 
-    int getMoveFromSan(String string, _Tmove *ptr) const;
+    int getMoveFromSan(const String& string, _Tmove *ptr) const;
 
 #ifndef JS_MODE
 
@@ -111,9 +111,9 @@ public:
 
     void init();
 
-    void setRepetitionMapCount(int i);
+    void setRepetitionMapCount(const int i);
 
-    bool setNthread(int);
+    bool setNthread(const int);
 
 #if defined(FULL_TEST)
 
@@ -195,7 +195,7 @@ public:
 
 #endif
 
-    int search(int mply);
+    int search(const int mply);
 
 private:
 

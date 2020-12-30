@@ -289,7 +289,7 @@ void GenMoves::unPerformCastle(const int side, const uchar type) {
 
 }
 
-void GenMoves::takeback(_Tmove *move, const u64 oldkey, bool rep) {
+void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     if (rep) {
         popStackMove();
     }
@@ -453,7 +453,7 @@ void GenMoves::setRepetitionMapCount(const int i) {
     repetitionMapCount = i;
 }
 
-int GenMoves::loadFen(string fen) {
+int GenMoves::loadFen(const string &fen) {
     int side = ChessBoard::loadFen(fen);
     if (side == 2) {
         fatal("Bad FEN position format ", fen)
@@ -463,7 +463,7 @@ int GenMoves::loadFen(string fen) {
     return side;
 }
 
-int GenMoves::getMoveFromSan(const string fenStr, _Tmove *move) {
+int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
     memset(move, 0, sizeof(_Tmove));
     movesCount++;

@@ -44,7 +44,7 @@ void Hash::clearHash() {
     memset(static_cast<void*>(hashArray[HASH_ALWAYS]), 0, sizeof(_Thash) * HASH_SIZE);
 }
 
-void Hash::setHashSize(int mb) {
+void Hash::setHashSize(const int mb) {
     dispose();
     if (mb > 0) {
         u64 tmp = (u64)mb * 1024 * 1024 / (sizeof(_Thash) * 2);

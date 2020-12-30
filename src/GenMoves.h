@@ -36,7 +36,7 @@ public:
 
     void setPerft(const bool b);
 
-    bool generateCaptures(const int side, u64, u64);
+    bool generateCaptures(const int side, const u64, const u64);
 
     void generateMoves(const int side, const u64);
 
@@ -101,22 +101,22 @@ public:
         return forceCheck;
     }
 
-    void setForceCheck(bool b) {
+    void setForceCheck(const bool b) {
         forceCheck = b;
     }
 
-    int getMoveFromSan(const string fenStr, _Tmove *move);
+    int getMoveFromSan(const string &fenStr, _Tmove *move);
 
     void init();
 
-    int loadFen(string fen = "");
+    int loadFen(const string &fen = "");
 
     inline u64 getDiagCapture(const int position, const u64 allpieces, const u64 enemies) const {
         ASSERT_RANGE(position, 0, 63)
         return Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies;
     }
 
-    void takeback(_Tmove *move, const u64 oldkey, bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey, const bool rep);
 
     void setRepetitionMapCount(const int i);
 

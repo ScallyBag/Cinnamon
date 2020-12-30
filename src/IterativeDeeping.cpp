@@ -257,6 +257,6 @@ void IterativeDeeping::run() {
     LOCK_RELEASE(running);
 }
 
-int IterativeDeeping::loadFen(const string fen) {
+int IterativeDeeping::loadFen(const string& fen) {
     return searchManager.loadFen(fen);
 }

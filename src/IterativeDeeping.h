@@ -53,7 +53,7 @@ public:
 
     void loadBook(const string);
 
-    int loadFen(const string fen = "");
+    int loadFen(const string& fen = "");
 
     int getRunning() const {
         return running;

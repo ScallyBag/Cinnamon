@@ -76,7 +76,7 @@ public:
     int n_cut_hashA, n_cut_hashB, cutFailed, probeHash;
 #endif
 
-    void setHashSize(int mb);
+    void setHashSize(const int mb);
 
     void clearHash();
 
