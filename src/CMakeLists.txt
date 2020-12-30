@@ -32,7 +32,6 @@ set(SOURCE_FILES
         perft/PerftThread.cpp
         perft/PerftThread.h
         test/test.cpp
-        threadPool/Mutex.h
         threadPool/ObserverThread.h
         threadPool/Spinlock.h
         threadPool/Thread.h
