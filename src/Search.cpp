@@ -744,16 +744,16 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     }
 
     //************* hash ****************
-    u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
-
-    pair<int, _TcheckHash> hashGreaterItem = checkHash(Hash::HASH_GREATER, alpha, beta, depth, zobristKeyR);
-    if (hashGreaterItem.first != INT_MAX) {
-        return hashGreaterItem.first;
+    const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
+    Hash::_ThashData hashGreaterItem1;
+    const int hashGreaterValue = checkHash(Hash::HASH_GREATER, alpha, beta, depth, zobristKeyR, hashGreaterItem1);
+    if (hashGreaterValue != INT_MAX) {
+        return hashGreaterValue;
     }
-
-    pair<int, _TcheckHash> hashAlwaysItem = checkHash(Hash::HASH_ALWAYS, alpha, beta, depth, zobristKeyR);
-    if (hashAlwaysItem.first != INT_MAX) {
-        return hashAlwaysItem.first;
+    Hash::_ThashData hashAlwaysItem1;
+    const int hashAlwaysValue = checkHash(Hash::HASH_ALWAYS, alpha, beta, depth, zobristKeyR, hashAlwaysItem1);
+    if (hashAlwaysValue != INT_MAX) {
+        return hashAlwaysValue;
     }
     ///********** end hash ***************
 
@@ -850,19 +850,20 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         }
     }
     ASSERT(gen_list[listId].size > 0)
-    Hash::_ThashData *c = nullptr;
+
     _Tmove *best = &gen_list[listId].moveList[0];
-    if (hashGreaterItem.second.phasheType[Hash::HASH_GREATER].dataS.flags & 0x3) {
-        c = &hashGreaterItem.second.phasheType[Hash::HASH_GREATER];
-    } else if (hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS].dataS.flags & 0x3) {
-        c = &hashAlwaysItem.second.phasheType[Hash::HASH_ALWAYS];
-    }
+
+
     INC(totGen);
     _Tmove *move;
     bool checkInCheck = false;
     int countMove = 0;
     char hashf = Hash::hashfALPHA;
     int first = 0;
+    const Hash::_ThashData *c = (hashGreaterItem1.dataS.flags & 0x3) ? &hashGreaterItem1
+                                                                     : (hashAlwaysItem1.dataS.flags &
+                                                                        0x3) ? &hashAlwaysItem1
+                                                                             : nullptr;
     while ((move = getNextMove(&gen_list[listId], depth, c, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;

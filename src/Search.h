@@ -161,30 +161,28 @@ private:
 
     int mainDepth;
 
-    inline pair<int, _TcheckHash> checkHash(const int type,
+    inline int checkHash(const int type,
                                             const int alpha,
                                             const int beta,
                                             const int depth,
-                                            const u64 zobristKeyR) {
+                                            const u64 zobristKeyR, Hash::_ThashData &checkHashStruct) {
 
-        _TcheckHash checkHashStruct;
-        Hash::_ThashData *phashe = &checkHashStruct.phasheType[type];
-        if ((phashe->dataU = hash.readHash(type, zobristKeyR))) {
-            if (phashe->dataS.depth >= depth) {
+        if ((checkHashStruct.dataU = hash.readHash(type, zobristKeyR))) {
+            if (checkHashStruct.dataS.depth >= depth) {
                 INC(hash.probeHash);
                 if (currentPly) {
-                    switch (phashe->dataS.flags) {
+                    switch (checkHashStruct.dataS.flags) {
                         case Hash::hashfEXACT:
                         case Hash::hashfBETA:
-                            if (phashe->dataS.score >= beta) {
+                            if (checkHashStruct.dataS.score >= beta) {
                                 INC(hash.n_cut_hashB);
-                                return pair<int, _TcheckHash>(beta, checkHashStruct);
+                                return beta;
                             }
                             break;
                         case Hash::hashfALPHA:
-                            if (phashe->dataS.score <= alpha) {
+                            if (checkHashStruct.dataS.score <= alpha) {
                                 INC(hash.n_cut_hashA);
-                                return pair<int, _TcheckHash>(alpha, checkHashStruct);
+                                return alpha;
                             }
                             break;
                         default:
@@ -195,7 +193,7 @@ private:
             }
         }
         INC(hash.cutFailed);
-        return pair<int, _TcheckHash>(INT_MAX, checkHashStruct);
+        return INT_MAX;
 
     }
 };
