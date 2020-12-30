@@ -272,10 +272,10 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
     }
 
 /**************Delta Pruning ****************/
-    char fprune = 0;
+    bool fprune = false;
     int fscore;
     if ((fscore = score + (promotionPiece == NO_PROMOTION ? VALUEQUEEN : 2 * VALUEQUEEN)) < alpha) {
-        fprune = 1;
+        fprune = true;
     }
 /************ end Delta Pruning *************/
     if (score > alpha) alpha = score; //TODO ?
