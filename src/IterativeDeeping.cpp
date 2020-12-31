@@ -139,10 +139,7 @@ void IterativeDeeping::run() {
         auto end1 = std::chrono::high_resolution_clock::now();
         timeTaken = Time::diffTime(end1, start1) + 1;
         totMoves += searchManager.getTotMoves();
-
-        if (sc > _INFINITE - MAX_PLY) {
-            sc = 0x7fffffff;
-        }
+        
 #ifdef DEBUG_MODE
         int totStoreHash = hash.nRecordHashA + hash.nRecordHashB + hash.nRecordHashE + 1;
         int percStoreHashA = hash.nRecordHashA * 100 / totStoreHash;
@@ -215,11 +212,12 @@ void IterativeDeeping::run() {
                 }
             }
 
-            if (sc > _INFINITE - MAX_PLY) {
-                cout << "info depth " << mply << " score mate 1";
-            } else {
-                cout << "info depth " << mply - extension << " score cp " << sc;
-            }
+            if (sc > _INFINITE - MAX_PLY)
+                cout << "info depth " << mply << " score mate " << max(1, (_INFINITE - sc) / 2);
+            else if (sc < -_INFINITE + MAX_PLY)
+                cout << "info depth " << mply << " score mate -" << max(1, (_INFINITE + sc) / 2);
+            else cout << "info depth " << mply - extension << " score cp " << sc;
+
             cout << " time " << timeTaken << " nodes " << totMoves;
             if (timeTaken)cout << " nps " << (int) ((double) totMoves / (double) timeTaken * 1000.0);
             cout << " pv " << pvv << endl;
@@ -246,7 +244,7 @@ void IterativeDeeping::run() {
 
     if (bestmove.empty())cout << "bestmove (none)";
     else
-    cout << "bestmove " << bestmove;
+        cout << "bestmove " << bestmove;
     if (ponderEnabled && ponderMove.size()) {
         cout << " ponder " << ponderMove;
     }
@@ -257,6 +255,6 @@ void IterativeDeeping::run() {
     LOCK_RELEASE(running);
 }
 
-int IterativeDeeping::loadFen(const string& fen) {
+int IterativeDeeping::loadFen(const string &fen) {
     return searchManager.loadFen(fen);
 }
