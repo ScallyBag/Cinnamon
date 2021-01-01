@@ -73,7 +73,7 @@ help:
 build:
 
 ifeq ($(FULL_TEST),yes)
-	$(MAKE) -j EXE=$(EXE) LIBS="$(LIBS) /usr/lib/libgtest.a " CFLAGS=$(CFLAGS)-DFULL_TEST all
+	$(MAKE) -j EXE=$(EXE) CFLAGS=$(CFLAGS)-DFULL_TEST all
 	$(PA)$(EXE)
 else
 	$(MAKE) EXE=$(EXE) CFLAGS=$(CFLAGS) all
@@ -87,22 +87,22 @@ cinnamon-js:
 	-s WASM=0 -s EXPORTED_FUNCTIONS="['_main','_perft','_command','_isvalid']" -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' -s NO_EXIT_RUNTIME=1 -o cinnamon.js -O3 --memory-init-file 0
 
 cinnamon32-generic:
-	$(MAKE) LIBS="$(LIBS) lib/$(OS)/32/libgtb.a" ARC="$(ARC) -m32" build
+	$(MAKE) ARC="$(ARC) -m32" build
 
 cinnamon32-modern:
 	$(MAKE) ARC="$(ARC) -mfpmath=sse -DHAS_POPCNT -DHAS_BSF" cinnamon32-generic
 
 cinnamon32-ARM:
-	$(MAKE) -j4  LIBS="$(LIBS) lib/ARM/32/libgtb.a" ARC="$(ARC) -DHAS_POPCNT -fno-gcse -DHAS_BSF" build
+	$(MAKE) -j4 ARC="$(ARC) -DHAS_POPCNT -fno-gcse -DHAS_BSF" build
 
 cinnamon64-ARM:
-	$(MAKE) LIBS="$(LIBS) lib/ARM/64/libgtb.a" ARC="$(ARC) -DHAS_64BIT " build
+	$(MAKE) ARC="$(ARC) -DHAS_64BIT " build
 
 cinnamon64-generic:
 	$(MAKE) -j ARC="$(ARC) -DHAS_64BIT -m64" build
 
 cinnamon64-modern:
-	$(MAKE) ARC="$(ARC) -DHAS_POPCNT -mpopcnt -msse3 -DHAS_POPCNT -DHAS_BSF " cinnamon64-generic
+	$(MAKE) ARC="$(ARC) -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF " cinnamon64-generic
 
 cinnamon64-modern-AMD:
 	$(MAKE) ARC="$(ARC) -msse4a -march=athlon64 " cinnamon64-modern
@@ -114,7 +114,7 @@ cinnamon64-BMI2:
 	$(MAKE) ARC="$(ARC) -mbmi2 -DUSE_BMI2 " cinnamon64-modern-INTEL
 
 all: main.o ChessBoard.o board.o Eval.o test.o String.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o IniFile.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o
-	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IniFile.o String.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o ${LIBS}
+	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IniFile.o String.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o
 
 default:
 	help
