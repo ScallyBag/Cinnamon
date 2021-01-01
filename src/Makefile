@@ -68,8 +68,6 @@ help:
 	@echo " FULL_TEST=yes                   > Unit test (googletest)"
 	@echo ""
 
-
-
 build:
 
 ifeq ($(FULL_TEST),yes)
