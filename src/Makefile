@@ -68,6 +68,8 @@ help:
 	@echo " FULL_TEST=yes                   > Unit test (googletest)"
 	@echo ""
 
+
+
 build:
 
 ifeq ($(FULL_TEST),yes)
@@ -97,7 +99,7 @@ cinnamon64-ARM:
 	$(MAKE) LIBS="$(LIBS) lib/ARM/64/libgtb.a" ARC="$(ARC) -DHAS_64BIT " build
 
 cinnamon64-generic:
-	$(MAKE) -j LIBS="$(LIBS) lib/$(OS)/64/libgtb.a" ARC="$(ARC) -DHAS_64BIT -m64" build
+	$(MAKE) -j ARC="$(ARC) -DHAS_64BIT -m64" build
 
 cinnamon64-modern:
 	$(MAKE) ARC="$(ARC) -DHAS_POPCNT -mpopcnt -msse3 -DHAS_POPCNT -DHAS_BSF " cinnamon64-generic
@@ -111,8 +113,8 @@ cinnamon64-modern-INTEL:
 cinnamon64-BMI2:
 	$(MAKE) ARC="$(ARC) -mbmi2 -DUSE_BMI2 " cinnamon64-modern-INTEL
 
-all: main.o ChessBoard.o board.o Eval.o test.o String.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o IniFile.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o
-	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IniFile.o String.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o ${LIBS}
+all: main.o ChessBoard.o board.o Eval.o test.o String.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o IniFile.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o
+	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IniFile.o String.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o OpenBook.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o ${LIBS}
 
 default:
 	help
@@ -158,6 +160,42 @@ OpenBook.o: db/OpenBook.cpp
 
 GTB.o: db/gaviota/GTB.cpp
 	$(COMP) -c db/gaviota/GTB.cpp ${CFLAGS} ${ARC}
+
+Lzma86Dec.o: db/gtb/compression/lzma/Lzma86Dec.c
+	$(COMP) -c db/gtb/compression/lzma/Lzma86Dec.c ${CFLAGS} ${ARC}
+
+LzFind.o: db/gtb/compression/lzma/LzFind.c
+	$(COMP) -c db/gtb/compression/lzma/LzFind.c ${CFLAGS} ${ARC}
+
+Lzma86Enc.o: db/gtb/compression/lzma/Lzma86Enc.c
+	$(COMP) -c db/gtb/compression/lzma/Lzma86Enc.c ${CFLAGS} ${ARC}
+
+LzmaDec.o: db/gtb/compression/lzma/LzmaDec.c
+	$(COMP) -c db/gtb/compression/lzma/LzmaDec.c ${CFLAGS} ${ARC}
+
+Alloc.o: db/gtb/compression/lzma/Alloc.c
+	$(COMP) -c db/gtb/compression/lzma/Alloc.c ${CFLAGS} ${ARC}
+
+Bra86.o: db/gtb/compression/lzma/Bra86.c
+	$(COMP) -c db/gtb/compression/lzma/Bra86.c ${CFLAGS} ${ARC}
+
+LzmaEnc.o: db/gtb/compression/lzma/LzmaEnc.c
+	$(COMP) -c db/gtb/compression/lzma/LzmaEnc.c ${CFLAGS} ${ARC}
+
+wrap.o: db/gtb/compression/wrap.c
+	$(COMP) -c db/gtb/compression/wrap.c ${CFLAGS} ${ARC}
+
+gtb-dec.o: db/gtb/gtb-dec.c
+	$(COMP) -c db/gtb/gtb-dec.c ${CFLAGS} ${ARC}
+
+gtb-att.o: db/gtb/gtb-att.c
+	$(COMP) -c db/gtb/gtb-att.c ${CFLAGS} ${ARC}
+
+sysport.o: db/gtb/sysport/sysport.c
+	$(COMP) -c db/gtb/sysport/sysport.c ${CFLAGS} ${ARC}
+
+gtb-probe.o: db/gtb/gtb-probe.c
+	$(COMP) -c db/gtb/gtb-probe.c ${CFLAGS} ${ARC}
 
 SYZYGY.o: db/syzygy/SYZYGY.cpp
 	$(COMP) -c db/syzygy/SYZYGY.cpp ${CFLAGS} ${ARC}
