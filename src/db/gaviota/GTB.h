@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "../../db/gtb/gtb-probe.h"
+#include "gtb/gtb-probe.h"
 #include "../../namespaces/bits.h"
 #include "../../ChessBoard.h"
 #include "../../util/Singleton.h"

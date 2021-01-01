@@ -33,35 +33,35 @@ set(SOURCE_FILES
         db/syzygy/tbprobe.c
         db/gaviota/GTB.h
         db/gaviota/GTB.cpp
-        db/gtb/compression/lzma/Alloc.c
-        db/gtb/compression/lzma/Alloc.h
-        db/gtb/compression/lzma/Bra.h
-        db/gtb/compression/lzma/Bra86.c
-        db/gtb/compression/lzma/LzFind.c
-        db/gtb/compression/lzma/LzFind.h
-        db/gtb/compression/lzma/LzFindMt.h
-        db/gtb/compression/lzma/LzHash.h
-        db/gtb/compression/lzma/Lzma86Dec.c
-        db/gtb/compression/lzma/Lzma86Dec.h
-        db/gtb/compression/lzma/Lzma86Enc.c
-        db/gtb/compression/lzma/Lzma86Enc.h
-        db/gtb/compression/lzma/LzmaDec.c
-        db/gtb/compression/lzma/LzmaDec.h
-        db/gtb/compression/lzma/LzmaEnc.c
-        db/gtb/compression/lzma/LzmaEnc.h
-        db/gtb/compression/lzma/Types.h
-        db/gtb/compression/wrap.c
-        db/gtb/compression/wrap.h
-        db/gtb/sysport/sysport.c
-        db/gtb/sysport/sysport.h
-        db/gtb/gtb-att.c
-        db/gtb/gtb-att.h
-        db/gtb/gtb-dec.c
-        db/gtb/gtb-dec.h
-        db/gtb/gtb-probe.c
-        db/gtb/gtb-probe.h
-        db/gtb/gtb-types.h
-        db/gtb/version.h
+        db/gaviota/gtb/compression/lzma/Alloc.c
+        db/gaviota/gtb/compression/lzma/Alloc.h
+        db/gaviota/gtb/compression/lzma/Bra.h
+        db/gaviota/gtb/compression/lzma/Bra86.c
+        db/gaviota/gtb/compression/lzma/LzFind.c
+        db/gaviota/gtb/compression/lzma/LzFind.h
+        db/gaviota/gtb/compression/lzma/LzFindMt.h
+        db/gaviota/gtb/compression/lzma/LzHash.h
+        db/gaviota/gtb/compression/lzma/Lzma86Dec.c
+        db/gaviota/gtb/compression/lzma/Lzma86Dec.h
+        db/gaviota/gtb/compression/lzma/Lzma86Enc.c
+        db/gaviota/gtb/compression/lzma/Lzma86Enc.h
+        db/gaviota/gtb/compression/lzma/LzmaDec.c
+        db/gaviota/gtb/compression/lzma/LzmaDec.h
+        db/gaviota/gtb/compression/lzma/LzmaEnc.c
+        db/gaviota/gtb/compression/lzma/LzmaEnc.h
+        db/gaviota/gtb/compression/lzma/Types.h
+        db/gaviota/gtb/compression/wrap.c
+        db/gaviota/gtb/compression/wrap.h
+        db/gaviota/gtb/sysport/sysport.c
+        db/gaviota/gtb/sysport/sysport.h
+        db/gaviota/gtb/gtb-att.c
+        db/gaviota/gtb/gtb-att.h
+        db/gaviota/gtb/gtb-dec.c
+        db/gaviota/gtb/gtb-dec.h
+        db/gaviota/gtb/gtb-probe.c
+        db/gaviota/gtb/gtb-probe.h
+        db/gaviota/gtb/gtb-types.h
+        db/gaviota/gtb/version.h
         perft/PerftThread.cpp
         perft/PerftThread.h
         test/test.cpp

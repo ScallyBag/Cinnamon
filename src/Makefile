@@ -161,41 +161,41 @@ OpenBook.o: db/OpenBook.cpp
 GTB.o: db/gaviota/GTB.cpp
 	$(COMP) -c db/gaviota/GTB.cpp ${CFLAGS} ${ARC}
 
-Lzma86Dec.o: db/gtb/compression/lzma/Lzma86Dec.c
-	$(COMP) -c db/gtb/compression/lzma/Lzma86Dec.c ${CFLAGS} ${ARC}
+Lzma86Dec.o: db/gaviota/gtb/compression/lzma/Lzma86Dec.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/Lzma86Dec.c ${CFLAGS} ${ARC}
 
-LzFind.o: db/gtb/compression/lzma/LzFind.c
-	$(COMP) -c db/gtb/compression/lzma/LzFind.c ${CFLAGS} ${ARC}
+LzFind.o: db/gaviota/gtb/compression/lzma/LzFind.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/LzFind.c ${CFLAGS} ${ARC}
 
-Lzma86Enc.o: db/gtb/compression/lzma/Lzma86Enc.c
-	$(COMP) -c db/gtb/compression/lzma/Lzma86Enc.c ${CFLAGS} ${ARC}
+Lzma86Enc.o: db/gaviota/gtb/compression/lzma/Lzma86Enc.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/Lzma86Enc.c ${CFLAGS} ${ARC}
 
-LzmaDec.o: db/gtb/compression/lzma/LzmaDec.c
-	$(COMP) -c db/gtb/compression/lzma/LzmaDec.c ${CFLAGS} ${ARC}
+LzmaDec.o: db/gaviota/gtb/compression/lzma/LzmaDec.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/LzmaDec.c ${CFLAGS} ${ARC}
 
-Alloc.o: db/gtb/compression/lzma/Alloc.c
-	$(COMP) -c db/gtb/compression/lzma/Alloc.c ${CFLAGS} ${ARC}
+Alloc.o: db/gaviota/gtb/compression/lzma/Alloc.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/Alloc.c ${CFLAGS} ${ARC}
 
-Bra86.o: db/gtb/compression/lzma/Bra86.c
-	$(COMP) -c db/gtb/compression/lzma/Bra86.c ${CFLAGS} ${ARC}
+Bra86.o: db/gaviota/gtb/compression/lzma/Bra86.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/Bra86.c ${CFLAGS} ${ARC}
 
-LzmaEnc.o: db/gtb/compression/lzma/LzmaEnc.c
-	$(COMP) -c db/gtb/compression/lzma/LzmaEnc.c ${CFLAGS} ${ARC}
+LzmaEnc.o: db/gaviota/gtb/compression/lzma/LzmaEnc.c
+	$(COMP) -c db/gaviota/gtb/compression/lzma/LzmaEnc.c ${CFLAGS} ${ARC}
 
-wrap.o: db/gtb/compression/wrap.c
-	$(COMP) -c db/gtb/compression/wrap.c ${CFLAGS} ${ARC}
+wrap.o: db/gaviota/gtb/compression/wrap.c
+	$(COMP) -c db/gaviota/gtb/compression/wrap.c ${CFLAGS} ${ARC}
 
-gtb-dec.o: db/gtb/gtb-dec.c
-	$(COMP) -c db/gtb/gtb-dec.c ${CFLAGS} ${ARC}
+gtb-dec.o: db/gaviota/gtb/gtb-dec.c
+	$(COMP) -c db/gaviota/gtb/gtb-dec.c ${CFLAGS} ${ARC} 
 
-gtb-att.o: db/gtb/gtb-att.c
-	$(COMP) -c db/gtb/gtb-att.c ${CFLAGS} ${ARC}
+gtb-att.o: db/gaviota/gtb/gtb-att.c
+	$(COMP) -c db/gaviota/gtb/gtb-att.c ${CFLAGS} ${ARC}
 
-sysport.o: db/gtb/sysport/sysport.c
-	$(COMP) -c db/gtb/sysport/sysport.c ${CFLAGS} ${ARC}
+sysport.o: db/gaviota/gtb/sysport/sysport.c
+	$(COMP) -c db/gaviota/gtb/sysport/sysport.c ${CFLAGS} ${ARC}
 
-gtb-probe.o: db/gtb/gtb-probe.c
-	$(COMP) -c db/gtb/gtb-probe.c ${CFLAGS} ${ARC}
+gtb-probe.o: db/gaviota/gtb/gtb-probe.c
+	$(COMP) -c db/gaviota/gtb/gtb-probe.c ${CFLAGS} ${ARC}
 
 SYZYGY.o: db/syzygy/SYZYGY.cpp
 	$(COMP) -c db/syzygy/SYZYGY.cpp ${CFLAGS} ${ARC}
