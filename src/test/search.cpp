@@ -74,4 +74,13 @@ TEST(search, twoCore) {
     EXPECT_TRUE(v.end() != v.find(it.getBestmove()));
 }
 
+TEST(search, ep) {
+    IterativeDeeping it;
+    it.loadFen("7r/1pk5/p3p1p1/2PqPp2/1P3PKb/P3Q2P/5B1P/2R5 w - f6 0 40");
+    it.start();
+    it.join();
+    EXPECT_EQ("e5f6", it.getBestmove());
+}
+
+
 #endif
