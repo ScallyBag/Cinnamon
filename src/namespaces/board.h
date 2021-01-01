@@ -149,8 +149,8 @@ public:
     }
 
     static bool isAttacked(const int side, const int position, const u64 allpieces, const _Tchessboard &chessboard) {
-        if (side == WHITE)return isAttacked<WHITE>(position, allpieces, chessboard);
-        return isAttacked<BLACK>(position, allpieces, chessboard);
+        if (side == WHITE)return isAttacked < WHITE > (position, allpieces, chessboard);
+        return isAttacked < BLACK > (position, allpieces, chessboard);
     }
 
     template<int side>
@@ -175,14 +175,18 @@ public:
             BENCH(Times::getInstance().stop("isAttacked"))
             return true;
         }
-        ///bishop queen
-        u64 enemies = chessboard[BISHOP_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
 
-        if (Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies) {
-            BENCH(Times::getInstance().stop("isAttacked"))
-            return true;
+        u64 enemies = chessboard[BISHOP_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
+        if ((DIAGONAL_ANTIDIAGONAL[position] & enemies)) {
+            ///bishop queen
+            if (Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies) {
+                BENCH(Times::getInstance().stop("isAttacked"))
+                return true;
+            }
         }
+
         enemies = chessboard[ROOK_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
+        if (!(RANK_FILE[position] & enemies)) return false;
         if (Bitboard::getRankFile(position, allpieces) & enemies) {
             BENCH(Times::getInstance().stop("isAttacked"))
             return true;
