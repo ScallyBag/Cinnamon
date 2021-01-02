@@ -73,27 +73,13 @@ public:
             isInCheck = board::isAttacked<side>(kingPosition, allpieces, chessboard);
         }
 
-        if (performPawnCapture<side>(enemies)) {
-            return true;
-        }
-        if (performKingShiftCapture<side>(enemies, true)) {
-            return true;
-        }
-        if (performKnightShiftCapture<side>(KNIGHT_BLACK + side, enemies, true)) {
-            return true;
-        }
-        if (performDiagCapture<side>(BISHOP_BLACK + side, enemies, allpieces)) {
-            return true;
-        }
-        if (performRankFileCapture<side>(ROOK_BLACK + side, enemies, allpieces)) {
-            return true;
-        }
-        if (performRankFileCapture<side>(QUEEN_BLACK + side, enemies, allpieces)) {
-            return true;
-        }
-        if (performDiagCapture<side>(QUEEN_BLACK + side, enemies, allpieces)) {
-            return true;
-        }
+        if (performPawnCapture<side>(enemies)) return true;
+        if (performKingShiftCapture<side>(enemies, true)) return true;
+        if (performKnightShiftCapture<side>(KNIGHT_BLACK + side, enemies, true)) return true;
+        if (performDiagCapture<side>(BISHOP_BLACK + side, enemies, allpieces)) return true;
+        if (performRankFileCapture<side>(ROOK_BLACK + side, enemies, allpieces)) return true;
+        if (performRankFileCapture<side>(QUEEN_BLACK + side, enemies, allpieces)) return true;
+        if (performDiagCapture<side>(QUEEN_BLACK + side, enemies, allpieces)) return true;
         return false;
     }
 
@@ -204,7 +190,7 @@ public:
         BENCH(times->start("pawnCapture"))
         if (!chessboard[side]) {
             if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-                updateZobristKey(13, chessboard[ENPASSANT_IDX]);
+                updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
             }
             chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
             BENCH(times->stop("pawnCapture"))
@@ -531,11 +517,10 @@ protected:
 
     template<int type, uchar side>
     bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
-        if (pieceTo == KING_BLACK || pieceTo == KING_WHITE) return false;
-        BENCH(times->start("inCheck"))
+        if (pieceTo == KING_BLACK || pieceTo == KING_WHITE) return false;BENCH(times->start("inCheck"))
 #ifdef DEBUG_MODE
-        _Tchessboard a;
-        memcpy(&a, chessboard, sizeof(_Tchessboard));
+            _Tchessboard a;
+            memcpy(&a, chessboard, sizeof(_Tchessboard));
 #endif
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
@@ -857,7 +842,7 @@ protected:
     bool isKiller(const int idx, const int from, const int to, const int ply) {
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
-        unsigned short v = from | (to << 8);
+        const unsigned short v = from | (to << 8);
         if (v == killer[idx][ply])return true;
         return false;
     }
@@ -865,7 +850,7 @@ protected:
     bool isKillerMate(const int from, const int to, const int ply) {
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
-        unsigned short v = from | (to << 8);
+        const unsigned short v = from | (to << 8);
         if (v == killer[2][ply])return true;
         return false;
     }

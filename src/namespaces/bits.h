@@ -71,6 +71,7 @@ namespace _def {
     static inline int bitCount(const u64 bits) {
         return __builtin_popcountll(bits);
     }
+
 #else
     static inline int bitCount(const u64 bits) {
         return __builtin_popcountl(bits)+__builtin_popcountl(bits>>32);
@@ -146,14 +147,10 @@ namespace _def {
     template<int side, int shift>
     static inline u64 shiftForward(const u64 bits) {
         ASSERT(shift == 7 || shift == 8 || shift == 9);
-
         const auto a = side == WHITE ? bits << shift : bits >> shift;
-        if (shift == 7)
-            return a & NO_FILE_LEFT[side];
-        if (shift == 9)
-            return a & NO_FILE_RIGHT[side];
+        if (shift == 7) return a & NO_FILE_LEFT[side];
+        if (shift == 9) return a & NO_FILE_RIGHT[side];
         return a;
-
     }
 
     static inline int BITScanForwardUnset(const u64 bb) {

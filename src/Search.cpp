@@ -232,7 +232,7 @@ int Search::printDtmWdlGtb(const bool dtm) {
 
 #endif
 
-void Search::setNullMove(bool b) {
+void Search::setNullMove(const bool b) {
     nullSearch = !b;
 }
 
@@ -850,7 +850,6 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     ASSERT(gen_list[listId].size > 0)
 
     _Tmove *best = &gen_list[listId].moveList[0];
-
 
     INC(totGen);
     _Tmove *move;

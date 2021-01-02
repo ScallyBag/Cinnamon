@@ -49,8 +49,7 @@ public:
 
     virtual ~OpenBook();
 
-
-    string search(string fen);
+    string search(const string& fen);
 
     void dispose();
 
@@ -66,7 +65,7 @@ private:
 
     FILE *openBookFile;
 
-    u64 createKey(string fen);
+    u64 createKey(const string& fen);
 
     int intFromFile(const int l, u64 *r);
 
