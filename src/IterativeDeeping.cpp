@@ -139,7 +139,7 @@ void IterativeDeeping::run() {
         auto end1 = std::chrono::high_resolution_clock::now();
         timeTaken = Time::diffTime(end1, start1) + 1;
         totMoves += searchManager.getTotMoves();
-        
+
 #ifdef DEBUG_MODE
         int totStoreHash = hash.nRecordHashA + hash.nRecordHashB + hash.nRecordHashE + 1;
         int percStoreHashA = hash.nRecordHashA * 100 / totStoreHash;
@@ -243,11 +243,8 @@ void IterativeDeeping::run() {
     BENCH((&Times::getInstance())->print())
 
     if (bestmove.empty())cout << "bestmove (none)";
-    else
-        cout << "bestmove " << bestmove;
-    if (ponderEnabled && ponderMove.size()) {
-        cout << " ponder " << ponderMove;
-    }
+    else cout << "bestmove " << bestmove;
+    if (ponderEnabled && ponderMove.size()) cout << " ponder " << ponderMove;
 
     cout << endl;
     ADD(checkSmp2, -1);

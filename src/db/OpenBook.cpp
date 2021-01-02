@@ -40,7 +40,7 @@ OpenBook::~OpenBook() {
     dispose();
 }
 
-u64 OpenBook::createKey(string fen1) {
+u64 OpenBook::createKey(const string& fen1) {
     const char *fen = fen1.c_str();
     u64 *RandomPiece = Random64;
     u64 *RandomCastle = Random64 + 768;
@@ -223,7 +223,7 @@ void OpenBook::moveToString(char move_s[6], const unsigned short move) {
     }
 }
 
-string OpenBook::search(string fen) {
+string OpenBook::search(const string& fen) {
     u64 key = createKey(fen);
     entry_t entry;
     char move_s[6];

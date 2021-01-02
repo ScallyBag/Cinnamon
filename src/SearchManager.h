@@ -37,13 +37,13 @@ public:
 
     ~SearchManager();
 
-    int loadFen(string fen = "");
+    int loadFen(const string &fen = "");
 
-    int getPieceAt(int side, u64 i);
+    int getPieceAt(const int side, const u64 i);
 
     u64 getTotMoves();
 
-    void incHistoryHeuristic(int from, int to, int value);
+    void incHistoryHeuristic(const int from, const int to, const int value);
 
     void startClock();
 
@@ -51,31 +51,31 @@ public:
 
     string decodeBoardinv(const uchar type, const int a, const int side);
 
-    bool setParameter(String param, int value);
+    bool setParameter(String param, const int value);
 
     void clearHeuristic();
 
     int getForceCheck() const;
 
-    u64 getZobristKey(int id) const;
+    u64 getZobristKey(const int id) const;
 
-    void setForceCheck(bool a);
+    void setForceCheck(const bool a);
 
-    void setRunningThread(bool r);
+    void setRunningThread(const bool r);
 
     string probeRootTB() const;
 
-    void setRunning(int i);
+    void setRunning(const int i);
 
-    int getRunning(int i) const;
+    int getRunning(const int i) const;
 
     void display() const;
 
-    void setMaxTimeMillsec(int i);
+    void setMaxTimeMillsec(const int i);
 
     void unsetSearchMoves();
 
-    void setSearchMoves(vector<string> &searchmoves);
+    void setSearchMoves(const vector<string> &searchmoves);
 
     void setPonder(bool i);
 
@@ -91,11 +91,11 @@ public:
 
     bool makemove(const _Tmove *i);
 
-    void takeback(const _Tmove *move, const u64 oldkey,const bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey, const bool rep);
 
     void setSide(const bool i);
 
-    int getMoveFromSan(const String& string, _Tmove *ptr) const;
+    int getMoveFromSan(const String &string, _Tmove *ptr) const;
 
 #ifndef JS_MODE
 

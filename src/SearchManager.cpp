@@ -138,7 +138,7 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
 SearchManager::~SearchManager() {
 }
 
-int SearchManager::loadFen(string fen) {
+int SearchManager::loadFen(const string &fen) {
     int res = -1;
 
     for (uchar i = 0; i < threadPool->getPool().size(); i++) {
@@ -157,13 +157,13 @@ void SearchManager::startThread(Search &thread, const int depth) {
     thread.start();
 }
 
-void SearchManager::setMainPly(int r) {
+void SearchManager::setMainPly(const int r) {
     for (Search *s:threadPool->getPool()) {
         s->setMainPly(r);
     }
 }
 
-int SearchManager::getPieceAt(int side, u64 i) {
+int SearchManager::getPieceAt(const int side, const u64 i) {
     return side == WHITE ? board::getPieceAt<WHITE>(i, threadPool->getThread(0).getChessboard())
                          : board::getPieceAt<BLACK>(i, threadPool->getThread(0).getChessboard());
 }
@@ -176,7 +176,7 @@ u64 SearchManager::getTotMoves() {
     return i;
 }
 
-void SearchManager::incHistoryHeuristic(int from, int to, int value) {
+void SearchManager::incHistoryHeuristic(const int from, const int to, const int value) {
     for (Search *s:threadPool->getPool()) {
         s->incHistoryHeuristic(from, to, value);
     }
@@ -200,27 +200,27 @@ int SearchManager::getForceCheck() const {
     return threadPool->getThread(0).getForceCheck();
 }
 
-u64 SearchManager::getZobristKey(int id) const {
+u64 SearchManager::getZobristKey(const int id) const {
     return threadPool->getThread(id).getZobristKey();
 }
 
-void SearchManager::setForceCheck(bool a) {
+void SearchManager::setForceCheck(const bool a) {
     for (Search *s:threadPool->getPool()) {
         s->setForceCheck(a);
     }
 }
 
-void SearchManager::setRunningThread(bool r) {
+void SearchManager::setRunningThread(const bool r) {
     Search::setRunningThread(r);
 }
 
-void SearchManager::setRunning(int i) {
+void SearchManager::setRunning(const int i) {
     for (Search *s:threadPool->getPool()) {
         s->setRunning(i);
     }
 }
 
-int SearchManager::getRunning(int i) const {
+int SearchManager::getRunning(const int i) const {
     return threadPool->getThread(i).getRunning();
 }
 
@@ -228,7 +228,7 @@ void SearchManager::display() const {
     threadPool->getThread(0).display();
 }
 
-void SearchManager::setMaxTimeMillsec(int i) {
+void SearchManager::setMaxTimeMillsec(const int i) {
     for (Search *s:threadPool->getPool()) {
         s->setMaxTimeMillsec(i);
     }
@@ -240,10 +240,10 @@ void SearchManager::unsetSearchMoves() {
     }
 }
 
-void SearchManager::setSearchMoves(vector<string> &searchMov) {
+void SearchManager::setSearchMoves(const vector<string> &searchMov) {
     _Tmove move;
     vector<int> searchMoves;
-    for (std::vector<string>::iterator it = searchMov.begin(); it != searchMov.end(); ++it) {
+    for (auto it = searchMov.begin(); it != searchMov.end(); ++it) {
         getMoveFromSan(*it, &move);
         const int x = move.s.to | (int) (move.s.from << 8);
         searchMoves.push_back(x);
@@ -253,7 +253,7 @@ void SearchManager::setSearchMoves(vector<string> &searchMov) {
     }
 }
 
-void SearchManager::setPonder(bool i) {
+void SearchManager::setPonder(const bool i) {
     for (Search *s:threadPool->getPool()) {
         s->setPonder(i);
     }
@@ -269,7 +269,7 @@ int SearchManager::getSide() const {
     return board::getSide(threadPool->getThread(0).getChessboard());
 }
 
-int SearchManager::getScore(int side, const bool trace) {
+int SearchManager::getScore(const int side, const bool trace) {
     return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, trace);
 }
 
@@ -307,7 +307,7 @@ void SearchManager::takeback(const _Tmove *move, const u64 oldkey, const bool re
     }
 }
 
-void SearchManager::setSide(bool i) {
+void SearchManager::setSide(const bool i) {
     for (Search *s:threadPool->getPool()) {
         s->setSide(i);
     }
@@ -329,7 +329,7 @@ void SearchManager::printWdlSyzygy() {
 
 #endif
 
-int SearchManager::getMoveFromSan(const String& string, _Tmove *ptr) const {
+int SearchManager::getMoveFromSan(const String &string, _Tmove *ptr) const {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {
@@ -367,7 +367,7 @@ void SearchManager::stopAllThread() {
     Search::setRunningThread(false);
 }
 
-bool SearchManager::setParameter(String param, int value) {
+bool SearchManager::setParameter(String param, const int value) {
     bool b = false;
     for (Search *s:threadPool->getPool()) {
         b = s->setParameter(param, value);

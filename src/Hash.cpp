@@ -27,7 +27,6 @@ Hash::Hash() {
     nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0;
 #endif
     setHashSize(HASH_SIZE_DEFAULT);
-
 }
 
 void Hash::clearAge() {
@@ -40,14 +39,14 @@ void Hash::clearHash() {
     if (!HASH_SIZE) {
         return;
     }
-    memset(static_cast<void*>(hashArray[HASH_GREATER]), 0, sizeof(_Thash) * HASH_SIZE);
-    memset(static_cast<void*>(hashArray[HASH_ALWAYS]), 0, sizeof(_Thash) * HASH_SIZE);
+    memset(static_cast<void *>(hashArray[HASH_GREATER]), 0, sizeof(_Thash) * HASH_SIZE);
+    memset(static_cast<void *>(hashArray[HASH_ALWAYS]), 0, sizeof(_Thash) * HASH_SIZE);
 }
 
 void Hash::setHashSize(const int mb) {
     dispose();
     if (mb > 0) {
-        u64 tmp = (u64)mb * 1024 * 1024 / (sizeof(_Thash) * 2);
+        u64 tmp = (u64) mb * 1024 * 1024 / (sizeof(_Thash) * 2);
         hashArray[HASH_ALWAYS] = (_Thash *) calloc(tmp, sizeof(_Thash));
         if (!hashArray[HASH_ALWAYS]) {
             fatal("info string error - no memory");
@@ -63,12 +62,8 @@ void Hash::setHashSize(const int mb) {
 }
 
 void Hash::dispose() {
-    if (hashArray[HASH_ALWAYS] != nullptr) {
-        free(hashArray[HASH_ALWAYS]);
-    }
-    if (hashArray[HASH_GREATER] != nullptr) {
-        free(hashArray[HASH_GREATER]);
-    }
+    if (hashArray[HASH_ALWAYS] != nullptr) free(hashArray[HASH_ALWAYS]);
+    if (hashArray[HASH_GREATER] != nullptr) free(hashArray[HASH_GREATER]);
     hashArray[HASH_ALWAYS] = hashArray[HASH_GREATER] = nullptr;
     HASH_SIZE = 0;
 }

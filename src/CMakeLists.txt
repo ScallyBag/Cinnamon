@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(cinnamon_debug)
 
 # debug
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -DBENCH_MODEx -fno-omit-frame-pointer -g -pthread -pedantic -std=c++11  -DDEBUG_MODEc -fsigned-char -fno-exceptions -fno-rtti -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -DHAS_64BIT -m64 ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -DBENCH_MODE -fno-omit-frame-pointer -g -pthread -pedantic -std=c++11 -DDLOG_LEVEL=_TRACE -DDEBUG_MODE -fsigned-char -fno-exceptions -fno-rtti -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -DHAS_64BIT -m64 ")
 
 # bench
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -pthread -pedantic -DBENCH_MODE -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -DHAS_64BIT -m64 ")
