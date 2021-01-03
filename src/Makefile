@@ -64,8 +64,8 @@ help:
 	@echo "make cinnamon-js                 > Javascript build"
 	@echo ""
 	@echo "add:"
-	@echo " COMP=compiler                   > Use another compiler"
-	@echo " FULL_TEST=yes                   > Unit test (googletest)"
+	@echo " COMP=compiler                   > Use another compiler (default g++)"
+	@echo " FULL_TEST=yes                   > Run unit test (googletest)"
 	@echo ""
 
 build:

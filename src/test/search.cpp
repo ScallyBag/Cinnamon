@@ -61,16 +61,16 @@ TEST(search, test2) {
     EXPECT_NE("d6d3", it.getBestmove());
 }
 
-TEST(search, twoCore) {
-    const set<string> v = {"d2d4", "e2e4", "e2e3", "b1c3", "g1f3", "g2g3", "f2f4"};
+TEST(search, fourCore) {
+    const set<string> v = {"c2c3", "d2d3", "d2d4", "e2e4", "e2e3", "b1c3", "g1f3", "g2g3", "g2g4", "f2f4"};
     IterativeDeeping it;
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     searchManager.setMaxTimeMillsec(250);
-    searchManager.setNthread(2);
+    searchManager.setNthread(4);
     it.setMaxDepth(MAX_PLY);
     it.start();
     it.join();
-    cout << "twoCore res: " << it.getBestmove() << endl;
+    cout << "fourCore res: " << it.getBestmove() << endl;
     EXPECT_TRUE(v.end() != v.find(it.getBestmove()));
 }
 
