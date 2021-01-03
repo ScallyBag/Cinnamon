@@ -29,7 +29,7 @@ using namespace chrono;
 class Time {
 
 private:
-    int _count = 0;
+    long _count = 0;
     std::chrono::time_point<std::chrono::system_clock> _start;
     int64_t _totTime = 0;
     map<string, int64_t> subName;
@@ -45,7 +45,7 @@ public:
     static constexpr int HOUR_IN_SECONDS = 60 * 60;
     static constexpr int HOUR_IN_MINUTES = 60;
 
-    int64_t getCount() const { return _count; }
+    long getCount() const { return _count; }
 
     void resetAndStart() {
         reset();
