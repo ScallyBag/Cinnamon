@@ -134,7 +134,7 @@ void IterativeDeeping::run() {
             break;
         }
 
-        searchManager.incHistoryHeuristic(resultMove.s.from, resultMove.s.to, 0x800);
+        searchManager.incHistoryHeuristic(resultMove.s.from, resultMove.s.to, 0x1000);
 
         auto end1 = std::chrono::high_resolution_clock::now();
         timeTaken = Time::diffTime(end1, start1) + 1;
