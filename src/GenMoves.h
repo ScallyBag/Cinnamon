@@ -832,7 +832,7 @@ protected:
         historyHeuristic[from][to] = value;
     }
 
-    void setKiller(const int from, const int to, const int ply, const bool isMate) {
+    void setKiller(const int from, const int to, const int ply, const bool isMate) {//TODO isMate sempre false
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
         if (isMate) killer[2][ply] = from | (to << 8);
