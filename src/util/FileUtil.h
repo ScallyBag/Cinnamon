@@ -30,11 +30,8 @@ using namespace std;
 class FileUtil {
 public:
     static bool fileExists(const string &filename) {
-
         struct stat info;
-        if (stat(filename.c_str(), &info) != 0)
-            return false;
-        return true;
+        return stat(filename.c_str(), &info) == 0;
     }
 
     static int fileSize(const string &filename) {

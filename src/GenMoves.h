@@ -846,16 +846,14 @@ protected:
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
         const unsigned short v = from | (to << 8);
-        if (v == killer[idx][ply])return true;
-        return false;
+        return v == killer[idx][ply];
     }
 
     bool isKillerMate(const int from, const int to, const int ply) {
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
         const unsigned short v = from | (to << 8);
-        if (v == killer[2][ply])return true;
-        return false;
+        return v == killer[2][ply];
     }
 
     bool forceCheck;

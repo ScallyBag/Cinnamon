@@ -30,7 +30,6 @@ unsigned WrapperCinnamon::perft(const string &fen, const int depth) {
 
 bool WrapperCinnamon::isValid(const string &fen) const {
     ChessBoard a;
-    if (a.loadFen(fen) == -1)return false;
-    return true;
+    return (a.loadFen(fen) != -1;
 }
 #endif

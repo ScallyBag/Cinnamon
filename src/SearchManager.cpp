@@ -359,8 +359,7 @@ void SearchManager::setRepetitionMapCount(const int i) {
 
 
 bool SearchManager::setNthread(const int nthread) {
-    if (!threadPool->setNthread(nthread))return false;
-    return true;
+    return threadPool->setNthread(nthread);
 }
 
 void SearchManager::stopAllThread() {
