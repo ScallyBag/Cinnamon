@@ -57,7 +57,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 
     int bestId = -1;
     int bestScore = -INT_MAX;
-//    const u64 allpieces = board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard);
+
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
         _assert(mos.s.type & 0x3) //TODO
@@ -88,7 +88,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 
     int bestId = -1;
     int bestScore = -1;
-//    const u64 allpieces = board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard);
+
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
         int score = 0;
