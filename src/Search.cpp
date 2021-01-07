@@ -738,7 +738,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     }
     int extension = isIncheckSide; // TODO pawn in 7th
     if (depth + extension == 0) {
-        return quiescence<side>(alpha, beta, -1, 0);
+        return quiescence<side>(alpha, beta, NO_PROMOTION, 0);
     }
 
     //************* hash ****************
