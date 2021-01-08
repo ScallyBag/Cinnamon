@@ -435,7 +435,7 @@ protected:
     }
 
     int historyHeuristic[64][64];
-    unsigned short killer[3][MAX_PLY];
+    unsigned short killer[2][MAX_PLY];
 
 #ifdef DEBUG_MODE
 
@@ -832,14 +832,11 @@ protected:
         historyHeuristic[from][to] = value;
     }
 
-    void setKiller(const int from, const int to, const int ply, const bool isMate) {//TODO isMate sempre false
+    void setKiller(const int from, const int to, const int ply) {
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)
-        if (isMate) killer[2][ply] = from | (to << 8);
-        else {
-            killer[1][ply] = killer[0][ply];
-            killer[0][ply] = from | (to << 8);
-        }
+        killer[1][ply] = killer[0][ply];
+        killer[0][ply] = from | (to << 8);
     }
 
     bool isKiller(const int idx, const int from, const int to, const int ply) {
@@ -847,13 +844,6 @@ protected:
         ASSERT_RANGE(to, 0, 63)
         const unsigned short v = from | (to << 8);
         return v == killer[idx][ply];
-    }
-
-    bool isKillerMate(const int from, const int to, const int ply) {
-        ASSERT_RANGE(from, 0, 63)
-        ASSERT_RANGE(to, 0, 63)
-        const unsigned short v = from | (to << 8);
-        return v == killer[2][ply];
     }
 
     bool forceCheck;

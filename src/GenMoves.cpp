@@ -110,8 +110,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 //            BENCH(times->start("seeTime"))
 //            See::see(mos, chessboard, allpieces);
 //            BENCH(times->stop("seeTime"))
-            if (isKillerMate(mos.s.from, mos.s.to, depth)) score += 100;
-            else if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
+            if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
             else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
 
         } else if (mos.s.type & 0xc) {    //castle
