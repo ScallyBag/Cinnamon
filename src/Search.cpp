@@ -260,7 +260,7 @@ Search::~Search() {
 }
 
 template<int side>
-int Search::quiescence(int alpha, const int beta, const char promotionPiece, const int depth) {
+int Search::qsearch(int alpha, const int beta, const char promotionPiece, const int depth) {
 
     if (!getRunning()) return 0;
     ++numMovesq;
@@ -310,7 +310,7 @@ int Search::quiescence(int alpha, const int beta, const char promotionPiece, con
             continue;
         }
 /************ end Delta Pruning *************/
-        int val = -quiescence<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
+        int val = -qsearch<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, false);
         if (score > alpha) {
@@ -738,7 +738,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     }
     int extension = isIncheckSide; // TODO pawn in 7th
     if (depth + extension == 0) {
-        return quiescence<side>(alpha, beta, NO_PROMOTION, 0);
+        return qsearch<side>(alpha, beta, NO_PROMOTION, 0);
     }
 
     //************* hash ****************
@@ -785,7 +785,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                     currentPly--;
                 }
             } else {
-                nullScore = -quiescence<side ^ 1>(-beta, -beta + 1, -1, 0);
+                nullScore = -qsearch<side ^ 1>(-beta, -beta + 1, -1, 0);
             }
             nullSearch = false;
             if (nullScore >= beta) {
