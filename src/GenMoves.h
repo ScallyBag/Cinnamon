@@ -153,6 +153,7 @@ public:
             const int position = BITScanForward(x2);
             u64 diag = getDiagonalAntiDiagonal(position, allpieces) & enemies;
             for (; diag; RESET_LSB(diag)) {
+                BENCH(times->subProcess("diagCapture", "pushmove"))
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(diag), NO_PROMOTION, piece, true)) {
                     BENCH(times->stop("diagCapture"))
                     return true;
@@ -175,6 +176,7 @@ public:
             const int position = BITScanForward(x2);
             u64 rankFile = getRankFile(position, allpieces) & enemies;
             for (; rankFile; RESET_LSB(rankFile)) {
+                BENCH(times->subProcess("rankFileCapture", "pushmove"))
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(rankFile), NO_PROMOTION, piece, true)) {
                     BENCH(times->stop("rankFileCapture"))
                     return true;
@@ -302,13 +304,18 @@ public:
             ASSERT(board::getPieceAt<side>(POW2[o + sh], chessboard) != SQUARE_EMPTY)
             ASSERT(board::board::getBitmap(side, chessboard) & POW2[o + sh])
             if (o > A7 || o < H2) {
+                BENCH(times->subProcess("pawnShift", "pushmove"))
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, QUEEN_BLACK + side, side, false);
+                BENCH(times->subProcess("pawnShift", "pushmove"))
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, KNIGHT_BLACK + side, side, false);
                 if (perftMode) {
+                    BENCH(times->subProcess("pawnShift", "pushmove"))
                     pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, BISHOP_BLACK + side, side, false);
+                    BENCH(times->subProcess("pawnShift", "pushmove"))
                     pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, ROOK_BLACK + side, side, false);
                 }
             } else {
+                BENCH(times->subProcess("pawnShift", "pushmove"))
                 pushmove<STANDARD_MOVE_MASK, side>(o + sh, o, NO_PROMOTION, side, false);
             }
         }
@@ -517,8 +524,9 @@ protected:
 
     template<int type, uchar side>
     bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
+        BENCH(times->start("inCheck"))
         if (pieceTo == KING_BLACK || pieceTo == KING_WHITE) {
-            BENCH(times->start("inCheck"))
+            BENCH(times->stop("inCheck"))
             return false;
         }
 #ifdef DEBUG_MODE
