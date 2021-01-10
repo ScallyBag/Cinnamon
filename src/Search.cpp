@@ -261,10 +261,12 @@ Search::~Search() {
 
 template<int side>
 int Search::qsearch(int alpha, const int beta, const char promotionPiece, const int depth) {
-
-    if (!getRunning()) return 0;
-    ++numMovesq;
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
+    if (!getRunning()) return 0;
+    if (depth >= MAX_PLY - 1) {
+        return getScore(zobristKeyR, side, alpha, beta);
+    }
+    ++numMovesq;
     int score = getScore(zobristKeyR, side, alpha, beta);
     if (score > alpha) {
         if (score >= beta) return score;
@@ -711,7 +713,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     ASSERT_RANGE(side, 0, 1);
     if (!getRunning()) return 0;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
-    if (depth > MAX_PLY) {
+    if (depth >= MAX_PLY - 1) {
         return getScore(oldKey, side, alpha, beta);
     }
     INC(cumulativeMovesCount);
@@ -937,9 +939,9 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         ASSERT(chessboard[KING_WHITE])
 
         if (score > alpha) {
-	       if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
-                    setKiller(move->s.from, move->s.to, depth);
-                }
+            if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
+                setKiller(move->s.from, move->s.to, depth);
+            }
             if (score >= beta) {
                 decListId();
                 INC(nCutAB);
@@ -993,7 +995,7 @@ void Search::setSearchMoves(const vector<int> &s) {
     searchMovesVector = s;
 }
 
-bool Search::setParameter(String& param,const int value) {
+bool Search::setParameter(String &param, const int value) {
 #if defined(CLOP) || defined(DEBUG_MODE)
     param.toUpper();
     bool res = true;
