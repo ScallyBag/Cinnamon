@@ -237,6 +237,6 @@ void Perft::endRun() {
 
     cerr << flush;
 
-    BENCH((&Times::getInstance())->print())
+    BENCH_PRINT(&Times::getInstance())
 
 }

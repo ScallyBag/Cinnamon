@@ -164,37 +164,37 @@ private:
     template<_Tphase phase>
     void getRes(_Tresult &res) {
 
-        BENCH(times->start("eval pawn"))
+        BENCH_START(times, "eval pawn")
         res.pawns[BLACK] = evaluatePawn<BLACK, phase>();
         res.pawns[WHITE] = evaluatePawn<WHITE, phase>();
-        BENCH(times->stop("eval pawn"))
+        BENCH_STOP(times, "eval pawn")
 
-        BENCH(times->start("eval bishop"))
+        BENCH_START(times, "eval bishop")
         res.bishop[BLACK] = evaluateBishop<BLACK, phase>(structureEval.allPiecesSide[WHITE]);
         res.bishop[WHITE] = evaluateBishop<WHITE, phase>(structureEval.allPiecesSide[BLACK]);
-        BENCH(times->stop("eval bishop"))
+        BENCH_STOP(times,"eval bishop")
 
-        BENCH(times->start("eval queen"))
+        BENCH_START(times, "eval queen")
         res.queens[BLACK] = evaluateQueen<BLACK, phase>(structureEval.allPiecesSide[WHITE]);
         res.queens[WHITE] = evaluateQueen<WHITE, phase>(structureEval.allPiecesSide[BLACK]);
-        BENCH(times->stop("eval queen"))
+        BENCH_STOP(times, "eval queen")
 
-        BENCH(times->start("eval rook"))
+        BENCH_START(times, "eval rook")
         res.rooks[BLACK] = evaluateRook<BLACK, phase>(chessboard[KING_BLACK], structureEval.allPiecesSide[WHITE],
                                                       structureEval.allPiecesSide[BLACK]);
         res.rooks[WHITE] = evaluateRook<WHITE, phase>(chessboard[KING_WHITE], structureEval.allPiecesSide[BLACK],
                                                       structureEval.allPiecesSide[WHITE]);
-        BENCH(times->stop("eval rook"))
+        BENCH_STOP(times, "eval rook")
 
-        BENCH(times->start("eval knight"))
+        BENCH_START(times, "eval knight")
         res.knights[BLACK] = evaluateKnight<BLACK, phase>(~structureEval.allPiecesSide[BLACK]);
         res.knights[WHITE] = evaluateKnight<WHITE, phase>(~structureEval.allPiecesSide[WHITE]);
-        BENCH(times->stop("eval knight"))
+        BENCH_STOP(times, "eval knight")
 
-        BENCH(times->start("eval king"))
+        BENCH_START(times, "eval king")
         res.kings[BLACK] = evaluateKing<phase>(BLACK, ~structureEval.allPiecesSide[BLACK]);
         res.kings[WHITE] = evaluateKing<phase>(WHITE, ~structureEval.allPiecesSide[WHITE]);
-        BENCH(times->stop("eval king"))
+        BENCH_STOP(times, "eval king")
     }
 
     template<int side, _Tphase phase>

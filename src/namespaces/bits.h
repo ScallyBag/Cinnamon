@@ -21,6 +21,7 @@
 
 #include "../util/bench/Time.h"
 #include "../util/FileUtil.h"
+#include "../util/bench/Bench.h"
 #include "debug.h"
 #include "../def.h"
 #include "constants.h"
@@ -43,9 +44,15 @@ namespace _def {
 #define _assert(a) if(!(a)){  print_stacktrace();cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #ifdef BENCH_MODE
-#define BENCH(a) (a);
+#define BENCH_START(times,name)  (Bench(times,name));
+#define BENCH_SUBPROCESS(times,name,sub)  (times)->subProcess(name,sub);
+#define BENCH_STOP(times,name)  (times)->stop(name);
+#define BENCH_PRINT(times)  (times)->print();
 #else
-#define BENCH(a)
+#define BENCH_START(times,name)
+#define BENCH_SUBPROCESS(times,name,subProcess)
+#define BENCH_STOP(times,name)
+#define BENCH_PRINT(times)
 #endif
 
 #ifdef DEBUG_MODE

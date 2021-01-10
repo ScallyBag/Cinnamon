@@ -47,12 +47,6 @@ u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies,
     return (rankFile & enemies) | (rankFile & ~allpieces);
 }
 
-
-int board::getDiagShiftCount(const int position, const u64 allpieces) {
-    ASSERT_RANGE(position, 0, 63)
-    return bitCount(Bitboard::getDiagonalAntiDiagonal(position, allpieces) & ~allpieces);
-}
-
 bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard) {
     //regexp: KN?B*KB*
     switch (nPieces) {
@@ -87,12 +81,6 @@ u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u
     ASSERT_RANGE(position, 0, 63)
     u64 nuovo = Bitboard::getDiagonalAntiDiagonal(position, allpieces);
     return (nuovo & enemies) | (nuovo & ~allpieces);
-}
-
-u64 board::getMobilityQueen(const int position, const u64 enemies, const u64 allpieces) {
-    ASSERT_RANGE(position, 0, 63)
-    return performRankFileCaptureAndShift(position, enemies, allpieces) +
-           getDiagShiftAndCapture(position, enemies, allpieces);
 }
 
 u64 board::getMobilityRook(const int position, const u64 enemies, const u64 friends) {

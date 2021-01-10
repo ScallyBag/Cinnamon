@@ -53,13 +53,13 @@ void GenMoves::clearHeuristic() {
 }
 
 _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
-    BENCH(Bench(times, "getNextMove"))
+    BENCH_START(times, "getNextMoveQ")
     int bestId = -1;
     int bestScore = -INT_MAX;
 
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
-
+        _assert(mos.s.type & 0x3) //TODO
         ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
@@ -67,7 +67,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
         const int score = (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
                           (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
                                                                                               : PIECES_VALUE[mos.s.capturedPiece];
-//        BENCH(times->start("seeTime"))
+//        BENCH_START(times,"seeTime"))
 //        See::see(mos, chessboard, allpieces);
 //        BENCH(times->stop("seeTime"))
         if (score > bestScore) {
@@ -82,7 +82,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 }
 
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
-    BENCH(Bench(times, "getNextMove"))
+    BENCH_START(times, "getNextMove")
     int bestId = -1;
     int bestScore = -1;
 
@@ -103,7 +103,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
                      (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
                                                                                          : PIECES_VALUE[mos.s.capturedPiece];
 
-//            BENCH(times->start("seeTime"))
+//            BENCH_START(times,"seeTime"))
 //            See::see(mos, chessboard, allpieces);
 //            BENCH(times->stop("seeTime"))
             if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;

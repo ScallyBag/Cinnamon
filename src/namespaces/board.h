@@ -44,7 +44,7 @@ public:
     template<int side>
     static u64
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
-        BENCH(Times::getInstance().start("pinTime"))
+        BENCH_START(&Times::getInstance(), "pinTime")
         u64 result = 0;
         ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
@@ -64,17 +64,12 @@ public:
                 result |= b & friends;
             }
         }
-        BENCH(Times::getInstance().stop("pinTime"))
         return result;
     }
 
     static u64 getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces);
 
-    static int getDiagShiftCount(const int position, const u64 allpieces);
-
     static bool isCastleRight_WhiteKing(const _Tchessboard &chessboard);
-
-    static u64 getMobilityQueen(const int position, const u64 enemies, const u64 allpieces);
 
     static u64 getMobilityRook(const int position, const u64 enemies, const u64 friends);
 
@@ -120,7 +115,7 @@ public:
 
     template<int side>
     static u64 getAttackers(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
-        BENCH(Times::getInstance().start("getAttackers"))
+        BENCH_START(&Times::getInstance(), "getAttackers")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
         constexpr int xside = side ^1;
@@ -144,7 +139,7 @@ public:
         for (; n; RESET_LSB(n)) {
             attackers |= POW2[BITScanForward(n)];
         }
-        BENCH(Times::getInstance().stop("getAttackers"))
+
         return attackers;
     }
 
@@ -155,24 +150,21 @@ public:
 
     template<int side>
     static bool isAttacked(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
-        BENCH(Times::getInstance().start("isAttacked"))
+        BENCH_START(&Times::getInstance(), "isAttacked")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
         constexpr int xside = side ^1;
         ///knight
         if (KNIGHT_MASK[position] & chessboard[KNIGHT_BLACK + xside]) {
-            BENCH(Times::getInstance().stop("isAttacked"))
             return true;
         }
 
         ///king
         if (NEAR_MASK1[position] & chessboard[KING_BLACK + xside]) {
-            BENCH(Times::getInstance().stop("isAttacked"))
             return true;
         }
         ///pawn
         if (PAWN_FORK_MASK[side][position] & chessboard[PAWN_BLACK + xside]) {
-            BENCH(Times::getInstance().stop("isAttacked"))
             return true;
         }
 
@@ -180,7 +172,6 @@ public:
         if ((DIAGONAL_ANTIDIAGONAL[position] & enemies)) {
             ///bishop queen
             if (Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies) {
-                BENCH(Times::getInstance().stop("isAttacked"))
                 return true;
             }
         }
@@ -188,10 +179,8 @@ public:
         enemies = chessboard[ROOK_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
         if (!(RANK_FILE[position] & enemies)) return false;
         if (Bitboard::getRankFile(position, allpieces) & enemies) {
-            BENCH(Times::getInstance().stop("isAttacked"))
             return true;
         }
-        BENCH(Times::getInstance().stop("isAttacked"))
         return false;
     }
 
@@ -211,16 +200,15 @@ public:
 
     template<int side>
     static u64 getBitmapNoPawnsNoKing(const _Tchessboard &chessboard) {
-        BENCH(Times::getInstance().start("getBitmapNoPawns"))
-        auto a = chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
-                 chessboard[QUEEN_BLACK + side];
-        BENCH(Times::getInstance().stop("getBitmapNoPawns"))
-        return a;
+        BENCH_START(&Times::getInstance(), "getBitmapNoPawns")
+        return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
+               chessboard[QUEEN_BLACK + side];
     }
 
 
     template<int side>
     static u64 getPiecesNoKing(const _Tchessboard &chessboard) {
+        BENCH_START(&Times::getInstance(), "getPiecesNoKing")
         return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
                chessboard[PAWN_BLACK + side] | chessboard[QUEEN_BLACK + side];
     }

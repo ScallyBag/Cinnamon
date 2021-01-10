@@ -88,7 +88,7 @@ int Eval::evaluatePawn() {
     for (u64 p = ped_friends; p; RESET_LSB(p)) {
         bool isolated = false;
         const int o = BITScanForward(p);
-        u64 pos = POW2[o];
+        const u64 pos = POW2[o];
 
         // 4. attack king
         if (structureEval.posKingBit[xside] & PAWN_FORK_MASK[side][o]) {
@@ -190,17 +190,15 @@ int Eval::evaluateBishop(const u64 enemies) {
         const int o = BITScanForward(bishop);
         // 5. mobility
 
-        u64 captured = getDiagCapture(o, structureEval.allPieces, enemies);
-        ASSERT(bitCount(captured) + board::getDiagShiftCount(o, structureEval.allPieces) <
-               (int) (sizeof(MOB_BISHOP) / sizeof(int)))
+        const u64 x = Bitboard::getDiagonalAntiDiagonal(o, structureEval.allPieces);
+        const u64 captured = x & enemies;
+        ASSERT(bitCount(captured) + bitCount(x & ~structureEval.allPieces) < (int) (sizeof(MOB_BISHOP) / sizeof(int)))
+        if (captured & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[o];
 
-        if (captured & structureEval.posKingBit[xside]) {
-            structureEval.kingAttackers[xside] |= POW2[o];
-        }
+        result += MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];
 
-        result += MOB_BISHOP[phase][bitCount(captured) + board::getDiagShiftCount(o, structureEval.allPieces)];
         ADD(SCORE_DEBUG.MOB_BISHOP[side],
-            MOB_BISHOP[phase][bitCount(captured) + board::getDiagShiftCount(o, structureEval.allPieces)]);
+            MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
 
         // 6.
         if (phase != OPEN) {
@@ -222,8 +220,7 @@ int Eval::evaluateBishop(const u64 enemies) {
             //friend paws defends bishop
             if (PAWN_FORK_MASK[side ^ 1][o] & chessboard[side]) {
                 result += p;
-                if (!(chessboard[KNIGHT_BLACK + xside]) &&
-                    !(chessboard[BISHOP_BLACK + xside] & board::colors(o))) {
+                if (!(chessboard[KNIGHT_BLACK + xside]) && !(chessboard[BISHOP_BLACK + xside] & board::colors(o))) {
                     result += p;
                 }
             }
@@ -262,12 +259,13 @@ int Eval::evaluateQueen(const u64 enemies) {
     for (; queen; RESET_LSB(queen)) {
         const int o = BITScanForward(queen);
         // 3. mobility
-        u64 x = board::getMobilityQueen(o, enemies, structureEval.allPieces);
+        const u64 x = board::performRankFileCaptureAndShift(o, enemies, structureEval.allPieces) |
+                      board::getDiagShiftAndCapture(o, enemies, structureEval.allPieces);
+
         result += MOB_QUEEN[phase][bitCount(x)];
         ADD(SCORE_DEBUG.MOB_QUEEN[side], MOB_QUEEN[phase][bitCount(x)]);
 
-        if (x & structureEval.posKingBit[xside])
-            structureEval.kingAttackers[xside] |= POW2[o];
+        if (x & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[o];
         // 4. half open file
         if ((chessboard[xside] & FILE_[o])) {
             ADD(SCORE_DEBUG.HALF_OPEN_FILE_Q[side], HALF_OPEN_FILE_Q);

@@ -44,7 +44,7 @@ public:
     Bitboard();
 
     static inline u64 getRankFile(const int position, const u64 allpieces) {
-        BENCH(Times::getInstance().start("getRankFile"))
+        BENCH_START(&Times::getInstance(), "getRankFile")
 //    ........            00000000
 //    ...q....            00010000
 //    ........            00010000
@@ -54,14 +54,12 @@ public:
 //    ...Q....            00010000
 //    ........            00000000
 
-        const u64 a = (BITBOARD_FILE[position][fileIdx(position, allpieces)]) |
-                      BITBOARD_RANK[position][rankIdx(position, allpieces)];
-        BENCH(Times::getInstance().stop("getRankFile"))
-        return a;
+        return (BITBOARD_FILE[position][fileIdx(position, allpieces)]) |
+               BITBOARD_RANK[position][rankIdx(position, allpieces)];
     }
 
     static inline u64 getDiagonalAntiDiagonal(const int position, const u64 allpieces) {
-        BENCH(Times::getInstance().start("getDiagonalAntiDiagonal"))
+        BENCH_START(&Times::getInstance(), "getDiagonalAntiDiagonal")
 //    ........            00010000
 //    q.......            10100000
 //    .B......            00000000
@@ -71,10 +69,8 @@ public:
 //    ........            00000100
 //    ........            00000010
 
-        const u64 a = BITBOARD_DIAGONAL[position][diagonalIdx(position, allpieces)] |
-                      BITBOARD_ANTIDIAGONAL[position][antiDiagonalIdx(position, allpieces)];
-        BENCH(Times::getInstance().stop("getDiagonalAntiDiagonal"))
-        return a;
+        return BITBOARD_DIAGONAL[position][diagonalIdx(position, allpieces)] |
+               BITBOARD_ANTIDIAGONAL[position][antiDiagonalIdx(position, allpieces)];
     }
 
 private:

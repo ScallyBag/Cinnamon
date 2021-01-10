@@ -312,7 +312,7 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
             continue;
         }
 /************ end Delta Pruning *************/
-        int val = -qsearch<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
+        int val = -qsearch < side ^1 > (-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, false);
         if (score > alpha) {
@@ -487,9 +487,9 @@ bool Search::probeRootTB(_Tmove *res) {
                 takeback(move, oldKey, false);
                 continue;
             }
-            BENCH(times->start("gtbTime"))
+            BENCH_START(times, "gtbTime")
             const auto res = GTB::getInstance().getDtmWdl(GTB_STM(side ^ 1), 0, chessboard, &dtz, true);
-            BENCH(times->stop("gtbTime"))
+            BENCH_STOP(times, "gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
                     bestMove = move;
@@ -555,9 +555,9 @@ bool Search::probeRootTB(_Tmove *res) {
         unsigned results[TB_MAX_MOVES];
 
         const u64 allPieces = white | black;
-        BENCH(times->start("syzygyTime"))
+        BENCH_START(times, "syzygyTime")
         const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, side, results);
-        BENCH(times->stop("syzygyTime"))
+        BENCH_STOP(times, "syzygyTime")
         if (sz == TB_RESULT_FAILED) return false;
 
         for (unsigned i = 0; results[i] != TB_RESULT_FAILED; i++) {
@@ -686,9 +686,9 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
         unsigned pliestomate;
         //gaviota
         if (GTB::getInstance().isInstalledPieces(N_PIECE)) {
-            BENCH(times->start("gtbTime"))
+            BENCH_START(times, "gtbTime")
             tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false);
-            BENCH(times->stop("gtbTime"))
+            BENCH_STOP(times, "gtbTime")
         }
         switch (tbResult) {
             case TB_LOSS :
