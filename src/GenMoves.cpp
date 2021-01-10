@@ -53,14 +53,13 @@ void GenMoves::clearHeuristic() {
 }
 
 _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
-    BENCH(times->start("getNextMove"))
-
+    BENCH(Bench(times, "getNextMove"))
     int bestId = -1;
     int bestScore = -INT_MAX;
 
     for (int i = first; i < list->size; i++) {
         const auto mos = list->moveList[i];
-        _assert(mos.s.type & 0x3) //TODO
+
         ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
@@ -76,7 +75,6 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
             bestId = i;
         }
     }
-    BENCH(times->stop("getNextMove"))
     if (bestId == -1) {
         return nullptr;
     }
@@ -84,8 +82,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 }
 
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
-    BENCH(times->start("getNextMove"))
-
+    BENCH(Bench(times, "getNextMove"))
     int bestId = -1;
     int bestScore = -1;
 
@@ -99,7 +96,6 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             ASSERT_RANGE(mos.s.from, 0, 63)
 
             if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
-                BENCH(times->stop("getNextMove"))
                 return swap(list, first, i);
             }
             score += historyHeuristic[mos.s.from][mos.s.to];
@@ -122,7 +118,6 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             bestId = i;
         }
     }
-    BENCH(times->stop("getNextMove"))
     if (bestId == -1) {
         return nullptr;
     }
