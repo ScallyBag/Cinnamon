@@ -44,7 +44,7 @@ public:
     template<int side>
     static u64
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
-        BENCH_START(&Times::getInstance(), "pinTime")
+        BENCH_AUTO_CLOSE( "pinTime")
         u64 result = 0;
         ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
@@ -115,7 +115,7 @@ public:
 
     template<int side>
     static u64 getAttackers(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
-        BENCH_START(&Times::getInstance(), "getAttackers")
+        BENCH_AUTO_CLOSE("getAttackers")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
         constexpr int xside = side ^1;
@@ -150,7 +150,7 @@ public:
 
     template<int side>
     static bool isAttacked(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
-        BENCH_START(&Times::getInstance(), "isAttacked")
+        BENCH_AUTO_CLOSE("isAttacked")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
         constexpr int xside = side ^1;
@@ -200,7 +200,7 @@ public:
 
     template<int side>
     static u64 getBitmapNoPawnsNoKing(const _Tchessboard &chessboard) {
-        BENCH_START(&Times::getInstance(), "getBitmapNoPawns")
+        BENCH_AUTO_CLOSE("getBitmapNoPawns")
         return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
                chessboard[QUEEN_BLACK + side];
     }
@@ -208,7 +208,7 @@ public:
 
     template<int side>
     static u64 getPiecesNoKing(const _Tchessboard &chessboard) {
-        BENCH_START(&Times::getInstance(), "getPiecesNoKing")
+        BENCH_AUTO_CLOSE("getPiecesNoKing")
         return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
                chessboard[PAWN_BLACK + side] | chessboard[QUEEN_BLACK + side];
     }

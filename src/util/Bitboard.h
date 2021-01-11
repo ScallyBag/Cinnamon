@@ -44,7 +44,7 @@ public:
     Bitboard();
 
     static inline u64 getRankFile(const int position, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "getRankFile")
+        BENCH_AUTO_CLOSE("getRankFile")
 //    ........            00000000
 //    ...q....            00010000
 //    ........            00010000
@@ -59,7 +59,7 @@ public:
     }
 
     static inline u64 getDiagonalAntiDiagonal(const int position, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "getDiagonalAntiDiagonal")
+        BENCH_AUTO_CLOSE("getDiagonalAntiDiagonal")
 //    ........            00010000
 //    q.......            10100000
 //    .B......            00000000

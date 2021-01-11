@@ -26,10 +26,10 @@ using namespace std;
 
 class Bench {
 public:
-    Bench(Times *time, const char *name) {
-        this->time = time;
+    Bench(Times &time, const char *name) {
+        this->time = &time;
         this->name = name;
-        time->start(name);
+        time.start(name);
     };
 
     ~Bench() {

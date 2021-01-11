@@ -44,15 +44,17 @@ namespace _def {
 #define _assert(a) if(!(a)){  print_stacktrace();cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #ifdef BENCH_MODE
-#define BENCH_START(times,name)  (Bench(times,name));
-#define BENCH_SUBPROCESS(times,name,sub)  (times)->subProcess(name,sub);
-#define BENCH_STOP(times,name)  (times)->stop(name);
-#define BENCH_PRINT(times)  (times)->print();
+#define BENCH_AUTO_CLOSE(name)  (Bench(Times::getInstance(),name));
+#define BENCH_START(name)  (Bench(Times::getInstance(),name));
+#define BENCH_SUBPROCESS(name,sub)  (Times::getInstance().subProcess(name,sub));
+#define BENCH_STOP(name)  (Times::getInstance().stop(name));
+#define BENCH_PRINT()  (Times::getInstance().print());
 #else
-#define BENCH_START(times,name)
-#define BENCH_SUBPROCESS(times,name,subProcess)
-#define BENCH_STOP(times,name)
-#define BENCH_PRINT(times)
+#define BENCH_AUTO_CLOSE(name)
+#define BENCH_START(name)
+#define BENCH_SUBPROCESS(name,subProcess)
+#define BENCH_STOP(name)
+#define BENCH_PRINT()
 #endif
 
 #ifdef DEBUG_MODE

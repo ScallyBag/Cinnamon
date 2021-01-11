@@ -71,9 +71,7 @@ public:
     string boardToFen() const;
 
 protected:
-#ifdef BENCH_MODE
-    Times *times = &Times::getInstance();
-#endif
+
     _Tchessboard chessboard;
     int startPosWhiteKing;
     int startPosWhiteRookKingSide;

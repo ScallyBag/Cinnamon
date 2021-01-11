@@ -103,13 +103,13 @@ public:
 
     template<int side>
     bool performKingShiftCapture(const u64 enemies, const bool isCapture) {
-        BENCH_START(&Times::getInstance(), "kingShiftCapture")
+        BENCH_AUTO_CLOSE("kingShiftCapture")
         ASSERT_RANGE(side, 0, 1)
         const int pos = BITScanForward(chessboard[KING_BLACK + side]);
         ASSERT(pos != -1)
 
         for (u64 x1 = enemies & NEAR_MASK1[pos]; x1; RESET_LSB(x1)) {
-            BENCH_SUBPROCESS(times, "kingShiftCapture", "pushmove")
+            BENCH_SUBPROCESS("kingShiftCapture", "pushmove")
             if (pushmove<STANDARD_MOVE_MASK, side>(pos, BITScanForward(x1), NO_PROMOTION, KING_BLACK + side,
                                                    isCapture)) {
                 return true;
@@ -120,13 +120,13 @@ public:
 
     template<int side>
     bool performKnightShiftCapture(const int piece, const u64 enemies, const bool isCapture) {
-        BENCH_START(&Times::getInstance(), "knightShiftCapture")
+        BENCH_AUTO_CLOSE("knightShiftCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
         for (u64 x = chessboard[piece]; x; RESET_LSB(x)) {
             const int pos = BITScanForward(x);
             for (u64 x1 = enemies & KNIGHT_MASK[pos]; x1; RESET_LSB(x1)) {
-                BENCH_SUBPROCESS(times, "knightShiftCapture", "pushmove")
+                BENCH_SUBPROCESS("knightShiftCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(pos, BITScanForward(x1), NO_PROMOTION, piece, isCapture)) {
                     return true;
                 }
@@ -137,14 +137,14 @@ public:
 
     template<int side>
     bool performDiagCapture(const int piece, const u64 enemies, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "diagCapture")
+        BENCH_AUTO_CLOSE("diagCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
             u64 diag = getDiagonalAntiDiagonal(position, allpieces) & enemies;
             for (; diag; RESET_LSB(diag)) {
-                BENCH_SUBPROCESS(times, "diagCapture", "pushmove")
+                BENCH_SUBPROCESS("diagCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(diag), NO_PROMOTION, piece, true)) {
                     return true;
                 }
@@ -157,7 +157,7 @@ public:
 
     template<int side>
     bool performRankFileCapture(const int piece, const u64 enemies, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "rankFileCapture")
+        BENCH_AUTO_CLOSE("rankFileCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
 
@@ -165,7 +165,7 @@ public:
             const int position = BITScanForward(x2);
             u64 rankFile = getRankFile(position, allpieces) & enemies;
             for (; rankFile; RESET_LSB(rankFile)) {
-                BENCH_SUBPROCESS(times, "rankFileCapture", "pushmove")
+                BENCH_SUBPROCESS("rankFileCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(rankFile), NO_PROMOTION, piece, true)) {
                     return true;
                 }
@@ -176,7 +176,7 @@ public:
 
     template<int side>
     bool performPawnCapture(const u64 enemies) {
-        BENCH_START(&Times::getInstance(), "pawnCapture")
+        BENCH_AUTO_CLOSE("pawnCapture")
         if (!chessboard[side]) {
             if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
                 updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
@@ -190,26 +190,26 @@ public:
         for (; x; RESET_LSB(x)) {
             const int o = BITScanForward(x);
             if ((side && o > 55) || (!side && o < 8)) {//PROMOTION
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, QUEEN_BLACK + side, side, true)) {
                     return true;        //queen
                 }
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, KNIGHT_BLACK + side, side, true)) {
                     return true;        //knight
                 }
                 if (perftMode) {
-                    BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                    BENCH_SUBPROCESS("pawnCapture", "pushmove")
                     if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, ROOK_BLACK + side, side, true)) {
                         return true;        //rock
                     }
-                    BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                    BENCH_SUBPROCESS("pawnCapture", "pushmove")
                     if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, BISHOP_BLACK + side, side, true)) {
                         return true;        //bishop
                     }
                 }
             } else {
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(o + sh, o, NO_PROMOTION, side, true)) {
                     return true;
                 }
@@ -221,26 +221,26 @@ public:
         for (; x; RESET_LSB(x)) {
             const int o = BITScanForward(x);
             if ((side && o > 55) || (!side && o < 8)) {    //PROMOTION
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh2, o, QUEEN_BLACK + side, side, true)) {
                     return true;        //queen
                 }
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh2, o, KNIGHT_BLACK + side, side, true)) {
                     return true;        //knight
                 }
                 if (perftMode) {
-                    BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                    BENCH_SUBPROCESS("pawnCapture", "pushmove")
                     if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh2, o, BISHOP_BLACK + side, side, true)) {
                         return true;        //bishop
                     }
-                    BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                    BENCH_SUBPROCESS("pawnCapture", "pushmove")
                     if (pushmove<PROMOTION_MOVE_MASK, side>(o + sh2, o, ROOK_BLACK + side, side, true)) {
                         return true;        //rock
                     }
                 }
             } else {
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(o + sh2, o, NO_PROMOTION, side, true)) {
                     return true;
                 }
@@ -251,7 +251,7 @@ public:
             x = ENPASSANT_MASK[side ^ 1][chessboard[ENPASSANT_IDX]] & chessboard[side];
             for (; x; RESET_LSB(x)) {
                 const int o = BITScanForward(x);
-                BENCH_SUBPROCESS(times, "pawnCapture", "pushmove")
+                BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 pushmove<ENPASSANT_MOVE_MASK, side>(o,
                                                     (side ? chessboard[ENPASSANT_IDX] + 8 : chessboard[ENPASSANT_IDX] -
                                                                                             8),
@@ -268,7 +268,7 @@ public:
     void performPawnShift(const u64 xallpieces) {
         u64 x = chessboard[side];
         checkJumpPawn<side>(x, xallpieces);
-        BENCH_START(&Times::getInstance(), "pawnShift")
+        BENCH_AUTO_CLOSE("pawnShift")
         constexpr int sh = side ? -8 : 8;
         x = side ? x << 8 : x >> 8;
 
@@ -278,18 +278,18 @@ public:
             ASSERT(board::getPieceAt<side>(POW2[o + sh], chessboard) != SQUARE_EMPTY)
             ASSERT(board::board::getBitmap(side, chessboard) & POW2[o + sh])
             if (o > A7 || o < H2) {
-                BENCH_SUBPROCESS(times, "pawnShift", "pushmove")
+                BENCH_SUBPROCESS("pawnShift", "pushmove")
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, QUEEN_BLACK + side, side, false);
-                BENCH_SUBPROCESS(times, "pawnShift", "pushmove")
+                BENCH_SUBPROCESS("pawnShift", "pushmove")
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, KNIGHT_BLACK + side, side, false);
                 if (perftMode) {
-                    BENCH_SUBPROCESS(times, "pawnShift", "pushmove")
+                    BENCH_SUBPROCESS("pawnShift", "pushmove")
                     pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, BISHOP_BLACK + side, side, false);
-                    BENCH_SUBPROCESS(times, "pawnShift", "pushmove")
+                    BENCH_SUBPROCESS("pawnShift", "pushmove")
                     pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, ROOK_BLACK + side, side, false);
                 }
             } else {
-                BENCH_SUBPROCESS(times, "pawnShift", "pushmove")
+                BENCH_SUBPROCESS("pawnShift", "pushmove")
                 pushmove<STANDARD_MOVE_MASK, side>(o + sh, o, NO_PROMOTION, side, false);
             }
         }
@@ -299,14 +299,14 @@ public:
 
     template<int side>
     void performDiagShift(const int piece, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "diagShift")
+        BENCH_AUTO_CLOSE("diagShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
             u64 diag = getDiagonalAntiDiagonal(position, allpieces) & ~allpieces;
             for (; diag; RESET_LSB(diag)) {
-                BENCH_SUBPROCESS(times, "diagShift", "pushmove")
+                BENCH_SUBPROCESS("diagShift", "pushmove")
                 pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(diag), NO_PROMOTION, piece, false);
             }
         }
@@ -314,7 +314,7 @@ public:
 
     template<int side>
     void performRankFileShift(const int piece, const u64 allpieces) {
-        BENCH_START(&Times::getInstance(), "rankFileShift")
+        BENCH_AUTO_CLOSE("rankFileShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
 
@@ -322,7 +322,7 @@ public:
             const int position = BITScanForward(x2);
             u64 rankFile = getRankFile(position, allpieces) & ~allpieces;
             for (; rankFile; RESET_LSB(rankFile)) {
-                BENCH_SUBPROCESS(times, "rankFileShift", "pushmove")
+                BENCH_SUBPROCESS("rankFileShift", "pushmove")
                 pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(rankFile), NO_PROMOTION, piece, false);
             }
         }
@@ -496,7 +496,7 @@ protected:
 
     template<int type, uchar side>
     bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
-        BENCH_START(&Times::getInstance(), "inCheck")
+        BENCH_AUTO_CLOSE("inCheck")
         if (pieceTo == KING_BLACK || pieceTo == KING_WHITE) {
             return false;
         }
@@ -605,7 +605,7 @@ protected:
     template<int side>
     void tryAllCastle(const u64 allpieces) {
         ASSERT_RANGE(side, 0, 1)
-        BENCH_START(&Times::getInstance(), "castle")
+        BENCH_AUTO_CLOSE("castle")
         if (chess960)tryAllCastle960<side>(allpieces);
         else tryAllCastleStandard<side>(allpieces);
     }
@@ -746,7 +746,7 @@ protected:
             }
         }
 #endif
-        BENCH_START(&Times::getInstance(), "pushmove")
+        BENCH_AUTO_CLOSE("pushmove")
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
         int piece_captured = SQUARE_EMPTY;
@@ -762,7 +762,7 @@ protected:
             piece_captured = side ^ 1;
         }
         if (!(type & 0xc) && (forceCheck || perftMode)) {
-            BENCH_SUBPROCESS(times, "pushmove", "inCheck")
+            BENCH_SUBPROCESS("pushmove", "inCheck")
             if (inCheck<type, side>(from, to, pieceFrom, piece_captured, promotionPiece)) {
                 return false;
             }
@@ -833,7 +833,7 @@ private:
 
     template<int side>
     void checkJumpPawn(u64 x, const u64 xallpieces) {
-        BENCH_START(times, "checkJumpPawn")
+        BENCH_AUTO_CLOSE("checkJumpPawn")
         x &= TABJUMPPAWN;
         if (!x) {
             return;
@@ -845,7 +845,7 @@ private:
         }
         for (; x; RESET_LSB(x)) {
             const int o = BITScanForward(x);
-            BENCH_SUBPROCESS(times, "checkJumpPawn", "pushmove")
+            BENCH_SUBPROCESS("checkJumpPawn", "pushmove")
             pushmove<STANDARD_MOVE_MASK, side>(o + (side ? -16 : 16), o, NO_PROMOTION, side, false);
         }
     }

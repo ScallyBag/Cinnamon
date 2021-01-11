@@ -240,7 +240,7 @@ void IterativeDeeping::run() {
         }
     }
 
-    BENCH_PRINT(&Times::getInstance())
+    BENCH_PRINT()
 
     if (bestmove.empty())cout << "bestmove (none)";
     else cout << "bestmove " << bestmove;

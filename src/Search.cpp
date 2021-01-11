@@ -280,7 +280,7 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
         fprune = true;
     }
 /************ end Delta Pruning *************/
-    if (score > alpha) alpha = score; //TODO ?
+    if (score > alpha) alpha = score;
 
     incListId();
 
@@ -487,9 +487,9 @@ bool Search::probeRootTB(_Tmove *res) {
                 takeback(move, oldKey, false);
                 continue;
             }
-            BENCH_START(times, "gtbTime")
+            BENCH_START("gtbTime")
             const auto res = GTB::getInstance().getDtmWdl(GTB_STM(side ^ 1), 0, chessboard, &dtz, true);
-            BENCH_STOP(times, "gtbTime")
+            BENCH_STOP("gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
                     bestMove = move;
@@ -555,9 +555,9 @@ bool Search::probeRootTB(_Tmove *res) {
         unsigned results[TB_MAX_MOVES];
 
         const u64 allPieces = white | black;
-        BENCH_START(times, "syzygyTime")
+        BENCH_START("syzygyTime")
         const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, side, results);
-        BENCH_STOP(times, "syzygyTime")
+        BENCH_STOP("syzygyTime")
         if (sz == TB_RESULT_FAILED) return false;
 
         for (unsigned i = 0; results[i] != TB_RESULT_FAILED; i++) {
@@ -686,9 +686,9 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
         unsigned pliestomate;
         //gaviota
         if (GTB::getInstance().isInstalledPieces(N_PIECE)) {
-            BENCH_START(times, "gtbTime")
+            BENCH_START("gtbTime")
             tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false);
-            BENCH_STOP(times, "gtbTime")
+            BENCH_STOP("gtbTime")
         }
         switch (tbResult) {
             case TB_LOSS :

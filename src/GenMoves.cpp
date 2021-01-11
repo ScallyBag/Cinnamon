@@ -53,7 +53,7 @@ void GenMoves::clearHeuristic() {
 }
 
 _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
-    BENCH_START(times, "getNextMoveQ")
+    BENCH_AUTO_CLOSE("getNextMoveQ")
     int bestId = -1;
     int bestScore = -INT_MAX;
 
@@ -82,7 +82,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 }
 
 _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
-    BENCH_START(times, "getNextMove")
+    BENCH_AUTO_CLOSE("getNextMove")
     int bestId = -1;
     int bestScore = -1;
 

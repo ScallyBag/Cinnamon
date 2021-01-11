@@ -35,7 +35,7 @@ class SYZYGY : public Singleton<SYZYGY> {
 public:
     int SZtbProbeWDL(const _Tchessboard &chessboard, const int side, const int tot) const {
         if (getInstalledPieces() >= tot) {
-            BENCH_START(times, "syzygyTime")
+            BENCH_AUTO_CLOSE("syzygyTime")
             return SZtbProbeWDL(chessboard, side);
         }
         return TB_RESULT_FAILED;
