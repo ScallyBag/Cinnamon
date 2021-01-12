@@ -64,12 +64,11 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
 
+        //TODO BxN e NxB error
         const int score = (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
                           (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
                                                                                               : PIECES_VALUE[mos.s.capturedPiece];
-//        BENCH_START(times,"seeTime"))
-//        See::see(mos, chessboard, allpieces);
-//        BENCH(times->stop("seeTime"))
+
         if (score > bestScore) {
             bestScore = score;
             bestId = i;
