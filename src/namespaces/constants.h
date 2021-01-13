@@ -26,7 +26,7 @@
 using namespace std;
 namespace constants {
     
-    static const string NAME = "Cinnamon 2.4.0-64%";
+    static const string NAME = "Cinnamon 2.4.0-65%";
     static const string STARTPOS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     static constexpr int BLACK = 0;
     static constexpr int WHITE = 1;
@@ -214,6 +214,71 @@ namespace constants {
     static constexpr u64 NOTPOW2_61 = 0xdfffffffffffffffULL;
     static constexpr u64 NOTPOW2_63 = 0x7fffffffffffffffULL;
 
+    static constexpr int _0_ = 0;
+    static constexpr int Px_ = 0;
+    static constexpr int Rx_ = 0;
+    static constexpr int Bx_ = 0;
+    static constexpr int Nx_ = 0;
+    static constexpr int Kx_ = 0;
+    static constexpr int Qx_ = 0;
+
+    static constexpr int PxP = 100;
+    static constexpr int PxN = 300;
+    static constexpr int PxB = 301;
+    static constexpr int PxR = 500;
+    static constexpr int PxQ = 800;
+    static constexpr int PxK = 100010;
+
+    static constexpr int NxP = 21;
+    static constexpr int NxN = 251;
+    static constexpr int NxB = 252;
+    static constexpr int NxR = 451;
+    static constexpr int NxQ = 751;
+    static constexpr int NxK = 100009;
+
+    static constexpr int BxP = 20;
+    static constexpr int BxN = 250;
+    static constexpr int BxB = 251;
+    static constexpr int BxR = 450;
+    static constexpr int BxQ = 750;
+    static constexpr int BxK = 100008;
+
+    static constexpr int RxP = 10;
+    static constexpr int RxN = 200;
+    static constexpr int RxB = 201;
+    static constexpr int RxR = 400;
+    static constexpr int RxQ = 700;
+    static constexpr int RxK = 100007;
+
+    static constexpr int QxP = 5;
+    static constexpr int QxN = 150;
+    static constexpr int QxB = 151;
+    static constexpr int QxR = 200;
+    static constexpr int QxQ = 400;
+    static constexpr int QxK = 100006;
+
+    static constexpr int KxP = 2;
+    static constexpr int KxN = 100;
+    static constexpr int KxB = 101;
+    static constexpr int KxR = 110;
+    static constexpr int KxQ = 200;
+    static constexpr int KxK = 100005;
+
+    static constexpr int CAPTURES[13][13]{
+            {_0_,PxP,_0_,PxR,_0_,PxB,_0_,PxN,_0_,PxK,_0_,PxQ,Px_},
+            {PxP,_0_,PxR,_0_,PxB,_0_,PxN,_0_,PxK,_0_,PxQ,_0_,Px_},
+            {_0_,RxP,_0_,RxR,_0_,RxB,_0_,RxN,_0_,RxK,_0_,RxQ,Rx_},
+            {RxP,_0_,RxR,_0_,RxB,_0_,RxN,_0_,RxK,_0_,RxQ,RxQ,Rx_},
+            {_0_,BxP,_0_,BxR,_0_,BxB,_0_,BxN,_0_,BxK,_0_,BxQ,Bx_},
+            {BxP,_0_,BxR,_0_,BxB,_0_,BxN,_0_,BxK,_0_,BxQ,_0_,Bx_},
+            {_0_,NxP,_0_,NxR,_0_,NxB,_0_,NxN,_0_,NxK,_0_,NxQ,Nx_},
+            {NxP,_0_,NxR,_0_,NxB,_0_,NxN,_0_,NxK,_0_,NxQ,_0_,Nx_},
+            {_0_,KxP,_0_,KxR,_0_,KxB,_0_,KxN,_0_,KxK,_0_,KxQ,Kx_},
+            {KxP,_0_,KxR,_0_,KxB,_0_,KxN,_0_,KxK,_0_,KxQ,_0_,Kx_},
+            {_0_,QxP,_0_,QxR,_0_,QxB,_0_,QxN,_0_,QxK,_0_,QxQ,Qx_},
+            {QxP,_0_,QxR,_0_,QxB,_0_,QxN,_0_,QxK,_0_,QxQ,_0_,Qx_},
+            {_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_,_0_}
+    };
 
     static const array<string, 64> BOARD =
         {"h1", "g1", "f1", "e1", "d1", "c1", "b1", "a1", "h2", "g2", "f2", "e2", "d2", "c2", "b2", "a2", "h3", "g3",

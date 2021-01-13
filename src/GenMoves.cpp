@@ -64,10 +64,11 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
 
+        const int score = CAPTURES[mos.s.pieceFrom][mos.s.capturedPiece];
         //TODO BxN e NxB error
-        const int score = (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
-                          (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
-                                                                                              : PIECES_VALUE[mos.s.capturedPiece];
+//                          (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
+//                                                                                              : PIECES_VALUE[mos.s.capturedPiece];
+
 
         if (score > bestScore) {
             bestScore = score;
@@ -98,9 +99,8 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
                 return swap(list, first, i);
             }
             score += historyHeuristic[mos.s.from][mos.s.to];
-            score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
-                     (PIECES_VALUE[mos.s.capturedPiece] - PIECES_VALUE[mos.s.pieceFrom]) * 2
-                                                                                         : PIECES_VALUE[mos.s.capturedPiece];
+            score += CAPTURES[mos.s.pieceFrom][mos.s.capturedPiece];
+//            score += (PIECES_VALUE[mos.s.capturedPiece] > PIECES_VALUE[mos.s.pieceFrom]) ?
 
 //            BENCH_START(times,"seeTime"))
 //            See::see(mos, chessboard, allpieces);
