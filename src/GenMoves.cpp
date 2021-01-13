@@ -366,6 +366,12 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
             }
         }
         //lost castle right
+
+        if (posTo == startPosWhiteRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xef;
+        else if (posTo == startPosWhiteRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0xdf;
+        else if (posTo == startPosBlackRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xbf;
+        else if (posTo == startPosBlackRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0x7f;
+
         switch (pieceFrom) {
             case KING_WHITE:
                 chessboard[RIGHT_CASTLE_IDX] &= 0xcf;
