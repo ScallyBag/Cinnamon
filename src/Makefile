@@ -44,7 +44,7 @@ ifeq ($(CLOP),yes)
 	DCLOP=-DCLOP
 endif
 
-CFLAGS=" -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -Ofast -DNDEBUG -fsigned-char -fno-exceptions -fno-rtti -funroll-loops $(DCLOP) "
+CFLAGS=" -std=c++11 -Wall -Ofast -DNDEBUG -funroll-loops $(DCLOP) "
 
 help:
 

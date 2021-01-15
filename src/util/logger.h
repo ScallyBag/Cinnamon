@@ -36,7 +36,7 @@ namespace _logger {
 #if defined DEBUG_MODE
 #define DLOG_LEVEL _TRACE
 #else
-#define DLOG_LEVEL _OFF
+#define DLOG_LEVEL _FATAL
 #endif
 #endif
 
