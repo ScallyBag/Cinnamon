@@ -81,7 +81,7 @@ public:
 
     int getSide() const;
 
-    int getScore(const int side, const bool trace);
+    int getScore(const int side);
 
     int getMaxTimeMillsec() const;
 

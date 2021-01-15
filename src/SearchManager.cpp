@@ -269,8 +269,8 @@ int SearchManager::getSide() const {
     return board::getSide(threadPool->getThread(0).getChessboard());
 }
 
-int SearchManager::getScore(const int side, const bool trace) {
-    return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, trace);
+int SearchManager::getScore(const int side) {
+    return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
 }
 
 int SearchManager::getMaxTimeMillsec() const {

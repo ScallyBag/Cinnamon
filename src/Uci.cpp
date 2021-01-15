@@ -92,7 +92,7 @@ void Uci::listner(IterativeDeeping *it) {
             cout << "uciok" << endl;
         } else if (token.toLower() == "score" || token.toLower() == "eval") {
             int side = searchManager.getSide();
-            int t = searchManager.getScore(side, true);
+            int t = searchManager.getScore(side);
 
             if (!searchManager.getSide()) {
                 t = -t;
