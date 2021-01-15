@@ -26,7 +26,7 @@
 using namespace std;
 namespace constants {
     
-    static const string NAME = "Cinnamon 2.4.0-65%";
+    static const string NAME = "Cinnamon 2.4.0-65-66%";
     static const string STARTPOS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
     static constexpr int BLACK = 0;
     static constexpr int WHITE = 1;
@@ -215,7 +215,7 @@ namespace constants {
     static constexpr u64 NOTPOW2_63 = 0x7fffffffffffffffULL;
 
     static constexpr int _0_ = 0;
-    static constexpr int Px_ = 0;
+    static constexpr int Px_ = 1;
     static constexpr int Rx_ = 0;
     static constexpr int Bx_ = 0;
     static constexpr int Nx_ = 0;
