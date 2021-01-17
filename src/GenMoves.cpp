@@ -64,7 +64,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
         ASSERT_RANGE(mos.s.to, 0, 63)
         ASSERT_RANGE(mos.s.from, 0, 63)
 
-        const int score = CAPTURES[(uchar)mos.s.pieceFrom][mos.s.capturedPiece];
+        const int score = CAPTURES[(uchar) mos.s.pieceFrom][mos.s.capturedPiece];
         if (score > bestScore) {
             bestScore = score;
             bestId = i;
@@ -94,8 +94,8 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
                 return swap(list, first, i);
             }
             score += historyHeuristic[mos.s.from][mos.s.to];
-            score += CAPTURES[(uchar)mos.s.pieceFrom][mos.s.capturedPiece];
-//            BENCH(times->stop("seeTime"))
+            score += CAPTURES[(uchar) mos.s.pieceFrom][mos.s.capturedPiece];
+
             if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
             else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
 
@@ -427,12 +427,7 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
 
 void GenMoves::init() {
     numMoves = numMovesq = listId = 0;
-#ifdef DEBUG_MODE
-    nCutFp = nCutRazor = 0;
-    betaEfficiency = 0.0;
-    nCutAB = 0;
-    nNullMoveCut = 0;
-#endif
+    DEBUG(nCutFp = nCutRazor = nCutAB = nNullMoveCut = 0)
 }
 
 u64 GenMoves::getTotMoves() const {

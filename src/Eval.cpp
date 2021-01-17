@@ -495,10 +495,9 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
         return lazyscore;
     }
 
-#ifdef DEBUG_MODE
-    evaluationCount[WHITE] = evaluationCount[BLACK] = 0;
-    memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG));
-#endif
+    DEBUG(evaluationCount[WHITE] = evaluationCount[BLACK] = 0)
+    DEBUG(memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG)))
+
     structureEval.kingSecurity[WHITE] = structureEval.kingSecurity[BLACK] = 0;
     const auto w = board::getBitmapNoPawnsNoKing<WHITE>(chessboard);
     const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);

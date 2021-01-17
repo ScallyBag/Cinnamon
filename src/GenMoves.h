@@ -365,9 +365,9 @@ public:
 
 #ifdef DEBUG_MODE
     unsigned nCutAB, nNullMoveCut, nCutFp, nCutRazor;
-    double betaEfficiency;
+    double betaEfficiency = 0.0;
+    unsigned betaEfficiencyCount = 0;
 #endif
-
 
     static constexpr int NO_PROMOTION = -1;
 protected:
@@ -501,8 +501,8 @@ protected:
             return false;
         }
 #ifdef DEBUG_MODE
-            _Tchessboard a;
-            memcpy(&a, chessboard, sizeof(_Tchessboard));
+        _Tchessboard a;
+        memcpy(&a, chessboard, sizeof(_Tchessboard));
 #endif
         ASSERT_RANGE(from, 0, 63)
         ASSERT_RANGE(to, 0, 63)

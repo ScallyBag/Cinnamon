@@ -74,10 +74,9 @@ private:
 #ifdef CLOP
         cout << "CLOP ENABLED\n";
 #endif
-#ifdef DEBUG_MODE
-        cout << "DEBUG_MODE\n";
-        cout << "Log level: " << LOG_LEVEL_STRING[DLOG_LEVEL] << endl;
-#endif
+
+        DEBUG(cout << "DEBUG_MODE" << endl)
+        DEBUG(cout << "Log level: " << LOG_LEVEL_STRING[DLOG_LEVEL] << endl)
         cout << flush;
     }
 

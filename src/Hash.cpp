@@ -22,10 +22,8 @@
 Hash::Hash() {
     HASH_SIZE = 0;
     hashArray[HASH_ALWAYS] = hashArray[HASH_GREATER] = nullptr;
-#ifdef DEBUG_MODE
-    n_cut_hashA = n_cut_hashB = cutFailed = probeHash = readCollisions = 0;
-    nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0;
-#endif
+    DEBUG(n_cut_hashA = n_cut_hashB = cutFailed = probeHash = readCollisions = nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0)
+
     setHashSize(HASH_SIZE_DEFAULT);
 }
 

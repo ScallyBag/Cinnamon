@@ -312,7 +312,7 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
             continue;
         }
 /************ end Delta Pruning *************/
-        int val = -qsearch < side ^1 > (-beta, -alpha, move->s.promotionPiece, depth - 1);
+        int val = -qsearch<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, false);
         if (score > alpha) {
@@ -725,7 +725,6 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 
-    DEBUG(double betaEfficiencyCount = 0.0)
     ASSERT(chessboard[KING_BLACK])
     ASSERT(chessboard[KING_WHITE])
 
@@ -866,7 +865,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     while ((move = getNextMove(&gen_list[listId], depth, c, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;
-        INC(betaEfficiencyCount);
+
         if (!makemove(move, true, checkInCheck)) {
             takeback(move, oldKey, true);
             continue;
@@ -945,7 +944,10 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             if (score >= beta) {
                 decListId();
                 INC(nCutAB);
-                ADD(betaEfficiency, betaEfficiencyCount / (double) listcount * 100.0);
+                INC(betaEfficiencyCount);
+                DEBUG(betaEfficiency +=
+                              (100.0 - ((double) countMove * 100.0 / (double) listcount)) +
+                              (((double) countMove * 100.0 / (double) listcount) / (double) countMove))
                 if (getRunning()) {
                     Hash::_ThashData data(score, depth, move->s.from, move->s.to, 0, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data);

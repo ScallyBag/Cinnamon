@@ -154,11 +154,13 @@ public:
     }
 
     double getBetaEfficiency() const {
-        double i = 0;
+        double b = 0;
+        unsigned count = 0;
         for (Search *s:threadPool->getPool()) {
-            i += s->betaEfficiency;
+            b += s->betaEfficiency;
+            count += s->betaEfficiencyCount;
         }
-        return i;
+        return b / count;
     }
 
     unsigned getLazyEvalCuts() const {

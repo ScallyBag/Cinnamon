@@ -157,9 +157,7 @@ void ChessBoard::display() const {
                                                                                  : BOARD[chessboard[ENPASSANT_IDX] -
                                                                                          8])) << endl;
     cout << "Chess960:\t" << (chess960 ? "true" : "false") << endl;
-#ifdef DEBUG_MODE
-    cout << "zobristKey:\t0x" << hex << chessboard[ZOBRISTKEY_IDX] << "ull" << dec << endl;
-#endif
+    DEBUG(cout << "zobristKey:\t0x" << hex << chessboard[ZOBRISTKEY_IDX] << "ull" << dec << endl)
     cout << endl;
 }
 

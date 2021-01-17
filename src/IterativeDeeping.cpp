@@ -162,7 +162,7 @@ void IterativeDeeping::run() {
             nps = totMoves * 1000 / timeTaken;
         }
         int nCutAB = searchManager.getNCutAB();
-        double betaEfficiency = searchManager.getBetaEfficiency();
+
         int LazyEvalCuts = searchManager.getLazyEvalCuts();
         int nCutFp = searchManager.getNCutFp();
         int nCutRazor = searchManager.getNCutRazor();
@@ -170,10 +170,9 @@ void IterativeDeeping::run() {
         int collisions = hash.collisions;
         unsigned readCollisions = hash.readCollisions;
         int nNullMoveCut = hash.cutFailed;
-        unsigned totGen = searchManager.getTotGen();
-        if (nCutAB) {
-            cout << "info string beta efficiency: " << (int) (betaEfficiency / totGen * 10) << "%" << endl;
-        }
+
+        if (nCutAB) cout << "info string beta efficiency: " << (searchManager.getBetaEfficiency()) << "%" << endl;
+
         if (totMovesPrec != 0xffffffffffffffffULL)
             cout << "info string effective branching factor: " << setiosflags(ios::fixed) << setprecision(2) <<
                  ((double) totMoves / (double) totMovesPrec) << endl;

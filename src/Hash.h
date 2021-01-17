@@ -90,12 +90,8 @@ public:
         const _Thash *hash = &(hashArray[type][zobristKeyR % HASH_SIZE]);
         const u64 data = hash->u.dataU;
         const u64 k = hash->key;
-        if (zobristKeyR == (k ^ data)) {
-            return data;
-        }
-
+        if (zobristKeyR == (k ^ data)) return data;
         DEBUG(if (data) readCollisions++)
-
         return 0;
     }
 
@@ -103,27 +99,18 @@ public:
         ASSERT(zobristKey);
         const unsigned kMod = zobristKey % HASH_SIZE;
         _Thash *rootHashG = &(hashArray[HASH_ALWAYS][kMod]);
-
         rootHashG->key = (zobristKey ^ tmp.dataU);
         rootHashG->u.dataU = tmp.dataU;
 
 #ifdef DEBUG_MODE
-        if (tmp.dataS.flags == hashfALPHA) {
-            nRecordHashA++;
-        } else if (tmp.dataS.flags == hashfBETA) {
-            nRecordHashB++;
-        } else {
-            nRecordHashE++;
-        }
+        if (tmp.dataS.flags == hashfALPHA) nRecordHashA++;
+        else if (tmp.dataS.flags == hashfBETA) nRecordHashB++;
+        else nRecordHashE++;
 #endif
 
         _Thash *rootHashA = &(hashArray[HASH_GREATER][kMod]);
-
         DEBUG(if (rootHashA->u.dataU) INC(collisions))
-
-        if (rootHashA->u.dataS.depth >= tmp.dataS.depth && rootHashA->u.dataS.entryAge) {
-            return;
-        }
+        if (rootHashA->u.dataS.depth >= tmp.dataS.depth && rootHashA->u.dataS.entryAge) return;
         tmp.dataS.entryAge = 1;
         rootHashA->key = (zobristKey ^ tmp.dataU);
         rootHashA->u.dataU = tmp.dataU;
@@ -131,6 +118,7 @@ public:
 
 private:
     Hash();
+
     unsigned HASH_SIZE;
 #ifdef JS_MODE
     static constexpr int HASH_SIZE_DEFAULT = 1;
