@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head><title>Cinnamon chess engine - regression test</title></head>
+<head><title>Cinnamon chess engine</title></head>
 <body>
-<h1>Cinnamon chess engine - Regression test</h1>
+<h1>Cinnamon chess engine</h1>
 
 <div id="maincol">
     <div id="wikipage">
@@ -13,29 +13,8 @@
                     <div>
                         <div>
                              <h2>Cinnamon 2.3.4</h2>
-                              <p><strong> perft </strong> depth 5 one cpu no hash<br><br>
-                                ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
-
-                            <p><strong>3 sec. </strong>Linux - Intel  i7-9750H CPU @ 2.60GHz gcc 9.3.0</p>
-
-                            <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
-                                ./cinnamon -perft -d6 -c8 -h2000 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
-
-                            <p><strong>7 sec. </strong>Linux - Intel  i7-9750H CPU @ 2.60GHz gcc 9.3.0</p>
-
-
-                           <h2>Cinnamon 2.2a</h2>
-                              <p><strong> perft </strong> depth 5 one cpu no hash<br><br>
-                                ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
-
-                            <p><strong>4 sec. </strong>Linux - Intel  i7-9750H CPU @ 2.60GHz gcc 9.3.0</p>
-
-                            <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
-                                ./cinnamon -perft -d6 -c8 -h2000 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
-
-                            <p><strong>9 sec. </strong>Linux - Intel  i7-9750H CPU @ 2.60GHz gcc 9.3.0</p>
-
-                            <h2>Cinnamon 2.2a</h2>
+<b>Linux - Intel i7-9750H CPU @ 2.60GHz gcc 9.3.0</b>
+<br>
                             <br>
                             <table>
                                 <tbody>
@@ -43,8 +22,77 @@
                                     <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">Test file (5 sec)
                                     </td>
 
-                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;"> Solved (Xeon W3540)
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;"> Solved</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">wac.epd</td>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">284/300</td>
+                                </tr>                             
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">kaufman.epd</td>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">23/25</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">zugzwang.epd</td>
+
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">2/5</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">bk.epd</td>
+
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">17/24</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">mate.epd</td>
+
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">53/71</td>
+                                </tr>
+                           
+                                </tbody>
+                            </table>
+
+                              <p><strong> perft </strong> depth 5 one cpu no hash<br><br>
+                                ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>3 sec. </strong></p>
+
+                            <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
+                                ./cinnamon -perft -d6 -c8 -h2000 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>7 sec. </strong></p>
+
+                              <p><strong> perft </strong> depth 5 one cpu no hash<br><br>
+                                ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>4 sec. </strong></p>
+
+                            <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
+                                ./cinnamon -perft -d6 -c8 -h2000 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>9 sec. </strong></p>
+   <h2>Cinnamon 2.2a</h2>
+<b>Linux - Intel i7-9750H CPU @ 2.60GHz gcc 9.3.0</b>
+                              <p><strong> perft </strong> depth 5 one cpu no hash<br><br>
+                                ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>4 sec. </strong></p>
+
+                            <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
+                                ./cinnamon -perft -d6 -c8 -h2000 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
+
+                            <p><strong>9 sec. </strong></p>
+
+                            <h2>Cinnamon 2.2a</h2>
+<b>Linux - Intel Xeon W3540 gcc 7.3.0</b>
+                            <br>
+<br>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">Test file (5 sec)
                                     </td>
+
+                                    <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;"> Solved</td>
                                 </tr>
                                 <tr>
                                     <td style="border: 1px solid rgb(204, 204, 204); padding: 5px;">wac.epd</td>
@@ -165,13 +213,13 @@
                                 ./cinnamon -perft -d5 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq
                                 -"</p>
 
-                            <p><strong>8 sec. </strong>Linux - Intel Xeon W3540 gcc 7.3.0</p>
+                            <p><strong>8 sec. </strong></p>
 
                             <p><strong> <br>perft </strong>depth 6 8 cpu 2 GB hash<br><br>
                                 ./cinnamon -perft -d6 -c8 -h2000
                                 -f"r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -"</p>
 
-                            <p><strong>22 sec. </strong>Intel Xeon W3540 Linux gcc 7.3.0</p>
+                            <p><strong>22 sec. </strong></p>
 
 
                             <h2>Cinnamon 2.1</h2>
