@@ -166,6 +166,7 @@ void IterativeDeeping::run() {
         int LazyEvalCuts = searchManager.getLazyEvalCuts();
         int nCutFp = searchManager.getNCutFp();
         int nCutRazor = searchManager.getNCutRazor();
+        int nBadCaputure = searchManager.getTotBadCaputure();
 
         int collisions = hash.collisions;
         unsigned readCollisions = hash.readCollisions;
@@ -182,6 +183,7 @@ void IterativeDeeping::run() {
         cout << "info string lazy eval cut: " << LazyEvalCuts << endl;
         cout << "info string futility pruning cut: " << nCutFp << endl;
         cout << "info string razor cut: " << nCutRazor << endl;
+        cout << "info string bad caputure cut: " << nBadCaputure << endl;
         cout << "info string null move cut: " << nNullMoveCut << endl;
         cout << "info string hash write collisions : " << collisions * 100 / totStoreHash << "%" << endl;
         cout << "info string hash read collisions : " << readCollisions * 100 / totStoreHash << "%" << endl;

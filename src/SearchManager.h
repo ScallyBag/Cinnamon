@@ -187,10 +187,10 @@ public:
         return i;
     }
 
-    unsigned getTotGen() const {
+    unsigned getTotBadCaputure() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
-            i += s->totGen;
+            i += s->nCutBadCaputure;
         }
         return i;
     }

@@ -195,4 +195,7 @@ private:
         INC(hash.cutFailed);
         return INT_MAX;
     }
+
+    template<int side>
+    bool badCapure(const _Tmove &move, const u64 allpieces);
 };

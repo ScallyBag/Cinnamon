@@ -305,6 +305,12 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
             continue;
         }
 /**************Delta Pruning ****************/
+        if (badCapure<side>(*move, friends | enemies)) {
+            INC(nCutBadCaputure);
+            takeback(move, oldKey, false);
+            continue;
+        }
+/**************Delta Pruning ****************/
         if (fprune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
             fscore + PIECES_VALUE[move->s.capturedPiece] <= alpha) {
             INC(nCutFp);
@@ -318,10 +324,6 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
         if (score > alpha) {
             if (score >= beta) {
                 decListId();
-                if (getRunning()) {
-                    Hash::_ThashData data(score, depth, move->s.from, move->s.to, 0, Hash::hashfBETA);
-                    hash.recordHash(zobristKeyR, data);
-                }
                 return beta;
             }
             alpha = score;
@@ -1068,6 +1070,24 @@ bool Search::setParameter(String &param, const int value) {
     cout << param << " " << value << endl;
     return false;
 #endif
+}
+
+template<int side>
+bool Search::badCapure(const _Tmove &move, const u64 allpieces) {
+
+    if (move.s.pieceFrom == (PAWN_BLACK + side)) return false;
+
+    if (PIECES_VALUE[move.s.capturedPiece] - 5 >= PIECES_VALUE[move.s.pieceFrom]) return false;
+
+    if (PIECES_VALUE[move.s.capturedPiece] + 200 < PIECES_VALUE[move.s.pieceFrom] &&
+        (PAWN_FORK_MASK[side][move.s.to] & chessboard[PAWN_BLACK + (side ^ 1)]))
+        return true;
+
+    if (PIECES_VALUE[move.s.capturedPiece] + 500 < PIECES_VALUE[move.s.pieceFrom] &&
+        board::isAttacked(side, move.s.to, allpieces, chessboard))
+        return true;
+
+    return false;
 }
 
 
