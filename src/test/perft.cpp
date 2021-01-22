@@ -29,7 +29,7 @@ TEST(perftTest, oneCore) {
     ASSERT_EQ(1360065, perft->getResult());
 }
 
-TEST(perftTest, oneCore) {
+TEST(perftTest, oneCore2) {
     Perft *perft = &Perft::getInstance();
     perft->setParam("r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1", 3, 1, 0, "",false);
     perft->start();

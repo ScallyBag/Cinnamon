@@ -58,13 +58,13 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
     int bestScore = -INT_MAX;
 
     for (int i = first; i < list->size; i++) {
-        const auto mos = list->moveList[i];
-        _assert(mos.s.type & 0x3) //TODO
-        ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
-        ASSERT_RANGE(mos.s.to, 0, 63)
-        ASSERT_RANGE(mos.s.from, 0, 63)
+        const auto move = list->moveList[i];
+        _assert(move.s.type & 0x3) //TODO
+        ASSERT_RANGE(move.s.pieceFrom, 0, 11)
+        ASSERT_RANGE(move.s.to, 0, 63)
+        ASSERT_RANGE(move.s.from, 0, 63)
 
-        const int score = CAPTURES[(uchar) mos.s.pieceFrom][mos.s.capturedPiece];
+        const int score = CAPTURES[(uchar) move.s.pieceFrom][move.s.capturedPiece];
         if (score > bestScore) {
             bestScore = score;
             bestId = i;
@@ -82,24 +82,24 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
     int bestScore = -1;
 
     for (int i = first; i < list->size; i++) {
-        const auto mos = list->moveList[i];
+        const auto move = list->moveList[i];
         int score = 0;
-        if (mos.s.type & 0x3) {
+        if (move.s.type & 0x3) {
 
-            ASSERT_RANGE(mos.s.pieceFrom, 0, 11)
-            ASSERT_RANGE(mos.s.to, 0, 63)
-            ASSERT_RANGE(mos.s.from, 0, 63)
+            ASSERT_RANGE(move.s.pieceFrom, 0, 11)
+            ASSERT_RANGE(move.s.to, 0, 63)
+            ASSERT_RANGE(move.s.from, 0, 63)
 
-            if (hash && (hash->dataS.from == mos.s.from && hash->dataS.to == mos.s.to)) {
+            if (hash && (hash->dataS.from == move.s.from && hash->dataS.to == move.s.to)) {
                 return swap(list, first, i);
             }
-            score += historyHeuristic[mos.s.from][mos.s.to];
-            score += CAPTURES[(uchar) mos.s.pieceFrom][mos.s.capturedPiece];
+            score += historyHeuristic[move.s.from][move.s.to];
+            score += CAPTURES[(uchar) move.s.pieceFrom][move.s.capturedPiece];
 
-            if (isKiller(0, mos.s.from, mos.s.to, depth)) score += 90;
-            else if (isKiller(1, mos.s.from, mos.s.to, depth)) score += 80;
+            if (isKiller(0, move.s.from, move.s.to, depth)) score += 90;
+            else if (isKiller(1, move.s.from, move.s.to, depth)) score += 80;
 
-        } else if (mos.s.type & 0xc) {    //castle
+        } else if (move.s.type & 0xc) {    //castle
             ASSERT(chessboard[RIGHT_CASTLE_IDX])
             score = 100;
         }

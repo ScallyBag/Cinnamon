@@ -769,16 +769,16 @@ protected:
         }
         ASSERT_RANGE(listId, 0, MAX_PLY - 1)
         ASSERT(getListSize() < MAX_MOVE)
-        auto mos = &gen_list[listId].moveList[getListSize()];
+        auto move = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
-        mos->s.type = (uchar) chessboard[RIGHT_CASTLE_IDX] | type;
-        mos->s.side = (char) side;
-        mos->s.capturedPiece = piece_captured;
+        move->s.type = (uchar) chessboard[RIGHT_CASTLE_IDX] | type;
+        move->s.side = (char) side;
+        move->s.capturedPiece = piece_captured;
         if (type & 0x3) {
-            mos->s.from = (uchar) from;
-            mos->s.to = (uchar) to;
-            mos->s.pieceFrom = pieceFrom;
-            mos->s.promotionPiece = (char) promotionPiece;
+            move->s.from = (uchar) from;
+            move->s.to = (uchar) to;
+            move->s.pieceFrom = pieceFrom;
+            move->s.promotionPiece = (char) promotionPiece;
 
         }
         ASSERT(getListSize() < MAX_MOVE)

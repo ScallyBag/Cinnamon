@@ -273,13 +273,13 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
         alpha = score;
     }
 
-/**************Delta Pruning ****************/
+    /// **************Delta Pruning ****************
     bool fprune = false;
     int fscore;
     if ((fscore = score + (promotionPiece == NO_PROMOTION ? VALUEQUEEN : 2 * VALUEQUEEN)) < alpha) {
         fprune = true;
     }
-/************ end Delta Pruning *************/
+    /// ************ end Delta Pruning *************
     if (score > alpha) alpha = score;
 
     incListId();
@@ -304,20 +304,20 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
             takeback(move, oldKey, false);
             continue;
         }
-/**************Delta Pruning ****************/
+
         if (badCapure<side>(*move, friends | enemies)) {
             INC(nCutBadCaputure);
             takeback(move, oldKey, false);
             continue;
         }
-/**************Delta Pruning ****************/
+        /// **************Delta Pruning ****************
         if (fprune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
             fscore + PIECES_VALUE[move->s.capturedPiece] <= alpha) {
             INC(nCutFp);
             takeback(move, oldKey, false);
             continue;
         }
-/************ end Delta Pruning *************/
+        /// ************ end Delta Pruning *************
         int val = -qsearch<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, false);
@@ -744,7 +744,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         return qsearch<side>(alpha, beta, NO_PROMOTION, 0);
     }
 
-    //************* hash ****************
+    /// ************* hash ****************
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     Hash::_ThashData hashGreaterItem1;
     const int hashGreaterValue = checkHash(Hash::HASH_GREATER, alpha, beta, depth, zobristKeyR, hashGreaterItem1);
@@ -756,7 +756,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     if (hashAlwaysValue != INT_MAX) {
         return hashAlwaysValue;
     }
-    ///********** end hash ***************
+    /// ********** end hash ***************
 
     if (!(numMoves % 2048)) setRunning(checkTime());
     ++numMoves;
@@ -798,39 +798,39 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         }
     }
 
-    ///******* null move end ********
+    /// ******* null move end ********
 
-    /**************Futility Pruning****************/
-    /**************Futility Pruning razor at pre-pre-frontier*****/
+    /// ********************** Futility Pruning *********************
+    /// ************* Futility Pruning razor at pre-pre-frontier ****
     bool futilPrune = false;
     int futilScore = 0;
     if (depth <= 3 && !isIncheckSide) {
         const int matBalance = lazyEval<side>();
-        /******** reverse futility pruning ***********/
+        /// ******** reverse futility pruning ***********
         if (depth < 3 && !pvNode && abs(beta - 1) > -_INFINITE + MAX_PLY) {
             const int evalMargin = matBalance - REVERSE_FUTIL_MARGIN * depth;
             if (evalMargin >= beta) return evalMargin;
         }
-        /*********************************************/
+        /// *********************************************
         if ((futilScore = matBalance + FUTIL_MARGIN) <= alpha) {
             if (depth == 3 && (matBalance + RAZOR_MARGIN) <= alpha &&
                 bitCount(board::getBitmapNoPawnsNoKing<side ^ 1>(chessboard)) > 3) {
                 INC(nCutRazor);
                 extension--;
             } else
-                ///**************Futility Pruning at pre-frontier*****
+                /// **************Futility Pruning at pre-frontier*****
             if (depth == 2 && (futilScore = matBalance + EXT_FUTIL_MARGIN) <= alpha) {
                 futilPrune = true;
                 score = futilScore;
             } else
-                ///**************Futility Pruning at frontier*****
+                /// **************Futility Pruning at frontier*****
             if (depth == 1) {
                 futilPrune = true;
                 score = futilScore;
             }
         }
     }
-    /************ end Futility Pruning*************/
+    /// ************ end Futility Pruning*************
     incListId();
     ASSERT_RANGE(KING_BLACK + side, 0, 11);
     ASSERT_RANGE(KING_BLACK + (side ^ 1), 0, 11);
