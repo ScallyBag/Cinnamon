@@ -121,7 +121,7 @@ void Search::printWdlSyzygy() {
         }
         print(move, chessboard);
 
-        unsigned res = syzygy->SZtbProbeWDL(chessboard, side ^ 1);
+        unsigned res = syzygy->SZtbProbeWDL(chessboard, X(side));
 
         if (res != TB_RESULT_FAILED) {
             res = TB_GET_WDL(res);
@@ -220,7 +220,7 @@ int Search::printDtmWdlGtb(const bool dtm) {
         }
         print(move, chessboard);
 
-        GTB::getInstance().getDtmWdl(GTB_STM(side ^ 1), 1, chessboard, &pliestomate, dtm);
+        GTB::getInstance().getDtmWdl(GTB_STM(X(side)), 1, chessboard, &pliestomate, dtm);
 
         takeback(move, oldKey, false);
 
@@ -285,7 +285,7 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
     incListId();
 
     u64 friends = board::getBitmap<side>(chessboard);
-    u64 enemies = board::getBitmap<side ^ 1>(chessboard);
+    u64 enemies = board::getBitmap<X(side)>(chessboard);
     if (generateCaptures<side>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth + depth);
@@ -318,7 +318,7 @@ int Search::qsearch(int alpha, const int beta, const char promotionPiece, const 
             continue;
         }
         /// ************ end Delta Pruning *************
-        int val = -qsearch<side ^ 1>(-beta, -alpha, move->s.promotionPiece, depth - 1);
+        int val = -qsearch<X(side)>(-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, false);
         if (score > alpha) {
@@ -443,9 +443,9 @@ bool Search::probeRootTB(_Tmove *res) {
             bool p;
 
             if (winSide != side) { // looking for draw
-                p = isDraw(winSide, side ^ 1, kw, kb, pawnQueenPos);
+                p = isDraw(winSide, X(side), kw, kb, pawnQueenPos);
             } else { //looking for win
-                p = !isDraw(winSide, side ^ 1, kw, kb, pawnQueenPos);
+                p = !isDraw(winSide, X(side), kw, kb, pawnQueenPos);
             }
             if (p &&
                 (bestMove == nullptr || move->s.capturedPiece != SQUARE_EMPTY ||
@@ -490,7 +490,7 @@ bool Search::probeRootTB(_Tmove *res) {
                 continue;
             }
             BENCH_START("gtbTime")
-            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(side ^ 1), 0, chessboard, &dtz, true);
+            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(side)), 0, chessboard, &dtz, true);
             BENCH_STOP("gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
@@ -712,7 +712,7 @@ template<int side, bool checkMoves>
 int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
                    const int nRootMoves) {
 
-    ASSERT_RANGE(side, 0, 1);
+    ASSERT_RANGE(side, 0, 1)
     if (!getRunning()) return 0;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     if (depth >= MAX_PLY - 1) {
@@ -733,7 +733,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     const bool isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
         if (board::checkInsufficientMaterial(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
-            if (board::inCheck1<side ^ 1>(chessboard)) {
+            if (board::inCheck1<X(side)>(chessboard)) {
                 return _INFINITE - (mainDepth - depth + 1);
             }
             return -lazyEval<side>() * 2;
@@ -776,19 +776,19 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
             int nullScore;
             if (depth - R - 1 > 0) {
-                nullScore = -search<side ^ 1, checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line, N_PIECE,
+                nullScore = -search<X(side), checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line, N_PIECE,
                                                           nRootMoves);
                 if (!forceCheck && abs(nullScore) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
-                    nullScore = -search<side ^ 1, checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line,
+                    nullScore = -search<X(side), checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line,
                                                               N_PIECE,
                                                               nRootMoves);
                     forceCheck = false;
                     currentPly--;
                 }
             } else {
-                nullScore = -qsearch<side ^ 1>(-beta, -beta + 1, -1, 0);
+                nullScore = -qsearch<X(side)>(-beta, -beta + 1, -1, 0);
             }
             nullSearch = false;
             if (nullScore >= beta) {
@@ -814,7 +814,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         /// *********************************************
         if ((futilScore = matBalance + FUTIL_MARGIN) <= alpha) {
             if (depth == 3 && (matBalance + RAZOR_MARGIN) <= alpha &&
-                bitCount(board::getBitmapNoPawnsNoKing<side ^ 1>(chessboard)) > 3) {
+                bitCount(board::getBitmapNoPawnsNoKing<X(side)>(chessboard)) > 3) {
                 INC(nCutRazor);
                 extension--;
             } else
@@ -832,10 +832,10 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     }
     /// ************ end Futility Pruning*************
     incListId();
-    ASSERT_RANGE(KING_BLACK + side, 0, 11);
-    ASSERT_RANGE(KING_BLACK + (side ^ 1), 0, 11);
+    ASSERT_RANGE(KING_BLACK + side, 0, 11)
+    ASSERT_RANGE(KING_BLACK + (X(side)), 0, 11)
     const u64 friends = board::getBitmap<side>(chessboard);
-    const u64 enemies = board::getBitmap<side ^ 1>(chessboard);
+    const u64 enemies = board::getBitmap<X(side)>(chessboard);
     if (generateCaptures<side>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth - depth + 1);
@@ -885,13 +885,13 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             move->s.promotionPiece == NO_PROMOTION) {
             currentPly++;
             const int R = countMove > 6 ? 3 : 2;
-            val = -search<side ^ 1, checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
+            val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
                                                 nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
-                val = -search<side ^ 1, checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
+                val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
                                                     nRootMoves);
                 forceCheck = false;
                 currentPly--;
@@ -902,14 +902,14 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             const int lwb = max(alpha, score);
             const int upb = (doMws ? (lwb + 1) : beta);
             currentPly++;
-            val = -search<side ^ 1, checkMoves>(depth + extension - 1, -upb, -lwb, &line,
+            val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
                                                 move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                 nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
-                val = -search<side ^ 1, checkMoves>(depth + extension - 1, -upb, -lwb, &line,
+                val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                     nRootMoves);
                 forceCheck = false;
@@ -917,7 +917,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             }
             if (doMws && (lwb < val) && (val < beta)) {
                 currentPly++;
-                val = -search<side ^ 1, checkMoves>(depth + extension - 1, -beta, -val + 1,
+                val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                     &line,
                                                     move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                     nRootMoves);
@@ -925,7 +925,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                 if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
-                    val = -search<side ^ 1, checkMoves>(depth + extension - 1, -beta, -val + 1,
+                    val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                         &line,
                                                         move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                         nRootMoves);
@@ -1080,7 +1080,7 @@ bool Search::badCapure(const _Tmove &move, const u64 allpieces) {
     if (PIECES_VALUE[move.s.capturedPiece] - 5 >= PIECES_VALUE[move.s.pieceFrom]) return false;
 
     if (PIECES_VALUE[move.s.capturedPiece] + 200 < PIECES_VALUE[move.s.pieceFrom] &&
-        (PAWN_FORK_MASK[side][move.s.to] & chessboard[PAWN_BLACK + (side ^ 1)]))
+        (PAWN_FORK_MASK[side][move.s.to] & chessboard[PAWN_BLACK + (X(side))]))
         return true;
 
     if (PIECES_VALUE[move.s.capturedPiece] + 500 < PIECES_VALUE[move.s.pieceFrom] &&

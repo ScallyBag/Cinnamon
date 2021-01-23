@@ -45,7 +45,7 @@ public:
 
     template<int side>
     int lazyEval() const {
-        return lazyEvalSide<side>() - lazyEvalSide<side ^ 1>();
+        return lazyEvalSide<side>() - lazyEvalSide<X(side)>();
     }
 
     DEBUG(unsigned lazyEvalCuts)

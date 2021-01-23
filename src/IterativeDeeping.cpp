@@ -204,7 +204,7 @@ void IterativeDeeping::run() {
         }
         if (trace) {
 
-            resultMove.s.capturedPiece = searchManager.getPieceAt(resultMove.s.side ^ 1, POW2[resultMove.s.to]);
+            resultMove.s.capturedPiece = searchManager.getPieceAt(X(resultMove.s.side), POW2[resultMove.s.to]);
             bestmove = searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.from, resultMove.s.side);
             if (!(resultMove.s.type & (KING_SIDE_CASTLE_MOVE_MASK | QUEEN_SIDE_CASTLE_MOVE_MASK))) {
                 bestmove += searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.to, resultMove.s.side);

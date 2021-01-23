@@ -42,8 +42,8 @@
 using namespace constants;
 
 int main(int argc, char **argv) {
-    ASSERT(sizeof(Hash::_Thash) == 16);
-    ASSERT(sizeof(_Tmove) == 8);
+    ASSERT(sizeof(Hash::_Thash) == 16)
+    ASSERT(sizeof(_Tmove) == 8)
 
 #if defined(FULL_TEST)
     testing::InitGoogleTest(&argc, argv);

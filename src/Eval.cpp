@@ -51,7 +51,7 @@ template<int side, Eval::_Tphase phase>
 int Eval::evaluatePawn() {
     INC(evaluationCount[side]);
     int result = 0;
-    constexpr int xside = side ^1;
+    constexpr int xside = X(side);
 
     const u64 ped_friends = chessboard[side];
 
@@ -151,7 +151,7 @@ int Eval::evaluatePawn() {
 template<int side, Eval::_Tphase phase>
 int Eval::evaluateBishop(const u64 enemies) {
     INC(evaluationCount[side]);
-    constexpr int xside = side ^1;
+    constexpr int xside = X(side);
     u64 bishop = chessboard[BISHOP_BLACK + side];
 
     // 1.
@@ -218,7 +218,7 @@ int Eval::evaluateBishop(const u64 enemies) {
         //enemy pawn doesn't attack bishop
         if (p && !(PAWN_FORK_MASK[xside][o] & chessboard[xside])) {
             //friend paws defends bishop
-            if (PAWN_FORK_MASK[side ^ 1][o] & chessboard[side]) {
+            if (PAWN_FORK_MASK[X(side)][o] & chessboard[side]) {
                 result += p;
                 if (!(chessboard[KNIGHT_BLACK + xside]) && !(chessboard[BISHOP_BLACK + xside] & board::colors(o))) {
                     result += p;
@@ -242,7 +242,7 @@ int Eval::evaluateQueen(const u64 enemies) {
     INC(evaluationCount[side]);
     u64 queen = chessboard[QUEEN_BLACK + side];
     int result = 0;
-    constexpr int xside = side ^1;
+    constexpr int xside = X(side);
     // 2. *king security*
     if (phase != OPEN) {
         structureEval.kingSecurity[side] +=
@@ -301,7 +301,7 @@ int Eval::evaluateKnight(const u64 notMyBits) {
     INC(evaluationCount[side]);
     u64 knight = chessboard[KNIGHT_BLACK + side];
     if (!knight) return 0;
-    constexpr int xside = side ^1;
+    constexpr int xside = X(side);
     // 1. pinned
     int result = 0;
 
@@ -373,7 +373,7 @@ int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
     const int nRooks = bitCount(rook);
     // 2.
     int result = 0;
-    constexpr int xside = side ^1;
+    constexpr int xside = X(side);
     // 3. in 7th
     if (phase == MIDDLE) {
         result += ROOK_7TH_RANK * bitCount(rook & RANK_1_7[side]);

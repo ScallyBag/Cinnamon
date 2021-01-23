@@ -197,7 +197,7 @@ int GTB::getDtmWdl(const int stm,
 
         if (tb_available) {
             if (doPrint != 0) {
-                const int stm1 = (doPrint == 1) ? stm : (stm ^ 1);
+                const int stm1 = (doPrint == 1) ? stm : X(stm);
                 if (info == tb_DRAW) {
                     cout << "Draw";
                 } else if (info == tb_WMATE && stm1 == tb_WHITE_TO_MOVE) {
@@ -227,7 +227,7 @@ int GTB::getDtmWdl(const int stm,
 
         if (tb_available) {
             if (doPrint != 0) {
-                const int stm1 = (doPrint == 1) ? stm : (stm ^ 1);
+                const int stm1 = (doPrint == 1) ? stm : X(stm);
                 switch (info) {
                     case tb_WMATE :
                         if (stm1 == tb_WHITE_TO_MOVE) cout << "Loss" << endl;

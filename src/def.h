@@ -22,7 +22,6 @@
 static constexpr int MAX_PLY = 96;
 
 typedef unsigned char uchar;
-//typedef bool SIDE; //TODO
 typedef long long unsigned u64;
 typedef u64 _Tchessboard[16];
 

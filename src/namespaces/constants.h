@@ -31,6 +31,47 @@ namespace constants {
     static constexpr int BLACK = 0;
     static constexpr int WHITE = 1;
 
+
+#if defined(CLOP) || defined(DEBUG_MODE)
+#define STATIC_CONST
+#else
+#define STATIC_CONST static constexpr
+#endif
+
+#define _assert(a) if(!(a)){  print_stacktrace();cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
+
+#define X(side) ((side)^1)
+#ifdef BENCH_MODE
+#define BENCH_AUTO_CLOSE(name)  (Bench(Times::getInstance(),name));
+#define BENCH_START(name)  (Bench(Times::getInstance(),name));
+#define BENCH_SUBPROCESS(name,sub)  (Times::getInstance().subProcess(name,sub));
+#define BENCH_STOP(name)  (Times::getInstance().stop(name));
+#define BENCH_PRINT()  (Times::getInstance().print());
+#else
+#define BENCH_AUTO_CLOSE(name)
+#define BENCH_START(name)
+#define BENCH_SUBPROCESS(name, subProcess)
+#define BENCH_STOP(name)
+#define BENCH_PRINT()
+#endif
+
+#ifdef DEBUG_MODE
+#define DEBUG(a) a;
+#define ASSERT(a) _assert(a)
+#define ASSERT_RANGE(value, from, to) {if ((value)<(from) || (value)>(to)){cout<<"ASSERT_RANGE: "<<value<<endl;_assert(0)};}
+#define INC(a) (a++)
+#define SET(a, v) (a=(v))
+#define ADD(a, b) (a+=(b))
+#else
+    #define DEBUG(a)
+#define ASSERT(a)
+#define ASSERT_RANGE(value, from, to)
+#define INC(a)
+#define SET(a, v)
+#define ADD(a, b)
+
+#endif
+
     static constexpr bool USE_HASH_YES = true;
     static constexpr bool USE_HASH_NO = false;
 

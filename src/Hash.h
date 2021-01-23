@@ -96,7 +96,7 @@ public:
     }
 
     void recordHash(const u64 zobristKey, _ThashData &tmp) {
-        ASSERT(zobristKey);
+        ASSERT(zobristKey)
         const unsigned kMod = zobristKey % HASH_SIZE;
         _Thash *rootHashG = &(hashArray[HASH_ALWAYS][kMod]);
         rootHashG->key = (zobristKey ^ tmp.dataU);

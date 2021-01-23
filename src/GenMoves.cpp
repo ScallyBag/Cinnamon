@@ -59,7 +59,6 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 
     for (int i = first; i < list->size; i++) {
         const auto move = list->moveList[i];
-        _assert(move.s.type & 0x3) //TODO
         ASSERT_RANGE(move.s.pieceFrom, 0, 11)
         ASSERT_RANGE(move.s.to, 0, 63)
         ASSERT_RANGE(move.s.from, 0, 63)
@@ -293,7 +292,7 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
             if (((move->s.type & 0x3) != ENPASSANT_MOVE_MASK)) {
                 chessboard[movecapture] |= POW2[posTo];
             } else {
-                ASSERT(movecapture == (move->s.side ^ 1))
+                ASSERT(movecapture == X(move->s.side))
                 if (move->s.side) {
                     chessboard[movecapture] |= POW2[posTo - 8];
                 } else {
@@ -346,7 +345,7 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
                 chessboard[movecapture] &= NOTPOW2[posTo];
                 updateZobristKey(movecapture, posTo);
             } else { //en passant
-                ASSERT(movecapture == (move->s.side ^ 1))
+                ASSERT(movecapture == X(move->s.side))
                 if (move->s.side) {
                     chessboard[movecapture] &= NOTPOW2[posTo - 8];
                     updateZobristKey(movecapture, posTo - 8);
@@ -521,7 +520,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
         move->s.type = STANDARD_MOVE_MASK;
         if (pieceFrom == PAWN_WHITE || pieceFrom == PAWN_BLACK) {
             if (FILE_AT[from] != FILE_AT[to] &&
-                (move->s.side ^ 1 ? board::getPieceAt<WHITE>(POW2[to], chessboard) : board::getPieceAt<BLACK>(POW2[to],
+                    (X(move->s.side) ? board::getPieceAt<WHITE>(POW2[to], chessboard) : board::getPieceAt<BLACK>(POW2[to],
                                                                                                               chessboard)) ==
                 SQUARE_EMPTY) {
                 move->s.type = ENPASSANT_MOVE_MASK;

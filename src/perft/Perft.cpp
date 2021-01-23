@@ -203,7 +203,7 @@ void Perft::run() {
     count = listcount;
     delete (p);
     p = nullptr;
-    ASSERT(perftRes.nCpu > 0);
+    ASSERT(perftRes.nCpu > 0)
     int block = listcount / perftRes.nCpu;
     int i, s = 0;
     setNthread(perftRes.nCpu);

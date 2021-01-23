@@ -26,13 +26,13 @@ public:
         const int side = move.s.side;
         const int position = move.s.to;
         const int capturedPiece = move.s.capturedPiece;
-        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)));
+        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
         int yourCap[15];
         int yourCount = _see(side, position, allpieces, yourCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
         const int pieceValue = PIECES_VALUE[capturedPiece];
         if (yourCount == 0) return pieceValue;
         int myCap[15];
-        int myCount = _see(side ^ 1, position, allpieces, myCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
+        int myCount = _see(X(side), position, allpieces, myCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
 
         if (!myCount && yourCount) {
             return -PIECES_VALUE[move.s.pieceFrom];
@@ -61,10 +61,10 @@ private:
     static int
     _see(const int side, const int position, const u64 allpieces, int attackersValue[], const int firstValueFrom,
          const _Tchessboard &chessboard) {
-        ASSERT_RANGE(position, 0, 63);
-        ASSERT_RANGE(side, 0, 1);
+        ASSERT_RANGE(position, 0, 63)
+        ASSERT_RANGE(side, 0, 1)
         int count = 0;
-        const int xside = side ^1;
+        const int xside = X(side);
         ///pawn
         u64 attackers = PAWN_FORK_MASK[side][position] & chessboard[PAWN_BLACK + xside];
         for (; attackers; RESET_LSB(attackers)) {

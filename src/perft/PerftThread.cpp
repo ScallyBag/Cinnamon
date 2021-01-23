@@ -58,7 +58,7 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
     _Tmove *move;
     incListId();
     u64 friends = board::getBitmap<side>(chessboard);
-    u64 enemies = board::getBitmap<side ^ 1>(chessboard);
+    u64 enemies = board::getBitmap<X(side)>(chessboard);
     generateCaptures<side>(enemies, friends);
 
     generateMoves<side>(friends | enemies);
@@ -72,11 +72,11 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
         move = getMove(ii);
         u64 keyold = chessboard[ZOBRISTKEY_IDX];
         makemove(move, false, false);
-        setSide(side ^ 1);
-        vector<string> bb = getSuccessorsFen<side ^ 1>(depthx - 1);
+        setSide(X(side));
+        vector<string> bb = getSuccessorsFen<X(side)>(depthx - 1);
         n_perft.insert(n_perft.end(), bb.begin(), bb.end());
         takeback(move, keyold, false);
-        setSide(side ^ 1);
+        setSide(X(side));
     }
     decListId();
 
@@ -108,7 +108,7 @@ u64 PerftThread::search(const int depthx) {
     _Tmove *move;
     incListId();
     u64 friends = board::getBitmap<side>(chessboard);
-    u64 enemies = board::getBitmap<side ^ 1>(chessboard);
+    u64 enemies = board::getBitmap<X(side)>(chessboard);
     generateCaptures<side>(enemies, friends);
 
     generateMoves<side>(friends | enemies);
@@ -121,7 +121,7 @@ u64 PerftThread::search(const int depthx) {
         move = getMove(ii);
         u64 keyold = chessboard[ZOBRISTKEY_IDX];
         makemove(move, false, false);
-        n_perft += search<side ^ 1, useHash>(depthx - 1);
+        n_perft += search<X(side), useHash>(depthx - 1);
         takeback(move, keyold, false);
     }
     decListId();
@@ -153,7 +153,7 @@ void PerftThread::run() {
         move = getMove(ii);
         makemove(move, false, false);
         bool fhash = Perft::hash != nullptr;
-        bool side = (chessboard[SIDETOMOVE_IDX] ^ 1);
+        bool side = X(chessboard[SIDETOMOVE_IDX]);
 
         if (fhash) {
             n_perft = side == WHITE ? search<WHITE, USE_HASH_YES>(tPerftRes->depth - 1) : search<BLACK, USE_HASH_YES>(

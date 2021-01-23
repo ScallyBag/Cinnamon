@@ -48,7 +48,7 @@ public:
         u64 result = 0;
         ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
-        constexpr int xside = side ^1;
+        constexpr int xside = X(side);
         u64 attacked = DIAGONAL_ANTIDIAGONAL[kingPosition] &
                        (chessboard[QUEEN_BLACK + xside] | chessboard[BISHOP_BLACK + xside]);
         attacked |=
@@ -118,7 +118,7 @@ public:
         BENCH_AUTO_CLOSE("getAttackers")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
-        constexpr int xside = side ^1;
+        constexpr int xside = X(side);
         ///knight
         u64 attackers = KNIGHT_MASK[position] & chessboard[KNIGHT_BLACK + xside];
 
@@ -153,7 +153,7 @@ public:
         BENCH_AUTO_CLOSE("isAttacked")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
-        constexpr int xside = side ^1;
+        constexpr int xside = X(side);
         ///knight
         if (KNIGHT_MASK[position] & chessboard[KNIGHT_BLACK + xside]) {
             return true;

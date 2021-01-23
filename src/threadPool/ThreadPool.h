@@ -66,7 +66,7 @@ public:
         joinAll();
         removeAllThread();
         nThread = t;
-        ASSERT(threadsBits == 0);
+        ASSERT(threadsBits == 0)
         for (int i = 0; i < nThread; i++) {
             T *x = new T();
             x->setId(i);
@@ -107,7 +107,7 @@ public:
     }
 
     T &getThread(int i) const {
-        ASSERT(i < nThread);
+        ASSERT(i < nThread)
         return *threadPool[i];
     }
 
@@ -121,14 +121,14 @@ private:
     T &getThread() {
         int i = BITScanForwardUnset(threadsBits);
         threadPool[i]->join();
-        ASSERT(!(threadsBits & POW2[i]));
+        ASSERT(!(threadsBits & POW2[i]))
         threadsBits |= POW2[i];
         return *threadPool[i];
     }
 
     void releaseThread(const int threadID) {
-        ASSERT_RANGE(threadID, 0, 63);
-        ASSERT(threadsBits & POW2[threadID]);
+        ASSERT_RANGE(threadID, 0, 63)
+        ASSERT(threadsBits & POW2[threadID])
         threadsBits &= ~POW2[threadID];
         cv.notify_all();
         debug("ThreadPool::releaseThread #", threadID);
@@ -150,7 +150,7 @@ private:
             delete s;
         }
         threadPool.clear();
-        ASSERT(threadsBits == 0);
+        ASSERT(threadsBits == 0)
     }
 };
 

@@ -56,7 +56,7 @@ public:
     }
 
     static bool see1(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
-        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)));
+        ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
         return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
     }
 
@@ -248,7 +248,7 @@ public:
         }
         //ENPASSANT
         if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-            x = ENPASSANT_MASK[side ^ 1][chessboard[ENPASSANT_IDX]] & chessboard[side];
+            x = ENPASSANT_MASK[X(side)][chessboard[ENPASSANT_IDX]] & chessboard[side];
             for (; x; RESET_LSB(x)) {
                 const int o = BITScanForward(x);
                 BENCH_SUBPROCESS("pawnCapture", "pushmove")
@@ -469,19 +469,19 @@ protected:
                 break;
             }
             case ENPASSANT_MOVE_MASK: {
-                u64 to1 = chessboard[side ^ 1];
+                u64 to1 = chessboard[X(side)];
                 u64 from1 = chessboard[side];
                 chessboard[side] &= NOTPOW2[from];
                 chessboard[side] |= POW2[to];
                 if (side) {
-                    chessboard[side ^ 1] &= NOTPOW2[to - 8];
+                    chessboard[X(side)] &= NOTPOW2[to - 8];
                 } else {
-                    chessboard[side ^ 1] &= NOTPOW2[to + 8];
+                    chessboard[X(side)] &= NOTPOW2[to + 8];
                 }
                 result = board::isAttacked<side>(BITScanForward(chessboard[KING_BLACK + side]),
                                                  board::getBitmap<BLACK>(chessboard) |
                                                  board::getBitmap<WHITE>(chessboard), chessboard);
-                chessboard[side ^ 1] = to1;
+                chessboard[X(side)] = to1;
                 chessboard[side] = from1;
                 break;
             }
@@ -574,19 +574,19 @@ protected:
                 break;
             }
             case ENPASSANT_MOVE_MASK: {
-                u64 to1 = chessboard[side ^ 1];
+                u64 to1 = chessboard[X(side)];
                 u64 from1 = chessboard[side];
                 chessboard[side] &= NOTPOW2[from];
                 chessboard[side] |= POW2[to];
                 if (side) {
-                    chessboard[side ^ 1] &= NOTPOW2[to - 8];
+                    chessboard[X(side)] &= NOTPOW2[to - 8];
                 } else {
-                    chessboard[side ^ 1] &= NOTPOW2[to + 8];
+                    chessboard[X(side)] &= NOTPOW2[to + 8];
                 }
                 result = board::isAttacked<side>(BITScanForward(chessboard[KING_BLACK + side]),
                                                  board::getBitmap<BLACK>(chessboard) |
                                                  board::getBitmap<WHITE>(chessboard), chessboard);
-                chessboard[side ^ 1] = to1;
+                chessboard[X(side)] = to1;
                 chessboard[side] = from1;
                 break;
             }
@@ -736,7 +736,7 @@ protected:
     bool pushmove(const int from, const int to, const int promotionPiece, const int pieceFrom, const bool isCapture) {
 #ifdef DEBUG_MODE
         if (((type & 0x3) != ENPASSANT_MOVE_MASK) && !(type & 0xc)) {
-            auto a = board::getPieceAt<side ^ 1>(POW2[to], chessboard);
+            auto a = board::getPieceAt<X(side)>(POW2[to], chessboard);
             if (from != -1 && (isCapture && a == SQUARE_EMPTY || !isCapture && a != SQUARE_EMPTY)) {
                 if (((type & 0x3) != ENPASSANT_MOVE_MASK)) {
                     display();
@@ -753,13 +753,13 @@ protected:
         bool res = false;
         if (((type & 0x3) != ENPASSANT_MOVE_MASK) && !(type & 0xc)) {
             if (isCapture) {
-                piece_captured = board::getPieceAt<side ^ 1>(POW2[to], chessboard);
-                if (piece_captured == KING_BLACK + (side ^ 1)) {
+                piece_captured = board::getPieceAt<X(side)>(POW2[to], chessboard);
+                if (piece_captured == KING_BLACK + (X(side))) {
                     res = true;
                 }
             }
         } else if (!(type & 0xc)) {//en passant
-            piece_captured = side ^ 1;
+            piece_captured = X(side);
         }
         if (!(type & 0xc) && (forceCheck || perftMode)) {
             BENCH_SUBPROCESS("pushmove", "inCheck")
