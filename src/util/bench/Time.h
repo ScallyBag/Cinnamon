@@ -71,7 +71,7 @@ public:
         return _count == 0 ? 0 : _totTime / _count;
     }
 
-    pair<int64_t, int64_t> avgWithSubProcessAndReset(const map<string, Time *> times1) {
+    pair<int64_t, int64_t> avgWithSubProcess(const map<string, Time *> times1) {
         int64_t totTimeSubprocess = 0;
         for (auto & it : subName) {
             auto name1 = it.first;
@@ -82,7 +82,6 @@ public:
         auto avgs = pair<int64_t, int64_t>(0, 0);
         if (_count)
             avgs = pair<int64_t, int64_t>((_totTime - totTimeSubprocess) / _count, _totTime / _count);
-        reset();
         return avgs;
     }
 

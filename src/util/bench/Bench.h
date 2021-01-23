@@ -22,6 +22,20 @@
 #include "Times.h"
 #include <map>
 
+#ifdef BENCH_MODE
+#define BENCH_AUTO_CLOSE(name)  (Bench(Times::getInstance(),name));
+#define BENCH_START(name)  (Bench(Times::getInstance(),name));
+#define BENCH_SUBPROCESS(name,sub)  (Times::getInstance().subProcess(name,sub));
+#define BENCH_STOP(name)  (Times::getInstance().stop(name));
+#define BENCH_PRINT()  (Times::getInstance().print());
+#else
+#define BENCH_AUTO_CLOSE(name)
+#define BENCH_START(name)
+#define BENCH_SUBPROCESS(name, subProcess)
+#define BENCH_STOP(name)
+#define BENCH_PRINT()
+#endif
+
 using namespace std;
 
 class Bench {

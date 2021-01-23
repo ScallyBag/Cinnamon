@@ -273,6 +273,7 @@ void GenMoves::unPerformCastle(const int side, const uchar type) {
 }
 
 void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
+    BENCH_AUTO_CLOSE("takeback")
     if (rep) {
         popStackMove();
     }
@@ -317,6 +318,7 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
 
 
 bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCheck) {
+    BENCH_AUTO_CLOSE("makemove")
     ASSERT(move)
     ASSERT(bitCount(chessboard[KING_WHITE]) == 1 && bitCount(chessboard[KING_BLACK]) == 1)
     int pieceFrom = SQUARE_EMPTY, posTo, posFrom, movecapture = SQUARE_EMPTY;

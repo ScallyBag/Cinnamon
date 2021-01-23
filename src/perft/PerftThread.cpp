@@ -141,8 +141,10 @@ void PerftThread::run() {
     _Tmove *move;
     incListId();
     resetList();
-    const u64 friends = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    const u64 enemies = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
+    const u64 friends = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
+            chessboard);
+    const u64 enemies = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
+            chessboard);
     generateCaptures(chessboard[SIDETOMOVE_IDX], enemies, friends);
     generateMoves(chessboard[SIDETOMOVE_IDX], friends | enemies);
 
@@ -167,16 +169,10 @@ void PerftThread::run() {
 
         char x = FEN_PIECE[chessboard[SIDETOMOVE_IDX] ? board::getPieceAt<WHITE>(POW2[move->s.from], chessboard)
                                                       : board::getPieceAt<BLACK>(POW2[move->s.from], chessboard)];
-        if (x == 'p' || x == 'P') {
-            x = ' ';
-        }
-        char y;
-        if (move->s.capturedPiece != SQUARE_EMPTY) {
-            y = '*';
-        } else {
-            y = '-';
-        }
+        x = toupper(x);
+        if (x == 'P') x = ' ';
 
+        const char y = (move->s.capturedPiece != SQUARE_EMPTY) ? '*' : '-';
 
         if (fhash)spinlockPrint.lock();
         cout << endl;
