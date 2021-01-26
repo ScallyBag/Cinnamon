@@ -70,6 +70,13 @@ public:
     }
 
     void print() {
+        int64_t tot = 0;
+        for (auto it = times.begin(); it != times.end(); ++it) {
+            const auto count1 = it->second->getCount();
+            const auto avg1 = avg(it->first);
+            tot += count1 * avg1.second;
+        }
+
         for (auto it = times.begin(); it != times.end(); ++it) {
             const auto count1 = it->second->getCount();
             long countP = count1;
@@ -88,6 +95,7 @@ public:
             if (avg1.first != avg1.second)
                 cout << (avg1.second > 1000 ? "\t" : "\t\t") << "without subprocess: " << avg1.first << flush;
             int64_t a = count1 * avg1.second;
+            int64_t aa = a;
             if (a > (1000 * 1000)) {
                 a /= (1000 * 1000);
                 m = "M";
@@ -96,9 +104,9 @@ public:
                 m = "K";
             }
             if (avg1.first != avg1.second)
-                cout << "\t\tTOT: " << a << m << flush;
+                cout << "\t\tTOT: " << a << m << "\t" << (aa * 100 / tot) << "%" << flush;
             else
-                cout << "\t\t\t\t\t\t\t\t\tTOT: " << a << m << flush;
+                cout << "\t\t\t\t\t\t\t\t\tTOT: " << a << m << "\t" << (aa * 100 / tot) << "%" << flush;
             cout << endl;
         }
     }

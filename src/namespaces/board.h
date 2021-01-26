@@ -83,6 +83,7 @@ public:
 
     template<int side>
     static u64 getBitmap(const _Tchessboard &chessboard) {
+        BENCH_AUTO_CLOSE("getBitmap")
         return chessboard[PAWN_BLACK + side] | chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] |
                chessboard[KNIGHT_BLACK + side] | chessboard[KING_BLACK + side] | chessboard[QUEEN_BLACK + side];
     }
@@ -96,6 +97,7 @@ public:
 
     template<int side>
     static int getPieceAt(const u64 bitmapPos, const _Tchessboard &chessboard) {
+        BENCH_AUTO_CLOSE("getPieceAt")
         if ((chessboard[PAWN_BLACK + side] & bitmapPos))return PAWN_BLACK + side;
         if ((chessboard[ROOK_BLACK + side] & bitmapPos))return ROOK_BLACK + side;
         if ((chessboard[BISHOP_BLACK + side] & bitmapPos))return BISHOP_BLACK + side;
