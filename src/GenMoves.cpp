@@ -278,7 +278,8 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     chessboard[ZOBRISTKEY_IDX] = oldkey;
     chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
     chessboard[RIGHT_CASTLE_IDX] = move->s.type & 0xf0;
-    if ((move->s.type & 0x3) == STANDARD_MOVE_MASK || (move->s.type & 0x3) == ENPASSANT_MOVE_MASK) {
+//    if (((move->s.type & 0x3) == STANDARD_MOVE_MASK || (move->s.type & 0x3) == ENPASSANT_MOVE_MASK)) {
+    if (move->s.type & 0x1) {
         ASSERT_RANGE(move->s.from, 0, 63)
         ASSERT_RANGE(move->s.to, 0, 63)
         chessboard[move->s.pieceFrom] = (chessboard[move->s.pieceFrom] & NOTPOW2(move->s.to)) | POW2(move->s.from);
@@ -295,7 +296,10 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
         chessboard[(uchar) move->s.side] |= POW2(move->s.from);
         chessboard[(uchar) move->s.promotionPiece] &= NOTPOW2(move->s.to);
         if (move->s.capturedPiece != SQUARE_EMPTY) chessboard[move->s.capturedPiece] |= POW2(move->s.to);
-    } else if (move->s.type & 0xc) unPerformCastle(move->s.side, move->s.type); //castle
+    } else {
+        _assert (move->s.type & 0xc) //TODO
+        unPerformCastle(move->s.side, move->s.type); //castle
+    }
 }
 
 

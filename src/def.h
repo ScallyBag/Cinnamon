@@ -40,7 +40,7 @@ typedef union {
     u64 u;
     struct s {
         char promotionPiece;
-        char pieceFrom;
+        uchar pieceFrom;
         uchar capturedPiece;
         uchar from;
         uchar to;
