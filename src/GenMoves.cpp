@@ -367,21 +367,17 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
                     chessboard[RIGHT_CASTLE_IDX] &= 0x3f;
                     break;
                 case ROOK_WHITE:
-                    if (posFrom == startPosWhiteRookKingSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xef;
-                    else if (posFrom == startPosWhiteRookQueenSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xdf;
+                    if (posFrom == startPosWhiteRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xef;
+                    else if (posFrom == startPosWhiteRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0xdf;
                     break;
                 case ROOK_BLACK:
-                    if (posFrom == startPosBlackRookKingSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xbf;
-                    else if (posFrom == startPosBlackRookQueenSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0x7f;
+                    if (posFrom == startPosBlackRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xbf;
+                    else if (posFrom == startPosBlackRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0x7f;
                     break;
                 default:;
             }
-            //en passant
         }
+        //en passant
         switch (pieceFrom) {
             case PAWN_WHITE:
                 if ((RANK_2 & POW2(posFrom)) && (RANK_3 & POW2(posTo))) {

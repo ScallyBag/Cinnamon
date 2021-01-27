@@ -25,13 +25,6 @@
 #include <cstring>
 
 using namespace std;
-#ifdef HAS_64BIT
-//64 bit
-typedef __int128_t i128;
-#else
-//32 bit
-    typedef unsigned long long i128;
-#endif
 
 class String: public string {
 public:
@@ -40,8 +33,6 @@ public:
     String(const char *s) : string(s) { };
 
     String() = default;
-
-    bool endsWith(const string &ending) const;
 
     String &trim();
 
@@ -56,27 +47,6 @@ public:
     String &toUpper();
 
     String &toLower();
-
-    static string toString(const i128 value) {
-        i128 tmp = value < 0 ? -value : value;
-
-        char buffer[128];
-        int p = 0;
-        char *d = std::end(buffer);
-        do {
-            p++;
-            --d;
-            *d = "0123456789"[tmp % 10];
-            tmp /= 10;
-        } while (tmp != 0);
-        if (value < 0) {
-            p++;
-            --d;
-            *d = '-';
-        }
-        d[p] = 0;
-        return d;
-    }
 
     template<class T>
     String(T d, const string tohex = "") {
@@ -101,11 +71,6 @@ public:
             ss << d;
         }
         assign(ss.str());
-    }
-
-    static int stoi(const string &s) {
-        if (s.empty())return 0;
-        return std::stoi(s);
     }
 
 };

@@ -18,11 +18,6 @@
 
 #include "String.h"
 
-bool String::endsWith(const string &ending) const {
-    if (ending.size() > this->size()) return false;
-    return std::equal(ending.rbegin(), ending.rend(), this->rbegin());
-}
-
 String &String::trim() {
     trimLeft();
     trimRight();
