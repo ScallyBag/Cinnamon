@@ -26,12 +26,16 @@
 #include "../def.h"
 #include "constants.h"
 #include <array>
+#include <cmath>
 
 using namespace _debug;
 using namespace constants;
 
 namespace _def {
     using namespace std;
+
+#define POW2(a) (1ull << (a))
+#define NOTPOW2(a) (~POW2(a))
 
 #define RESET_LSB(bits) (bits&=bits-1)
 

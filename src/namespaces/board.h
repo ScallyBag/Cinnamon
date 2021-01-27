@@ -44,7 +44,7 @@ public:
     template<int side>
     static u64
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
-        BENCH_AUTO_CLOSE( "pinTime")
+        BENCH_AUTO_CLOSE( "getPinned")
         u64 result = 0;
         ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
@@ -57,7 +57,7 @@ public:
             const int pos = BITScanForward(attacked);
             const u64 b = *(s + pos) & allpieces;
 #ifdef DEBUG_MODE
-            u64 x = *(s + pos) & (allpieces & NOTPOW2[kingPosition]);
+            u64 x = *(s + pos) & (allpieces & NOTPOW2(kingPosition));
             ASSERT(b == x)
 #endif
             if (!(b & (b - 1))) {
@@ -134,12 +134,12 @@ public:
         u64 enemies = chessboard[BISHOP_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
         u64 n = Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies;
         for (; n; RESET_LSB(n)) {
-            attackers |= POW2[BITScanForward(n)];
+            attackers |= POW2(BITScanForward(n));
         }
         enemies = chessboard[ROOK_BLACK + xside] | chessboard[QUEEN_BLACK + xside];
         n = Bitboard::getRankFile(position, allpieces) & enemies;
         for (; n; RESET_LSB(n)) {
-            attackers |= POW2[BITScanForward(n)];
+            attackers |= POW2(BITScanForward(n));
         }
 
         return attackers;
