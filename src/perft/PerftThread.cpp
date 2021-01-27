@@ -167,8 +167,8 @@ void PerftThread::run() {
 
         takeback(move, keyold, false);
 
-        char x = FEN_PIECE[chessboard[SIDETOMOVE_IDX] ? board::getPieceAt<WHITE>(POW2[move->s.from], chessboard)
-                                                      : board::getPieceAt<BLACK>(POW2[move->s.from], chessboard)];
+        char x = FEN_PIECE[chessboard[SIDETOMOVE_IDX] ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
+                                                      : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];
         x = toupper(x);
         if (x == 'P') x = ' ';
 

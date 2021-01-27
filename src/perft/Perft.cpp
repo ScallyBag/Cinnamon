@@ -118,9 +118,9 @@ void Perft::alloc() {
     dealloc();
     hash = (_ThashPerft **) calloc(perftRes.depth + 1, sizeof(_ThashPerft *));
     _assert(hash);
-    const u64 k = 1024 * 1024 * mbSize / POW2[perftRes.depth];
+    const u64 k = 1024 * 1024 * mbSize / POW2(perftRes.depth);
     for (int i = 1; i <= perftRes.depth; i++) {
-        perftRes.sizeAtDepth[i] = k * POW2[i - 1] / sizeof(_ThashPerft);
+        perftRes.sizeAtDepth[i] = k * POW2(i - 1) / sizeof(_ThashPerft);
         hash[i] = (_ThashPerft *) calloc(perftRes.sizeAtDepth[i], sizeof(_ThashPerft));
         _assert(hash[i]);
 

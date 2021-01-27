@@ -19,7 +19,7 @@
 #include "board.h"
 
 u64 board::colors(const int pos) {
-    if (POW2[pos] & 0x55aa55aa55aa55aaULL)return 0x55aa55aa55aa55aaULL;
+    if (POW2(pos) & 0x55aa55aa55aa55aaULL)return 0x55aa55aa55aa55aaULL;
     return 0xaa55aa55aa55aa55ULL;
 }
 
@@ -109,9 +109,9 @@ int board::getFile(const char cc) {
 }
 
 bool board::isOccupied(const uchar pos, const u64 allpieces) {
-    return allpieces & POW2[pos];
+    return allpieces & POW2(pos);
 }
 
 bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {
-    return chessboard[pieces] & POW2[pos];
+    return chessboard[pieces] & POW2(pos);
 }

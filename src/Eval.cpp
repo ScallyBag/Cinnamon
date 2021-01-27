@@ -88,7 +88,7 @@ int Eval::evaluatePawn() {
     for (u64 p = ped_friends; p; RESET_LSB(p)) {
         bool isolated = false;
         const int o = BITScanForward(p);
-        const u64 pos = POW2[o];
+        const u64 pos = POW2(o);
 
         // 4. attack king
         if (structureEval.posKingBit[xside] & PAWN_FORK_MASK[side][o]) {
@@ -114,7 +114,7 @@ int Eval::evaluatePawn() {
             isolated = true;
         }
         /// doubled
-        if (NOTPOW2[o] & FILE_[o] & ped_friends) {
+        if (NOTPOW2(o) & FILE_[o] & ped_friends) {
             result -= DOUBLED_PAWNS;
             ADD(SCORE_DEBUG.DOUBLED_PAWNS[side], -DOUBLED_PAWNS);
             /// doubled and isolated
@@ -193,7 +193,7 @@ int Eval::evaluateBishop(const u64 enemies) {
         const u64 x = Bitboard::getDiagonalAntiDiagonal(o, structureEval.allPieces);
         const u64 captured = x & enemies;
         ASSERT(bitCount(captured) + bitCount(x & ~structureEval.allPieces) < (int) (sizeof(MOB_BISHOP) / sizeof(int)))
-        if (captured & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[o];
+        if (captured & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
 
         result += MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];
 
@@ -202,11 +202,11 @@ int Eval::evaluateBishop(const u64 enemies) {
 
         // 6.
         if (phase != OPEN) {
-            if ((BIG_DIAGONAL & structureEval.allPieces) == POW2[o]) {
+            if ((BIG_DIAGONAL & structureEval.allPieces) == POW2(o)) {
                 ADD(SCORE_DEBUG.OPEN_DIAG_BISHOP[side], OPEN_FILE);
                 result += OPEN_FILE;
             }
-            if ((BIG_ANTIDIAGONAL & structureEval.allPieces) == POW2[o]) {
+            if ((BIG_ANTIDIAGONAL & structureEval.allPieces) == POW2(o)) {
                 ADD(SCORE_DEBUG.OPEN_DIAG_BISHOP[side], OPEN_FILE);
                 result += OPEN_FILE;
             }
@@ -265,7 +265,7 @@ int Eval::evaluateQueen(const u64 enemies) {
         result += MOB_QUEEN[phase][bitCount(x)];
         ADD(SCORE_DEBUG.MOB_QUEEN[side], MOB_QUEEN[phase][bitCount(x)]);
 
-        if (x & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[o];
+        if (x & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
         // 4. half open file
         if ((chessboard[xside] & FILE_[o])) {
             ADD(SCORE_DEBUG.HALF_OPEN_FILE_Q[side], HALF_OPEN_FILE_Q);
@@ -273,7 +273,7 @@ int Eval::evaluateQueen(const u64 enemies) {
         }
 
         // 5. open file
-        if ((FILE_[o] & structureEval.allPieces) == POW2[o]) {
+        if ((FILE_[o] & structureEval.allPieces) == POW2(o)) {
             ADD(SCORE_DEBUG.OPEN_FILE_Q[side], OPEN_FILE_Q);
             result += OPEN_FILE_Q;
         }
@@ -331,7 +331,7 @@ int Eval::evaluateKnight(const u64 notMyBits) {
         ASSERT(bitCount(notMyBits & KNIGHT_MASK[pos]) < (int) (sizeof(MOB_KNIGHT) / sizeof(int)))
         u64 mob = notMyBits & KNIGHT_MASK[pos];
         result += MOB_KNIGHT[bitCount(mob)];
-        if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[pos];
+        if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(pos);
         ADD(SCORE_DEBUG.MOB_KNIGHT[side], MOB_KNIGHT[bitCount(mob)]);
 
         // 6. outposts
@@ -414,7 +414,7 @@ int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
         const int o = BITScanForward(rook);
         //mobility
         u64 mob = board::getMobilityRook(o, enemies, friends);
-        if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2[o];
+        if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
 
         ASSERT(bitCount(mob) < (int) (sizeof(MOB_ROOK[phase]) / sizeof(int)))
         result += MOB_ROOK[phase][bitCount(mob)];
@@ -517,8 +517,8 @@ short Eval::getScore(const u64 key, const int side, const int alpha, const int b
     structureEval.allPieces = structureEval.allPiecesSide[BLACK] | structureEval.allPiecesSide[WHITE];
     structureEval.posKing[BLACK] = (uchar) BITScanForward(chessboard[KING_BLACK]);
     structureEval.posKing[WHITE] = (uchar) BITScanForward(chessboard[KING_WHITE]);
-    structureEval.posKingBit[BLACK] = POW2[structureEval.posKing[BLACK]];
-    structureEval.posKingBit[WHITE] = POW2[structureEval.posKing[WHITE]];
+    structureEval.posKingBit[BLACK] = POW2(structureEval.posKing[BLACK]);
+    structureEval.posKingBit[WHITE] = POW2(structureEval.posKing[WHITE]);
     structureEval.kingAttackers[WHITE] = structureEval.kingAttackers[BLACK] = 0;
 
     _Tresult Tresult;

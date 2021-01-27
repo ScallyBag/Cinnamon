@@ -68,9 +68,9 @@ string ChessBoard::boardToFen() const {
         int l = 0;
         string row;
         for (int x = 0; x < 8; x++) {
-            int q = board::getPieceAt<BLACK>(POW2[63 - ((y * 8) + x)], chessboard);
+            int q = board::getPieceAt<BLACK>(POW2(63 - ((y * 8) + x)), chessboard);
             if (q == SQUARE_EMPTY) {
-                q = board::getPieceAt<WHITE>(POW2[63 - ((y * 8) + x)], chessboard);
+                q = board::getPieceAt<WHITE>(POW2(63 - ((y * 8) + x)), chessboard);
             }
             if (q == SQUARE_EMPTY) {
                 l++;
@@ -135,10 +135,10 @@ void ChessBoard::display() const {
             cout << endl << "   ----+---+---+---+---+---+---+----" << endl;
             cout << " " << 8 - RANK_AT[t] << " | ";
         }
-        x = (x = (x = FEN_PIECE[board::getPieceAt<WHITE>(POW2[63 - t], chessboard)]) != '-' ? x
+        x = (x = (x = FEN_PIECE[board::getPieceAt<WHITE>(POW2(63 - t), chessboard)]) != '-' ? x
                                                                                             : FEN_PIECE[board::getPieceAt<BLACK>(
-                        POW2[63 - t], chessboard)]) == '-' ? ' ' : x;
-        x != ' ' ? cout << x : POW2[t] & WHITE_SQUARES ? cout << " " : cout << ".";
+                        POW2(63 - t), chessboard)]) == '-' ? ' ' : x;
+        x != ' ' ? cout << x : POW2(t) & WHITE_SQUARES ? cout << " " : cout << ".";
         cout << " | ";
     }
     cout << endl << "   ----+---+---+---+---+---+---+----" << endl;
@@ -253,9 +253,9 @@ int ChessBoard::loadFen(const string &fen) {
         int p = s[63 - i];
         if (p != SQUARE_EMPTY) {
             updateZobristKey(p, i);
-            chessboard[p] |= POW2[i];
+            chessboard[p] |= POW2(i);
         } else {
-            chessboard[p] &= NOTPOW2[i];
+            chessboard[p] &= NOTPOW2(i);
         }
     }
     startPosWhiteKing = BITScanForward(chessboard[KING_WHITE]);
