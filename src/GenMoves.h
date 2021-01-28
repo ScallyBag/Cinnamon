@@ -677,25 +677,18 @@ protected:
     template<uchar side>
     void tryAllCastle960(const u64 allpieces) {
         if (side == WHITE) {
-
             if (allowKingSideWhite(allpieces)) {
-
                 pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
-
             if (allowQueenSideWhite(allpieces)) {
-
                 pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
 
         } else {
             if (allowKingSideBlack(allpieces)) {
-
                 pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
-
             if (allowQueenSideBlack(allpieces)) {
-
                 pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
         }
