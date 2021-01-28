@@ -64,19 +64,19 @@ namespace constants {
 
     static constexpr int _INFINITE = 32000;
 
-    static constexpr int PAWN_BLACK = 0;
-    static constexpr int PAWN_WHITE = 1;
-    static constexpr int ROOK_BLACK = 2;
-    static constexpr int ROOK_WHITE = 3;
-    static constexpr int BISHOP_BLACK = 4;
-    static constexpr int BISHOP_WHITE = 5;
-    static constexpr int KNIGHT_BLACK = 6;
-    static constexpr int KNIGHT_WHITE = 7;
-    static constexpr int KING_BLACK = 8;
-    static constexpr int KING_WHITE = 9;
-    static constexpr int QUEEN_BLACK = 10;
-    static constexpr int QUEEN_WHITE = 11;
-    static constexpr int SQUARE_EMPTY = 12;
+    static constexpr uchar PAWN_BLACK = 0;
+    static constexpr uchar PAWN_WHITE = 1;
+    static constexpr uchar ROOK_BLACK = 2;
+    static constexpr uchar ROOK_WHITE = 3;
+    static constexpr uchar BISHOP_BLACK = 4;
+    static constexpr uchar BISHOP_WHITE = 5;
+    static constexpr uchar KNIGHT_BLACK = 6;
+    static constexpr uchar KNIGHT_WHITE = 7;
+    static constexpr uchar KING_BLACK = 8;
+    static constexpr uchar KING_WHITE = 9;
+    static constexpr uchar QUEEN_BLACK = 10;
+    static constexpr uchar QUEEN_WHITE = 11;
+    static constexpr uchar SQUARE_EMPTY = 12;
 
     static constexpr int VALUEPAWN = 100;
     static constexpr int VALUEROOK = 520;

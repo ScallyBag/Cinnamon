@@ -717,7 +717,7 @@ protected:
     }
 
     template<uchar type, int side>
-    bool pushmove(const int from, const int to, const int promotionPiece, const int pieceFrom, const bool isCapture) {
+    bool pushmove(const int from, const int to, const uchar promotionPiece, const int pieceFrom, const bool isCapture) {
         BENCH_AUTO_CLOSE("pushmove")
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
@@ -741,8 +741,8 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
-        move->s.type = (uchar) chessboard[RIGHT_CASTLE_IDX] | type;
-        move->s.side = (char) side;
+        move->s.type = chessboard[RIGHT_CASTLE_IDX] | type;
+        move->s.side = side;
         move->s.capturedPiece = capturedPiece;
         if (type & 0x3) {
             move->s.from = (uchar) from;
