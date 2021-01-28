@@ -137,7 +137,7 @@ public:
     }
 
     template<uchar side>
-    bool performDiagCapture(const int piece, const u64 enemies, const u64 allpieces) {
+    bool performDiagCapture(const uchar piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -157,7 +157,7 @@ public:
     u64 getTotMoves() const;
 
     template<uchar side>
-    bool performRankFileCapture(const int piece, const u64 enemies, const u64 allpieces) {
+    bool performRankFileCapture(const uchar piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -287,7 +287,7 @@ public:
     void clearHeuristic();
 
     template<uchar side>
-    void performDiagShift(const int piece, const u64 allpieces) {
+    void performDiagShift(const uchar piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -302,7 +302,7 @@ public:
     }
 
     template<uchar side>
-    void performRankFileShift(const int piece, const u64 allpieces) {
+    void performRankFileShift(const uchar piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -408,7 +408,7 @@ protected:
 
     template<uchar side, uchar type>
     bool
-    inCheckSlow(const int from, const int to, const uchar pieceFrom, const int pieceTo, const uchar promotionPiece) {
+    inCheckSlow(const int from, const int to, const uchar pieceFrom, const uchar pieceTo, const uchar promotionPiece) {
         bool result;
         switch (type & 0x3) {
             case STANDARD_MOVE_MASK: {
