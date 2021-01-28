@@ -163,7 +163,7 @@ void SearchManager::setMainPly(const int r) {
     }
 }
 
-int SearchManager::getPieceAt(const int side, const u64 i) {
+int SearchManager::getPieceAt(const uchar side, const u64 i) {
     return side == WHITE ? board::getPieceAt<WHITE>(i, threadPool->getThread(0).getChessboard())
                          : board::getPieceAt<BLACK>(i, threadPool->getThread(0).getChessboard());
 }
@@ -269,7 +269,7 @@ int SearchManager::getSide() const {
     return board::getSide(threadPool->getThread(0).getChessboard());
 }
 
-int SearchManager::getScore(const int side) {
+int SearchManager::getScore(const uchar side) {
     return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
 }
 
@@ -297,7 +297,7 @@ bool SearchManager::makemove(const _Tmove *i) {
     return b;
 }
 
-string SearchManager::decodeBoardinv(const uchar type, const int a, const int side) {
+string SearchManager::decodeBoardinv(const uchar type, const int a, const uchar side) {
     return threadPool->getThread(0).decodeBoardinv(type, a, side);
 }
 

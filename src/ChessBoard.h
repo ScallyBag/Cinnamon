@@ -44,7 +44,7 @@ class ChessBoard : public Bitboard {
 public:
     ChessBoard();
 
-    string decodeBoardinv(const uchar type, const int a, const int side);
+    string decodeBoardinv(const uchar type, const int a, const uchar side);
 
     virtual ~ChessBoard();
 

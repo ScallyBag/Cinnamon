@@ -76,7 +76,7 @@ public:
     void endRun() {};
 #ifndef JS_MODE
 
-    int probeWdl(const int depth, const int side, const int N_PIECE);
+    int probeWdl(const int depth, const uchar side, const int N_PIECE);
 
     int printDtmWdlGtb(const bool dtm);
 
@@ -148,13 +148,13 @@ private:
 
     bool checkDraw(u64);
 
-    template<int side, bool checkMoves>
+    template<uchar side, bool checkMoves>
     int search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE, const int nRootMoves);
 
     template<bool checkMoves>
     bool checkSearchMoves(const _Tmove *move) const;
 
-    template<int side>
+    template<uchar side>
     int qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth);
 
     void updatePv(_TpvLine *pline, const _TpvLine *line, const _Tmove *move);
@@ -196,6 +196,6 @@ private:
         return INT_MAX;
     }
 
-    template<int side>
+    template<uchar side>
     bool badCapure(const _Tmove &move, const u64 allpieces);
 };

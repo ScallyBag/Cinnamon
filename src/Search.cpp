@@ -83,13 +83,13 @@ void Search::clone(const Search *s) {
 
 int Search::SZtbProbeWDL() const {
     const auto tot = bitCount(board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard));
-    const int side = board::getSide(chessboard);
+    const uchar side = board::getSide(chessboard);
     return syzygy->SZtbProbeWDL(chessboard, side, tot);
 }
 
 void Search::printWdlSyzygy() {
     perftMode = true;
-    const int side = board::getSide(chessboard);
+    const uchar side = board::getSide(chessboard);
     u64 friends = side == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     u64 enemies = side == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
@@ -141,7 +141,7 @@ void Search::printWdlSyzygy() {
 
 void Search::printDtzSyzygy() {
     perftMode = true;
-    const int side = board::getSide(chessboard);
+    const uchar side = board::getSide(chessboard);
 
     if ((side == BLACK) ? board::inCheck1<WHITE>(chessboard) : board::inCheck1<BLACK>(chessboard)) {
         cout << "invalid position" << endl;
@@ -199,7 +199,7 @@ void Search::printDtzSyzygy() {
 
 int Search::printDtmWdlGtb(const bool dtm) {
     perftMode = true;
-    int side = board::getSide(chessboard);
+    uchar side = board::getSide(chessboard);
     u64 friends = side == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     u64 enemies = side == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     display();
@@ -259,7 +259,7 @@ Search::~Search() {
     join();
 }
 
-template<int side>
+template<uchar side>
 int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth) {
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     if (!getRunning()) return 0;
@@ -388,7 +388,7 @@ int Search::search(const int depth, const int alpha, const int beta) {
     ASSERT_RANGE(depth, 0, MAX_PLY)
     auto ep = chessboard[ENPASSANT_IDX];
     incListId();
-    const int side = board::getSide(chessboard);
+    const uchar side = board::getSide(chessboard);
     const u64 friends = (side == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     const u64 enemies = (side == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
     generateCaptures(side, enemies, friends);
@@ -413,7 +413,7 @@ bool Search::probeRootTB(_Tmove *res) {
     const u64 white = board::getBitmap<WHITE>(chessboard);
     const u64 black = board::getBitmap<BLACK>(chessboard);
     const auto tot = bitCount(white | black);
-    const int side = board::getSide(chessboard);
+    const uchar side = board::getSide(chessboard);
 
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
@@ -661,7 +661,7 @@ bool Search::checkSearchMoves(const _Tmove *move) const {
 
 #ifndef JS_MODE
 
-int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
+int Search::probeWdl(const int depth, const uchar side, const int N_PIECE) {
 
 //    if (N_PIECE == 3 &&  depth > 2 && depth != mainDepth && (board[WHITE] || board[BLACK])) {
 //        const int kw = BITScanForward(board[KING_WHITE]);
@@ -708,7 +708,7 @@ int Search::probeWdl(const int depth, const int side, const int N_PIECE) {
 
 #endif
 
-template<int side, bool checkMoves>
+template<uchar side, bool checkMoves>
 int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, const int N_PIECE,
                    const int nRootMoves) {
 
@@ -1072,7 +1072,7 @@ bool Search::setParameter(String &param, const int value) {
 #endif
 }
 
-template<int side>
+template<uchar side>
 bool Search::badCapure(const _Tmove &move, const u64 allpieces) {
 
     if (move.s.pieceFrom == (PAWN_BLACK + side)) return false;

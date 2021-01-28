@@ -91,7 +91,7 @@ namespace _def {
 
 #endif
 
-    template<int side, int shift>
+    template<uchar side, int shift>
     static inline u64 shiftForward(const u64 bits) {
         ASSERT(shift == 7 || shift == 8 || shift == 9)
         const auto a = side == WHITE ? bits << shift : bits >> shift;

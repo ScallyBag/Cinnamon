@@ -173,7 +173,7 @@ void ChessBoard::print(const _Tmove *move, const _Tchessboard &chessboard) {
     cout << moveToString(move) << " " << flush;
 }
 
-string ChessBoard::decodeBoardinv(const uchar type, const int a, const int side) {
+string ChessBoard::decodeBoardinv(const uchar type, const int a, const uchar side) {
     if (type & QUEEN_SIDE_CASTLE_MOVE_MASK && side == WHITE) {
         return isChess960() ? BOARD[startPosWhiteKing] + BOARD[startPosWhiteRookQueenSide] : "e1c1";
     }

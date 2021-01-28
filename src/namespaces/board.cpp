@@ -26,18 +26,18 @@ u64 board::colors(const int pos) {
 
 #ifdef DEBUG_MODE
 
-u64 board::getBitmap(const int side, const _Tchessboard &chessboard) {
+u64 board::getBitmap(const uchar side, const _Tchessboard &chessboard) {
     return side ? getBitmap<WHITE>(chessboard) : getBitmap<BLACK>(chessboard);
 }
 
-int board::getPieceAt(int side, const u64 bitmapPos, const _Tchessboard &chessboard) {
+int board::getPieceAt(uchar side, const u64 bitmapPos, const _Tchessboard &chessboard) {
     return side == WHITE ? getPieceAt<WHITE>(bitmapPos, chessboard) : getPieceAt<BLACK>
             (bitmapPos, chessboard);
 }
 
 #endif
 
-int board::getSide(const _Tchessboard &chessboard) {
+uchar board::getSide(const _Tchessboard &chessboard) {
     return chessboard[SIDETOMOVE_IDX];
 }
 

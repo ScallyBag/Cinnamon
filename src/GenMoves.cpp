@@ -33,12 +33,12 @@ GenMoves::GenMoves() : perftMode(false), listId(-1) {
     init();
 }
 
-void GenMoves::generateMoves(const int side, const u64 allpieces) {
+void GenMoves::generateMoves(const uchar side, const u64 allpieces) {
     ASSERT_RANGE(side, 0, 1)
     side ? generateMoves<WHITE>(allpieces) : generateMoves<BLACK>(allpieces);
 }
 
-bool GenMoves::generateCaptures(const int side, const u64 enemies, const u64 friends) {
+bool GenMoves::generateCaptures(const uchar side, const u64 enemies, const u64 friends) {
     ASSERT_RANGE(side, 0, 1)
     return side ? generateCaptures<WHITE>(enemies, friends) : generateCaptures<BLACK>(enemies, friends);
 }
@@ -121,7 +121,7 @@ GenMoves::~GenMoves() {
     free(repetitionMap);
 }
 
-void GenMoves::performCastle(const int side, const uchar type) {
+void GenMoves::performCastle(const uchar side, const uchar type) {
     ASSERT_RANGE(side, 0, 1)
 
     if (side == WHITE) {
@@ -228,7 +228,7 @@ bool GenMoves::allowCastleWhiteKing(const u64 allpieces) const {
            !board::isAttacked<WHITE>(3, allpieces, chessboard);
 }
 
-void GenMoves::unPerformCastle(const int side, const uchar type) {
+void GenMoves::unPerformCastle(const uchar side, const uchar type) {
     ASSERT_RANGE(side, 0, 1)
     ASSERT(chessboard[KING_WHITE])
     ASSERT(chessboard[KING_BLACK])
@@ -248,7 +248,7 @@ void GenMoves::unPerformCastle(const int side, const uchar type) {
             if (startPosWhiteRookQueenSide != D1)
                 chessboard[ROOK_WHITE] = (chessboard[ROOK_WHITE] | POW2(startPosWhiteRookQueenSide)) & NOTPOW2_4;
         }
-//void GenMoves::unPerformCastle(const int side, const uchar type) {
+//void GenMoves::unPerformCastle(const uchar side, const uchar type) {
         ASSERT(chessboard[KING_WHITE] & POW2(startPosWhiteKing))
     } else {
 //    ASSERT_RANGE(side, 0, 1)
@@ -419,7 +419,7 @@ void GenMoves::setRepetitionMapCount(const int i) {
 }
 
 int GenMoves::loadFen(const string &fen) {
-    int side = ChessBoard::loadFen(fen);
+    uchar side = ChessBoard::loadFen(fen);
     if (side == 2) {
         fatal("Bad FEN position format ", fen)
         std::_Exit(1);
@@ -564,7 +564,7 @@ bool GenMoves::generatePuzzle(const string type) {
     vector<int> pieces;
 
     for (unsigned k = 0; k < TOT; k++) {
-        int side = WHITE;
+        uchar side = WHITE;
         pieces.clear();
         _assert(toupper(type.at(0)) == 'K')
         for (unsigned i = 1; i < type.size(); i++) {

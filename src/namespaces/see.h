@@ -23,7 +23,7 @@ using namespace constants;
 class See { // TODO
 public:
     static int see(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
-        const int side = move.s.side;
+        const uchar side = move.s.side;
         const int position = move.s.to;
         const int capturedPiece = move.s.capturedPiece;
         ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
@@ -59,7 +59,7 @@ public:
 
 private:
     static int
-    _see(const int side, const int position, const u64 allpieces, int attackersValue[], const int firstValueFrom,
+    _see(const uchar side, const int position, const u64 allpieces, int attackersValue[], const int firstValueFrom,
          const _Tchessboard &chessboard) {
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)

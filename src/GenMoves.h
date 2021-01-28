@@ -36,11 +36,11 @@ public:
 
     void setPerft(const bool b);
 
-    bool generateCaptures(const int side, const u64, const u64);
+    bool generateCaptures(const uchar side, const u64, const u64);
 
-    void generateMoves(const int side, const u64);
+    void generateMoves(const uchar side, const u64);
 
-    template<int side>
+    template<uchar side>
     void generateMoves(const u64 allpieces) {
         ASSERT_RANGE(side, 0, 1)
         ASSERT(chessboard[KING_BLACK])
@@ -60,7 +60,7 @@ public:
         return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
     }
 
-    template<int side>
+    template<uchar side>
     bool generateCaptures(const u64 enemies, const u64 friends) {
         ASSERT_RANGE(side, 0, 1)
         ASSERT(chessboard[KING_BLACK])
@@ -101,7 +101,7 @@ public:
 
     void setRepetitionMapCount(const int i);
 
-    template<int side>
+    template<uchar side>
     bool performKingShiftCapture(const u64 enemies, const bool isCapture) {
         BENCH_AUTO_CLOSE("kingShiftCapture")
         ASSERT_RANGE(side, 0, 1)
@@ -118,7 +118,7 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     bool performKnightShiftCapture(const u64 enemies, const bool isCapture) {
         BENCH_AUTO_CLOSE("knightShiftCapture")
         ASSERT_RANGE(side, 0, 1)
@@ -136,7 +136,7 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     bool performDiagCapture(const int piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagCapture")
         ASSERT_RANGE(piece, 0, 11)
@@ -156,7 +156,7 @@ public:
 
     u64 getTotMoves() const;
 
-    template<int side>
+    template<uchar side>
     bool performRankFileCapture(const int piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileCapture")
         ASSERT_RANGE(piece, 0, 11)
@@ -175,7 +175,7 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     bool performPawnCapture(const u64 enemies) {
         BENCH_AUTO_CLOSE("pawnCapture")
         if (!chessboard[side]) {
@@ -253,7 +253,7 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     void performPawnShift(const u64 xallpieces) {
         u64 x = chessboard[side];
         performJumpPawn<side>(x, xallpieces);
@@ -286,7 +286,7 @@ public:
 
     void clearHeuristic();
 
-    template<int side>
+    template<uchar side>
     void performDiagShift(const int piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagShift")
         ASSERT_RANGE(piece, 0, 11)
@@ -301,7 +301,7 @@ public:
         }
     }
 
-    template<int side>
+    template<uchar side>
     void performRankFileShift(const int piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileShift")
         ASSERT_RANGE(piece, 0, 11)
@@ -386,7 +386,7 @@ protected:
 
     _Tmove *getNextMove(decltype(gen_list), const int depth, const Hash::_ThashData *c, const int first);
 
-    template<int side>
+    template<uchar side>
     int getMobilityCastle(const u64 allpieces) const {
         ASSERT_RANGE(side, 0, 1)
         if (chess960) return 0;
@@ -406,7 +406,7 @@ protected:
 
 #ifdef DEBUG_MODE
 
-    template<int side, uchar type>
+    template<uchar side, uchar type>
     bool
     inCheckSlow(const int from, const int to, const uchar pieceFrom, const int pieceTo, const uchar promotionPiece) {
         bool result;
@@ -583,11 +583,11 @@ protected:
         return result;
     }
 
-    void performCastle(const int side, const uchar type);
+    void performCastle(const uchar side, const uchar type);
 
-    void unPerformCastle(const int side, const uchar type);
+    void unPerformCastle(const uchar side, const uchar type);
 
-    template<int side>
+    template<uchar side>
     void tryAllCastle(const u64 allpieces) {
         ASSERT_RANGE(side, 0, 1)
         BENCH_AUTO_CLOSE("castle")
@@ -674,7 +674,7 @@ protected:
                 !board::anyAttack<WHITE>(kingPath, allpieces & NOTPOW2(startPosWhiteRookKingSide), chessboard));
     }
 
-    template<int side>
+    template<uchar side>
     void tryAllCastle960(const u64 allpieces) {
         if (side == WHITE) {
 
@@ -701,7 +701,7 @@ protected:
         }
     }
 
-    template<int side>
+    template<uchar side>
     void tryAllCastleStandard(const u64 allpieces) {
         if (side == WHITE) {
             if (allowCastleWhiteKing(allpieces))
@@ -717,7 +717,7 @@ protected:
         }
     }
 
-    template<uchar type, int side>
+    template<uchar type, uchar side>
     bool
     pushmove(const uchar from, const uchar to, const uchar promotionPiece, const uchar pieceFrom,
              const bool isCapture) {
@@ -803,7 +803,7 @@ private:
         return &list->moveList[i];
     }
 
-    template<int side>
+    template<uchar side>
     void performJumpPawn(u64 x, const u64 xallpieces) {
         BENCH_AUTO_CLOSE("performJumpPawn")
         x &= TABJUMPPAWN;

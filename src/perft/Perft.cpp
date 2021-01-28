@@ -168,7 +168,7 @@ void Perft::run() {
         p->loadFen(fen);
     }
     p->setPerft(true);
-    int side = board::getSide(p->getChessboard()) ? 1 : 0;
+    uchar side = board::getSide(p->getChessboard()) ? 1 : 0;
 
     p->display();
     cout << "fen:\t\t\t" << fen << endl;

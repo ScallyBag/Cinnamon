@@ -44,7 +44,7 @@ vector<string> PerftThread::getSuccessorsFen(const string &fen1, const int depth
 }
 
 
-template<int side>
+template<uchar side>
 vector<string> PerftThread::getSuccessorsFen(const int depthx) {
     if (depthx == 0) {
         vector<string> a;
@@ -84,7 +84,7 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
 }
 
 
-template<int side, bool useHash>
+template<uchar side, bool useHash>
 u64 PerftThread::search(const int depthx) {
     checkWait();
     if (depthx == 0) {
