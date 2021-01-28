@@ -358,7 +358,6 @@ public:
     unsigned betaEfficiencyCount = 0;
 #endif
 
-    static constexpr int NO_PROMOTION = -1;
 protected:
 
     u64 pinned;

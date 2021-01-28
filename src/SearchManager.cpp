@@ -59,7 +59,7 @@ string SearchManager::probeRootTB() const {
         string best = string(search.decodeBoardinv(bestMove.s.type, bestMove.s.from, getSide())) +
                       string(search.decodeBoardinv(bestMove.s.type, bestMove.s.to, getSide()));
 
-        if (bestMove.s.promotionPiece != GenMoves::NO_PROMOTION)
+        if (bestMove.s.promotionPiece != NO_PROMOTION)
             best += tolower(bestMove.s.promotionPiece);
 
         return best;

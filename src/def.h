@@ -39,12 +39,12 @@ typedef struct {
 typedef union {
     u64 u;
     struct s {
-        char promotionPiece;
+        uchar promotionPiece;
         uchar pieceFrom;
         uchar capturedPiece;
         uchar from;
         uchar to;
-        char side;
+        uchar side;
         uchar type;
     } s;
 } _Tmove;

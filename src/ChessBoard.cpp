@@ -165,7 +165,7 @@ string ChessBoard::moveToString(const _Tmove *move) {
     string a = decodeBoardinv(move->s.type, move->s.from, move->s.side);
     if (move->s.type & 0xc) return a;
     string b = decodeBoardinv(move->s.type, move->s.to, move->s.side);
-    if (move->s.promotionPiece != -1) (a + b) += (char) tolower(FEN_PIECE[move->s.promotionPiece]);
+    if (move->s.promotionPiece != NO_PROMOTION) (a + b) += (char) tolower(FEN_PIECE[move->s.promotionPiece]);
     return a + b;
 }
 

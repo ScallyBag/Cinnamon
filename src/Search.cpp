@@ -260,7 +260,7 @@ Search::~Search() {
 }
 
 template<int side>
-int Search::qsearch(int alpha, const int beta, const char promotionPiece, const int depth) {
+int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth) {
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     if (!getRunning()) return 0;
     if (depth >= MAX_PLY - 1) {

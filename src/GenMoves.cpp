@@ -63,7 +63,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
         ASSERT_RANGE(move.s.to, 0, 63)
         ASSERT_RANGE(move.s.from, 0, 63)
 
-        const int score = CAPTURES[(uchar) move.s.pieceFrom][move.s.capturedPiece];
+        const int score = CAPTURES[move.s.pieceFrom][move.s.capturedPiece];
         if (score > bestScore) {
             bestScore = score;
             bestId = i;
@@ -93,7 +93,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
                 return swap(list, first, i);
             }
             score += historyHeuristic[move.s.from][move.s.to];
-            score += CAPTURES[(uchar) move.s.pieceFrom][move.s.capturedPiece];
+            score += CAPTURES[move.s.pieceFrom][move.s.capturedPiece];
 
             if (isKiller(0, move.s.from, move.s.to, depth)) score += 90;
             else if (isKiller(1, move.s.from, move.s.to, depth)) score += 80;
@@ -278,7 +278,7 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     chessboard[ZOBRISTKEY_IDX] = oldkey;
     chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
     chessboard[RIGHT_CASTLE_IDX] = move->s.type & 0xf0;
-//    if (((move->s.type & 0x3) == STANDARD_MOVE_MASK || (move->s.type & 0x3) == ENPASSANT_MOVE_MASK)) {
+
     if (move->s.type & 0x1) {
         ASSERT_RANGE(move->s.from, 0, 63)
         ASSERT_RANGE(move->s.to, 0, 63)
@@ -293,12 +293,13 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
         }
     } else if ((move->s.type & 0x3) == PROMOTION_MOVE_MASK) {
         ASSERT(move->s.to >= 0 && move->s.side >= 0 && move->s.promotionPiece >= 0)
-        chessboard[(uchar) move->s.side] |= POW2(move->s.from);
-        chessboard[(uchar) move->s.promotionPiece] &= NOTPOW2(move->s.to);
+        chessboard[move->s.side] |= POW2(move->s.from);
+        chessboard[move->s.promotionPiece] &= NOTPOW2(move->s.to);
         if (move->s.capturedPiece != SQUARE_EMPTY) chessboard[move->s.capturedPiece] |= POW2(move->s.to);
     } else {
-        _assert (move->s.type & 0xc) //TODO
-        unPerformCastle(move->s.side, move->s.type); //castle
+        //castle
+        ASSERT (move->s.type & 0xc)
+        unPerformCastle(move->s.side, move->s.type);
     }
 }
 
@@ -315,8 +316,8 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
             chessboard[move->s.pieceFrom] &= NOTPOW2(move->s.from);
             updateZobristKey(move->s.pieceFrom, move->s.from);
             ASSERT(move->s.promotionPiece >= 0)
-            chessboard[(uchar) move->s.promotionPiece] |= POW2(move->s.to);
-            updateZobristKey((uchar) move->s.promotionPiece, move->s.to);
+            chessboard[move->s.promotionPiece] |= POW2(move->s.to);
+            updateZobristKey(move->s.promotionPiece, move->s.to);
         } else {
             chessboard[move->s.pieceFrom] = (chessboard[move->s.pieceFrom] | POW2(move->s.to)) & NOTPOW2(move->s.from);
             updateZobristKey(move->s.pieceFrom, move->s.from);
@@ -513,7 +514,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
         } else {
             move->s.promotionPiece = INV_FEN[(uchar) fenStr.at(4)];
         }
-        ASSERT(move->s.promotionPiece != -1)
+        ASSERT(move->s.promotionPiece != NO_PROMOTION)
     }
     if (move->s.side == WHITE) {
         move->s.capturedPiece = board::getPieceAt<BLACK>(POW2(move->s.to), chessboard);
