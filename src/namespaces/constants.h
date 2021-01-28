@@ -100,6 +100,8 @@ namespace constants {
     static constexpr int ZOBRISTKEY_IDX = 15;
 
     static constexpr uchar NO_PROMOTION = 0xff;
+    static constexpr uchar NO_PIECE = 0xff;
+    static constexpr uchar NO_POSITION = 0xff;
 
     static constexpr u64 A7bit = 0x80000000000000ULL;
     static constexpr u64 B7bit = 0x40000000000000ULL;

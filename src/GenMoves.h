@@ -407,7 +407,8 @@ protected:
 #ifdef DEBUG_MODE
 
     template<int side, uchar type>
-    bool inCheckSlow(const int from, const int to, const int pieceFrom, const int pieceTo, const int promotionPiece) {
+    bool
+    inCheckSlow(const int from, const int to, const uchar pieceFrom, const int pieceTo, const uchar promotionPiece) {
         bool result;
         switch (type & 0x3) {
             case STANDARD_MOVE_MASK: {
@@ -483,7 +484,7 @@ protected:
 #endif
 
     template<int type, uchar side>
-    bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
+    bool inCheck(const uchar from, const uchar to, const uchar pieceFrom, const uchar pieceTo, uchar promotionPiece) {
         BENCH_AUTO_CLOSE("inCheck")
 #ifdef DEBUG_MODE
         _Tchessboard a;
@@ -679,23 +680,23 @@ protected:
 
             if (allowKingSideWhite(allpieces)) {
 
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
 
             if (allowQueenSideWhite(allpieces)) {
 
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
 
         } else {
             if (allowKingSideBlack(allpieces)) {
 
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
 
             if (allowQueenSideBlack(allpieces)) {
 
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
         }
     }
@@ -704,24 +705,26 @@ protected:
     void tryAllCastleStandard(const u64 allpieces) {
         if (side == WHITE) {
             if (allowCastleWhiteKing(allpieces))
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             if (allowCastleWhiteQueen(allpieces)) {
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
         } else {
             if (allowCastleBlackKing(allpieces))
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             if (allowCastleBlackQueen(allpieces))
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
         }
     }
 
     template<uchar type, int side>
-    bool pushmove(const int from, const int to, const uchar promotionPiece, const int pieceFrom, const bool isCapture) {
+    bool
+    pushmove(const uchar from, const uchar to, const uchar promotionPiece, const uchar pieceFrom,
+             const bool isCapture) {
         BENCH_AUTO_CLOSE("pushmove")
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
-        int capturedPiece = SQUARE_EMPTY;
+        uchar capturedPiece = SQUARE_EMPTY;
         bool res = false;
         if (((type & 0x3) != ENPASSANT_MOVE_MASK) && !(type & 0xc)) {
             if (isCapture) {
