@@ -101,61 +101,11 @@ public:
         return elapsed.count();
     }
 
-    static string
-    diffTimeToString(const high_resolution_clock::time_point start, const high_resolution_clock::time_point stop) {
-        string res;
-        unsigned t = Time::diffTime(stop, start) / 1000;
-        unsigned days = t / 60 / 60 / 24;
-        int hours = (t / 60 / 60) % 24;
-        int minutes = (t / 60) % 60;
-        int seconds = t % 60;
-        int millsec = Time::diffTime(stop, start) % 1000;
-
-        if (days) {
-            res.append(String(days)).append(" days ");
-        }
-        if (days || hours) {
-            res.append(String(hours)).append(" hours ");
-        }
-        if (days || hours || minutes) {
-            res.append(String(minutes)).append(" minutes ");
-        }
-        if (!days) {
-            res.append(String(seconds)).append(" seconds ");
-        }
-        if (!days && !hours) {
-            res.append(String(millsec)).append(" millsec");
-        }
-        return res;
-    }
-
     static string getLocalTime() {
         time_t current = chrono::system_clock::to_time_t(chrono::system_clock::now());
         auto a = string(ctime(&current));
         return a.substr(0, a.size() - 1);
     }
 
-    static string getLocalTimeNs() {
-        unsigned long ns = (unsigned long) (std::chrono::steady_clock::now().time_since_epoch().count());
-        return getLocalTime() + " ns: " + to_string(ns);
-    }
-
-    static int getYear() {
-        time_t t = time(nullptr);
-        tm *timePtr = localtime(&t);
-        return 1900 + timePtr->tm_year;
-    }
-
-    static int getMonth() {
-        time_t t = time(nullptr);
-        tm *timePtr = localtime(&t);
-        return 1 + timePtr->tm_mon;
-    }
-
-    static int getDay() {
-        time_t t = time(nullptr);
-        tm *timePtr = localtime(&t);
-        return timePtr->tm_mday;
-    }
 };
 

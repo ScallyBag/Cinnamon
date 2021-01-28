@@ -36,11 +36,6 @@ private:
 
         cout << NAME << " UCI chess engine by Giuseppe Cannella\n";
 
-#ifdef HAS_64BIT
-        cout << "64-bit ";
-#else
-        cout << "32-bit ";
-#endif
 #ifdef HAS_POPCNT
         cout << "popcnt ";
 #endif

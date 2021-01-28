@@ -94,10 +94,10 @@ cinnamon32-ARM:
 	$(MAKE) -j4 ARC="$(ARC) -DHAS_POPCNT -fno-gcse -DHAS_BSF" build
 
 cinnamon64-ARM:
-	$(MAKE) ARC="$(ARC) -DHAS_64BIT " build
+	$(MAKE) ARC="$(ARC) " build
 
 cinnamon64-generic:
-	$(MAKE) -j ARC="$(ARC) -DHAS_64BIT -m64" build
+	$(MAKE) -j ARC="$(ARC) -m64" build
 
 cinnamon64-modern:
 	$(MAKE) ARC="$(ARC) -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF " cinnamon64-generic
