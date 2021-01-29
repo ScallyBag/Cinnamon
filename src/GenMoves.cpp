@@ -325,6 +325,7 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         }
         if (move->s.capturedPiece != SQUARE_EMPTY) {
             if ((move->s.type & 0x3) != ENPASSANT_MOVE_MASK) {
+                ASSERT(chessboard[move->s.capturedPiece] & POW2(move->s.to))
                 chessboard[move->s.capturedPiece] &= NOTPOW2(move->s.to);
                 updateZobristKey(move->s.capturedPiece, move->s.to);
             } else { //en passant

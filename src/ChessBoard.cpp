@@ -215,7 +215,7 @@ int ChessBoard::loadFen(const string &fen) {
     MATCH_QUEENSIDE_BLACK = "O-O-O ";
     MATCH_KINGSIDE_BLACK = "O-O ";
     fenString = fen;
-    clearChessboard()
+    clearChessboard();
     istringstream iss(fen);
     string pos, castle, enpassant, side, a1, a2;
     iss >> pos;
