@@ -40,26 +40,26 @@ void Search::aspirationWindow(const int depth, const int valWin) {
     init();
 
     if (depth == 1) {
-        valWindow = search<searchMoves>(depth, -_INFINITE - 1, _INFINITE + 1);
+        valWindow = searchRoot<searchMoves>(depth, -_INFINITE - 1, _INFINITE + 1);
     } else {
-        int tmp = search<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW);
+        int tmp = searchRoot<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW);
 
         if (tmp <= valWindow - VAL_WINDOW || tmp >= valWindow + VAL_WINDOW) {
             if (tmp <= valWindow - VAL_WINDOW) {
-                tmp = search<searchMoves>(mainDepth, valWindow - VAL_WINDOW * 2, valWindow + VAL_WINDOW);
+                tmp = searchRoot<searchMoves>(mainDepth, valWindow - VAL_WINDOW * 2, valWindow + VAL_WINDOW);
             } else {
-                tmp = search<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW * 2);
+                tmp = searchRoot<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW * 2);
             }
 
             if (tmp <= valWindow - VAL_WINDOW || tmp >= valWindow + VAL_WINDOW) {
                 if (tmp <= valWindow - VAL_WINDOW) {
-                    tmp = search<searchMoves>(mainDepth, valWindow - VAL_WINDOW * 4, valWindow + VAL_WINDOW);
+                    tmp = searchRoot<searchMoves>(mainDepth, valWindow - VAL_WINDOW * 4, valWindow + VAL_WINDOW);
                 } else {
-                    tmp = search<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW * 4);
+                    tmp = searchRoot<searchMoves>(mainDepth, valWindow - VAL_WINDOW, valWindow + VAL_WINDOW * 4);
                 }
 
                 if (tmp <= valWindow - VAL_WINDOW || tmp >= valWindow + VAL_WINDOW) {
-                    tmp = search<searchMoves>(mainDepth, -_INFINITE - 1, _INFINITE + 1);
+                    tmp = searchRoot<searchMoves>(mainDepth, -_INFINITE - 1, _INFINITE + 1);
                 }
             }
         }
@@ -384,7 +384,7 @@ void Search::setMainParam(const int depth) {
 }
 
 template<bool searchMoves>
-int Search::search(const int depth, const int alpha, const int beta) {
+int Search::searchRoot(const int depth, const int alpha, const int beta) {
     ASSERT_RANGE(depth, 0, MAX_PLY)
     auto ep = chessboard[ENPASSANT_IDX];
     incListId();

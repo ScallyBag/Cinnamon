@@ -69,7 +69,7 @@ public:
     void setMainParam(const int depth);
 
     template<bool searchMoves>
-    int search(const int depth, const int alpha, const int beta);
+    int searchRoot(const int depth, const int alpha, const int beta);
 
     void run();
 
