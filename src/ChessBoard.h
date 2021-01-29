@@ -57,7 +57,7 @@ public:
     }
 
     void setSide(const bool b) {
-        chessboard[SIDETOMOVE_IDX] = b;
+        SIDETOMOVE = b;
     }
 
     void setChess960(bool c) { chess960 = c; }
@@ -69,7 +69,7 @@ public:
     void display() const;
 
     string boardToFen() const;
-
+    uchar SIDETOMOVE;
 protected:
 
     _Tchessboard chessboard;
@@ -81,6 +81,9 @@ protected:
     int startPosBlackRookKingSide;
     int startPosBlackRookQueenSide;
 
+    uchar RIGHT_CASTLE;
+
+    uchar ENPASSANT;
     string MATCH_QUEENSIDE;
     string MATCH_QUEENSIDE_WHITE;
     string MATCH_KINGSIDE_WHITE;

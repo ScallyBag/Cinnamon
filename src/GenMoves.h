@@ -179,10 +179,10 @@ public:
     bool performPawnCapture(const u64 enemies) {
         BENCH_AUTO_CLOSE("pawnCapture")
         if (!chessboard[side]) {
-            if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-                updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
+            if (ENPASSANT != NO_ENPASSANT) {
+                updateZobristKey(ENPASSANT_IDX, ENPASSANT);
             }
-            chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
+            ENPASSANT = NO_ENPASSANT;
             return false;
         }
         constexpr int sh = side ? -7 : 7;
@@ -236,19 +236,17 @@ public:
             }
         }
         //ENPASSANT
-        if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-            x = ENPASSANT_MASK[X(side)][chessboard[ENPASSANT_IDX]] & chessboard[side];
+        if (ENPASSANT != NO_ENPASSANT) {
+            x = ENPASSANT_MASK[X(side)][ENPASSANT] & chessboard[side];
             for (; x; RESET_LSB(x)) {
                 const int o = BITScanForward(x);
                 BENCH_SUBPROCESS("pawnCapture", "pushmove")
-                pushmove<ENPASSANT_MOVE_MASK, side>(o,
-                                                    (side ? chessboard[ENPASSANT_IDX] + 8 : chessboard[ENPASSANT_IDX] -
-                                                                                            8),
-                                                    NO_PROMOTION, side, true);
+                pushmove<ENPASSANT_MOVE_MASK, side>(o, (side ? ENPASSANT + 8 : ENPASSANT - 8), NO_PROMOTION, side,
+                                                    true);
 
             }
-            updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
-            chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
+            updateZobristKey(ENPASSANT_IDX, ENPASSANT);
+            ENPASSANT = NO_ENPASSANT;
         }
         return false;
     }
@@ -596,7 +594,7 @@ protected:
     }
 
     bool allowKingSideBlack(const u64 allpieces) const {
-        const auto a = board::isCastleRight_BlackKing(chessboard) &&
+        const auto a = board::isCastleRight_BlackKing(RIGHT_CASTLE) &&
                        board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                        board::isPieceAt(ROOK_BLACK, startPosBlackRookKingSide, chessboard) &&
                        (!board::isOccupied(G8, allpieces) || startPosBlackKing == G8 ||
@@ -614,7 +612,7 @@ protected:
     }
 
     bool allowQueenSideBlack(const u64 allpieces) const {
-        auto a = board::isCastleRight_BlackQueen(chessboard) &&
+        auto a = board::isCastleRight_BlackQueen(RIGHT_CASTLE) &&
                  board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                  board::isPieceAt(ROOK_BLACK, startPosBlackRookQueenSide, chessboard) &&
                  (!board::isOccupied(C8, allpieces) || startPosBlackKing == C8 || startPosBlackRookQueenSide == C8) &&
@@ -639,7 +637,7 @@ protected:
     bool allowCastleWhiteKing(const u64 allpieces) const;
 
     bool allowQueenSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteQueen(chessboard) &&
+        const auto a = board::isCastleRight_WhiteQueen(RIGHT_CASTLE) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookQueenSide, chessboard) &&
                        (!board::isOccupied(C1, allpieces) || startPosWhiteKing == C1 ||
@@ -657,7 +655,7 @@ protected:
     }
 
     bool allowKingSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteKing(chessboard) &&
+        const auto a = board::isCastleRight_WhiteKing(RIGHT_CASTLE) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookKingSide, chessboard) &&
                        (!board::isOccupied(G1, allpieces) || startPosWhiteKing == G1 ||
@@ -737,7 +735,7 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
-        move->s.type = chessboard[RIGHT_CASTLE_IDX] | type;
+        move->s.type = RIGHT_CASTLE | type;
         move->s.side = side;
         move->s.capturedPiece = capturedPiece;
         if (type & 0x3) {

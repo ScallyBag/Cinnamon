@@ -83,24 +83,23 @@ void Search::clone(const Search *s) {
 
 int Search::SZtbProbeWDL() const {
     const auto tot = bitCount(board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard));
-    const uchar side = board::getSide(chessboard);
-    return syzygy->SZtbProbeWDL(chessboard, side, tot);
+    return syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE, tot);
 }
 
 void Search::printWdlSyzygy() {
     perftMode = true;
-    const uchar side = board::getSide(chessboard);
-    u64 friends = side == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    u64 enemies = side == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    ;
+    u64 friends = SIDETOMOVE == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 enemies = SIDETOMOVE == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
     incListId();
-    generateCaptures(side, enemies, friends);
-    generateMoves(side, friends | enemies);
+    generateCaptures(SIDETOMOVE, enemies, friends);
+    generateMoves(SIDETOMOVE, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     display();
 
-    unsigned res = syzygy->SZtbProbeWDL(chessboard, side);
+    unsigned res = syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE);
     cout << "current: ";
     if (res != TB_RESULT_FAILED) {
         res = TB_GET_WDL(res);
@@ -121,7 +120,7 @@ void Search::printWdlSyzygy() {
         }
         print(move, chessboard);
 
-        unsigned res = syzygy->SZtbProbeWDL(chessboard, X(side));
+        unsigned res = syzygy->SZtbProbeWDL(chessboard, X(SIDETOMOVE));
 
         if (res != TB_RESULT_FAILED) {
             res = TB_GET_WDL(res);
@@ -141,9 +140,8 @@ void Search::printWdlSyzygy() {
 
 void Search::printDtzSyzygy() {
     perftMode = true;
-    const uchar side = board::getSide(chessboard);
 
-    if ((side == BLACK) ? board::inCheck1<WHITE>(chessboard) : board::inCheck1<BLACK>(chessboard)) {
+    if ((SIDETOMOVE == BLACK) ? board::inCheck1<WHITE>(chessboard) : board::inCheck1<BLACK>(chessboard)) {
         cout << "invalid position" << endl;
         return;
     }
@@ -153,7 +151,7 @@ void Search::printDtzSyzygy() {
     const u64 white = board::getBitmap<WHITE>(chessboard);
     const u64 black = board::getBitmap<BLACK>(chessboard);
 
-    unsigned res = syzygy->SZtbProbeWDL(chessboard, side);
+    unsigned res = syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE);
     display();
     cout << "current: ";
     if (res != TB_RESULT_FAILED) {
@@ -167,7 +165,7 @@ void Search::printDtzSyzygy() {
     } else
         cout << " none" << endl;
 
-    const unsigned res1 = syzygy->SZtbProbeRoot(white, black, chessboard, side, results);
+    const unsigned res1 = syzygy->SZtbProbeRoot(white, black, chessboard, SIDETOMOVE, results);
     if (res1 != TB_RESULT_FAILED) {
         for (unsigned i = 0; results[i] != TB_RESULT_FAILED; i++) {
 
@@ -199,16 +197,16 @@ void Search::printDtzSyzygy() {
 
 int Search::printDtmWdlGtb(const bool dtm) {
     perftMode = true;
-    uchar side = board::getSide(chessboard);
-    u64 friends = side == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    u64 enemies = side == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+
+    u64 friends = SIDETOMOVE == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 enemies = SIDETOMOVE == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     display();
     cout << "current: ";
     unsigned pliestomate;
-    const int res = GTB::getInstance().getDtmWdl(GTB_STM(side), 2, chessboard, &pliestomate, dtm);
+    const int res = GTB::getInstance().getDtmWdl(GTB_STM(SIDETOMOVE), 2, chessboard, &pliestomate, dtm, RIGHT_CASTLE);
     incListId();
-    generateCaptures(side, enemies, friends);
-    generateMoves(side, friends | enemies);
+    generateCaptures(SIDETOMOVE, enemies, friends);
+    generateMoves(SIDETOMOVE, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
@@ -220,7 +218,7 @@ int Search::printDtmWdlGtb(const bool dtm) {
         }
         print(move, chessboard);
 
-        GTB::getInstance().getDtmWdl(GTB_STM(X(side)), 1, chessboard, &pliestomate, dtm);
+        GTB::getInstance().getDtmWdl(GTB_STM(X(SIDETOMOVE)), 1, chessboard, &pliestomate, dtm, RIGHT_CASTLE);
 
         takeback(move, oldKey, false);
 
@@ -386,17 +384,17 @@ void Search::setMainParam(const int depth) {
 template<bool searchMoves>
 int Search::searchRoot(const int depth, const int alpha, const int beta) {
     ASSERT_RANGE(depth, 0, MAX_PLY)
-    auto ep = chessboard[ENPASSANT_IDX];
+    auto ep = ENPASSANT;
     incListId();
-    const uchar side = board::getSide(chessboard);
-    const u64 friends = (side == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    const u64 enemies = (side == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
-    generateCaptures(side, enemies, friends);
-    generateMoves(side, friends | enemies);
+
+    const u64 friends = (SIDETOMOVE == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    const u64 enemies = (SIDETOMOVE == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
+    generateCaptures(SIDETOMOVE, enemies, friends);
+    generateMoves(SIDETOMOVE, friends | enemies);
     int n_root_moves = getListSize();
     decListId();
-    chessboard[ENPASSANT_IDX] = ep;
-    return board::getSide(chessboard) ? search<WHITE, searchMoves>(depth,
+    ENPASSANT = ep;
+    return SIDETOMOVE ? search<WHITE, searchMoves>(depth,
                                                                    alpha,
                                                                    beta,
                                                                    &pvLine,
@@ -413,18 +411,17 @@ bool Search::probeRootTB(_Tmove *res) {
     const u64 white = board::getBitmap<WHITE>(chessboard);
     const u64 black = board::getBitmap<BLACK>(chessboard);
     const auto tot = bitCount(white | black);
-    const uchar side = board::getSide(chessboard);
 
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
     if (tot == 3 && (chessboard[WHITE] || chessboard[BLACK])) {
         _Tmove *bestMove = nullptr;
-        u64 friends = side == WHITE ? white : black;
-        u64 enemies = side == BLACK ? white : black;
+        u64 friends = SIDETOMOVE == WHITE ? white : black;
+        u64 enemies = SIDETOMOVE == BLACK ? white : black;
 
         incListId();
-        generateCaptures(side, enemies, friends);
-        generateMoves(side, friends | enemies);
+        generateCaptures(SIDETOMOVE, enemies, friends);
+        generateMoves(SIDETOMOVE, friends | enemies);
 
         for (int i = 0; i < getListSize(); i++) {
             if (bestMove)break;
@@ -442,10 +439,10 @@ bool Search::probeRootTB(_Tmove *res) {
 
             bool p;
 
-            if (winSide != side) { // looking for draw
-                p = isDraw(winSide, X(side), kw, kb, pawnQueenPos);
+            if (winSide != SIDETOMOVE) { // looking for draw
+                p = isDraw(winSide, X(SIDETOMOVE), kw, kb, pawnQueenPos);
             } else { //looking for win
-                p = !isDraw(winSide, X(side), kw, kb, pawnQueenPos);
+                p = !isDraw(winSide, X(SIDETOMOVE), kw, kb, pawnQueenPos);
             }
             if (p &&
                 (bestMove == nullptr || move->s.capturedPiece != SQUARE_EMPTY ||
@@ -466,12 +463,12 @@ bool Search::probeRootTB(_Tmove *res) {
 #ifndef JS_MODE
     //gaviota
     if (GTB::getInstance().isInstalledPieces(tot)) {
-        u64 friends = side == WHITE ? white : black;
-        u64 enemies = side == BLACK ? white : black;
+        u64 friends = SIDETOMOVE == WHITE ? white : black;
+        u64 enemies = SIDETOMOVE == BLACK ? white : black;
         _Tmove *bestMove = nullptr;
         incListId();
-        generateCaptures(side, enemies, friends);
-        generateMoves(side, friends | enemies);
+        generateCaptures(SIDETOMOVE, enemies, friends);
+        generateMoves(SIDETOMOVE, friends | enemies);
 
         _Tmove *drawMove = nullptr;
         _Tmove *worstMove = nullptr;
@@ -490,7 +487,7 @@ bool Search::probeRootTB(_Tmove *res) {
                 continue;
             }
             BENCH_START("gtbTime")
-            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(side)), 0, chessboard, &dtz, true);
+            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(SIDETOMOVE)), 0, chessboard, &dtz, true, RIGHT_CASTLE);
             BENCH_STOP("gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
@@ -558,7 +555,7 @@ bool Search::probeRootTB(_Tmove *res) {
 
         const u64 allPieces = white | black;
         BENCH_START("syzygyTime")
-        const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, side, results);
+        const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, SIDETOMOVE, results);
         BENCH_STOP("syzygyTime")
         if (sz == TB_RESULT_FAILED) return false;
 
@@ -689,7 +686,7 @@ int Search::probeWdl(const int depth, const uchar side, const int N_PIECE) {
         //gaviota
         if (GTB::getInstance().isInstalledPieces(N_PIECE)) {
             BENCH_START("gtbTime")
-            tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false);
+            tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false, RIGHT_CASTLE);
             BENCH_STOP("gtbTime")
         }
         switch (tbResult) {
@@ -777,13 +774,13 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             int nullScore;
             if (depth - R - 1 > 0) {
                 nullScore = -search<X(side), checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line, N_PIECE,
-                                                          nRootMoves);
+                                                         nRootMoves);
                 if (!forceCheck && abs(nullScore) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
                     nullScore = -search<X(side), checkMoves>(depth + extension - R - 1, -beta, -beta + 1, &line,
-                                                              N_PIECE,
-                                                              nRootMoves);
+                                                             N_PIECE,
+                                                             nRootMoves);
                     forceCheck = false;
                     currentPly--;
                 }
@@ -886,13 +883,13 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             currentPly++;
             const int R = countMove > 6 ? 3 : 2;
             val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
-                                                nRootMoves);
+                                               nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
                 val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
-                                                    nRootMoves);
+                                                   nRootMoves);
                 forceCheck = false;
                 currentPly--;
             }
@@ -903,32 +900,32 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             const int upb = (doMws ? (lwb + 1) : beta);
             currentPly++;
             val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
-                                                move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                nRootMoves);
+                                               move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                               nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
                 val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
-                                                    move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                    nRootMoves);
+                                                   move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                   nRootMoves);
                 forceCheck = false;
                 currentPly--;
             }
             if (doMws && (lwb < val) && (val < beta)) {
                 currentPly++;
                 val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
-                                                    &line,
-                                                    move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                    nRootMoves);
+                                                   &line,
+                                                   move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                   nRootMoves);
                 currentPly--;
                 if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                     currentPly++;
                     forceCheck = true;
                     val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
-                                                        &line,
-                                                        move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
-                                                        nRootMoves);
+                                                       &line,
+                                                       move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                       nRootMoves);
                     forceCheck = false;
                     currentPly--;
                 }

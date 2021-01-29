@@ -180,12 +180,12 @@ int GTB::getDtmWdl(const int stm,
                    const int doPrint,
                    const _Tchessboard &chessboard,
                    unsigned *pliestomate,
-                   const bool dtm) const {
+                   const bool dtm, const uchar RIGHT_CASTLE) const {
 
     unsigned info = tb_UNKNOWN;    /* default, no tbvalue */
 
     GTBchessboard gtbChessboard;
-    gtbChessboard.fromChessboard(chessboard);
+    gtbChessboard.fromChessboard(chessboard, RIGHT_CASTLE);
     if (dtm) {
         int tb_available = tb_probe_soft(stm, tb_NOSQUARE, gtbChessboard.tb_castling, gtbChessboard.ws,
                                          gtbChessboard.bs,

@@ -116,13 +116,11 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
     for (int t = 0; t < lineWin.cmove; t++) {
         pvvTmp.clear();
         pvvTmp +=
-                decodeBoardinv(lineWin.argmove[t].s.type,
-                               lineWin.argmove[t].s.from,
-                               board::getSide(threadPool->getThread(0).getChessboard()));
+                decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.from,
+                               threadPool->getThread(0).SIDETOMOVE);
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
-            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type,
-                                     lineWin.argmove[t].s.to,
-                                     board::getSide(threadPool->getThread(0).getChessboard()));
+            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.to,
+                                     threadPool->getThread(0).SIDETOMOVE);
         }
         pvv.append(pvvTmp);
         if (t == 1) {
@@ -261,12 +259,12 @@ void SearchManager::setPonder(const bool i) {
 
 int SearchManager::getSide() const {
 #ifdef DEBUG_MODE
-    int t = board::getSide(threadPool->getThread(0).getChessboard());
+    int t = threadPool->getThread(0).SIDETOMOVE;
     for (Search *s:threadPool->getPool()) {
-        ASSERT(board::getSide(s->getChessboard()) == t)
+        ASSERT(s->SIDETOMOVE == t)
     }
 #endif
-    return board::getSide(threadPool->getThread(0).getChessboard());
+    return threadPool->getThread(0).SIDETOMOVE;
 }
 
 int SearchManager::getScore(const uchar side) {

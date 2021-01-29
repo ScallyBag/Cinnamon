@@ -39,8 +39,6 @@ public:
 
     [[gnu::pure]]  static u64 performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces);
 
-    [[gnu::pure]] static uchar getSide(const _Tchessboard &chessboard);
-
     template<uchar side>
     [[gnu::pure]] static u64
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
@@ -69,15 +67,15 @@ public:
 
     [[gnu::pure]] static u64 getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces);
 
-    [[gnu::pure]] static bool isCastleRight_WhiteKing(const _Tchessboard &chessboard);
+    [[gnu::pure]] static bool isCastleRight_WhiteKing(const uchar RIGHT_CASTLE);
 
     [[gnu::pure]] static u64 getMobilityRook(const int position, const u64 enemies, const u64 friends);
 
-    [[gnu::pure]] static bool isCastleRight_BlackKing(const _Tchessboard &chessboard);
+    [[gnu::pure]] static bool isCastleRight_BlackKing(const uchar RIGHT_CASTLE);
 
-    [[gnu::pure]]static bool isCastleRight_WhiteQueen(const _Tchessboard &chessboard);
+    [[gnu::pure]]static bool isCastleRight_WhiteQueen(const uchar RIGHT_CASTLE);
 
-    [[gnu::pure]]static bool isCastleRight_BlackQueen(const _Tchessboard &chessboard);
+    [[gnu::pure]]static bool isCastleRight_BlackQueen(const uchar RIGHT_CASTLE);
 
     [[gnu::pure]]static bool isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard);
 

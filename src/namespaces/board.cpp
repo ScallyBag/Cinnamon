@@ -37,10 +37,6 @@
 
 #endif
 
-[[gnu::pure]]uchar board::getSide(const _Tchessboard &chessboard) {
-    return chessboard[SIDETOMOVE_IDX];
-}
-
 [[gnu::pure]]u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces) {
     ASSERT_RANGE(position, 0, 63)
     const u64 rankFile = Bitboard::getRankFile(position, allpieces);
@@ -88,20 +84,20 @@
     return performRankFileCaptureAndShift(position, enemies, enemies | friends);
 }
 
-[[gnu::pure]]bool board::isCastleRight_WhiteKing(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_WHITE_MASK;
+[[gnu::pure]]bool board::isCastleRight_WhiteKing(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_KING_CASTLE_WHITE_MASK;
 }
 
-[[gnu::pure]]bool board::isCastleRight_BlackKing(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_BLACK_MASK;
+[[gnu::pure]]bool board::isCastleRight_BlackKing(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_KING_CASTLE_BLACK_MASK;
 }
 
-[[gnu::pure]]bool board::isCastleRight_WhiteQueen(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_WHITE_MASK;
+[[gnu::pure]]bool board::isCastleRight_WhiteQueen(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_WHITE_MASK;
 }
 
-[[gnu::pure]]bool board::isCastleRight_BlackQueen(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_BLACK_MASK;
+[[gnu::pure]]bool board::isCastleRight_BlackQueen(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_BLACK_MASK;
 }
 
 [[gnu::pure]]int board::getFile(const char cc) {

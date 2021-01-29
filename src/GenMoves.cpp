@@ -99,7 +99,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             else if (isKiller(1, move.s.from, move.s.to, depth)) score += 80;
 
         } else if (move.s.type & 0xc) {    //castle
-            ASSERT(chessboard[RIGHT_CASTLE_IDX])
+            ASSERT(RIGHT_CASTLE)
             score = 100;
         }
         if (score > bestScore) {
@@ -197,7 +197,7 @@ void GenMoves::performCastle(const uchar side, const uchar type) {
 }
 
 bool GenMoves::allowCastleBlackQueen(const u64 allpieces) const {
-    return POW2_59 & chessboard[KING_BLACK] && chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_BLACK_MASK &&
+    return POW2_59 & chessboard[KING_BLACK] && RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_BLACK_MASK &&
            !(allpieces & 0x7000000000000000ULL) && chessboard[ROOK_BLACK] & POW2_63 &&
            !board::isAttacked<BLACK>(59, allpieces, chessboard) &&
            !board::isAttacked<BLACK>(60, allpieces, chessboard) &&
@@ -206,14 +206,14 @@ bool GenMoves::allowCastleBlackQueen(const u64 allpieces) const {
 
 bool GenMoves::allowCastleWhiteQueen(const u64 allpieces) const {
     return POW2_3 & chessboard[KING_WHITE] && !(allpieces & 0x70ULL) &&
-           chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_WHITE_MASK && chessboard[ROOK_WHITE] & POW2_7 &&
+           RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_WHITE_MASK && chessboard[ROOK_WHITE] & POW2_7 &&
            !board::isAttacked<WHITE>(3, allpieces, chessboard) &&
            !board::isAttacked<WHITE>(4, allpieces, chessboard) &&
            !board::isAttacked<WHITE>(5, allpieces, chessboard);
 }
 
 bool GenMoves::allowCastleBlackKing(const u64 allpieces) const {
-    return POW2_59 & chessboard[KING_BLACK] && chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_BLACK_MASK &&
+    return POW2_59 & chessboard[KING_BLACK] && RIGHT_CASTLE & RIGHT_KING_CASTLE_BLACK_MASK &&
            !(allpieces & 0x600000000000000ULL) && chessboard[ROOK_BLACK] & POW2_56 &&
            !board::isAttacked<BLACK>(57, allpieces, chessboard) &&
            !board::isAttacked<BLACK>(58, allpieces, chessboard) &&
@@ -222,7 +222,7 @@ bool GenMoves::allowCastleBlackKing(const u64 allpieces) const {
 
 bool GenMoves::allowCastleWhiteKing(const u64 allpieces) const {
     return POW2_3 & chessboard[KING_WHITE] && !(allpieces & 0x6ULL) &&
-           chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_WHITE_MASK && chessboard[ROOK_WHITE] & POW2_0 &&
+           RIGHT_CASTLE & RIGHT_KING_CASTLE_WHITE_MASK && chessboard[ROOK_WHITE] & POW2_0 &&
            !board::isAttacked<WHITE>(1, allpieces, chessboard) &&
            !board::isAttacked<WHITE>(2, allpieces, chessboard) &&
            !board::isAttacked<WHITE>(3, allpieces, chessboard);
@@ -276,8 +276,8 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     BENCH_AUTO_CLOSE("takeback")
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;
-    chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
-    chessboard[RIGHT_CASTLE_IDX] = move->s.type & 0xf0;
+    ENPASSANT = NO_ENPASSANT;
+    RIGHT_CASTLE = move->s.type & 0xf0;
 
     if (move->s.type & 0x1) {
         ASSERT_RANGE(move->s.from, 0, 63)
@@ -308,7 +308,7 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
     BENCH_AUTO_CLOSE("makemove")
     ASSERT(move)
     ASSERT(bitCount(chessboard[KING_WHITE]) == 1 && bitCount(chessboard[KING_BLACK]) == 1)
-    const uchar rightCastleOld = chessboard[RIGHT_CASTLE_IDX];
+    const uchar rightCastleOld = RIGHT_CASTLE;
     if (!(move->s.type & 0xc)) { //no castle
         ASSERT_RANGE(move->s.from, 0, 63)
         ASSERT_RANGE(move->s.to, 0, 63)
@@ -336,30 +336,30 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         }
         //lost castle right
         if (POW2(move->s.to) & 0xff000000000000ffULL) {
-            if (move->s.to == startPosWhiteRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xef;
-            else if (move->s.to == startPosWhiteRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0xdf;
-            else if (move->s.to == startPosBlackRookKingSide) chessboard[RIGHT_CASTLE_IDX] &= 0xbf;
-            else if (move->s.to == startPosBlackRookQueenSide) chessboard[RIGHT_CASTLE_IDX] &= 0x7f;
+            if (move->s.to == startPosWhiteRookKingSide) RIGHT_CASTLE &= 0xef;
+            else if (move->s.to == startPosWhiteRookQueenSide) RIGHT_CASTLE &= 0xdf;
+            else if (move->s.to == startPosBlackRookKingSide) RIGHT_CASTLE &= 0xbf;
+            else if (move->s.to == startPosBlackRookQueenSide) RIGHT_CASTLE &= 0x7f;
         }
         if (move->s.pieceFrom & 0xb) {
             switch (move->s.pieceFrom) {
                 case KING_WHITE:
-                    chessboard[RIGHT_CASTLE_IDX] &= 0xcf;
+                    RIGHT_CASTLE &= 0xcf;
                     break;
                 case KING_BLACK:
-                    chessboard[RIGHT_CASTLE_IDX] &= 0x3f;
+                    RIGHT_CASTLE &= 0x3f;
                     break;
                 case ROOK_WHITE:
                     if (move->s.from == startPosWhiteRookKingSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xef;
+                        RIGHT_CASTLE &= 0xef;
                     else if (move->s.from == startPosWhiteRookQueenSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xdf;
+                        RIGHT_CASTLE &= 0xdf;
                     break;
                 case ROOK_BLACK:
                     if (move->s.from == startPosBlackRookKingSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0xbf;
+                        RIGHT_CASTLE &= 0xbf;
                     else if (move->s.from == startPosBlackRookQueenSide)
-                        chessboard[RIGHT_CASTLE_IDX] &= 0x7f;
+                        RIGHT_CASTLE &= 0x7f;
                     break;
                 default:;
             }
@@ -368,14 +368,14 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         switch (move->s.pieceFrom) {
             case PAWN_WHITE:
                 if ((RANK_2 & POW2(move->s.from)) && (RANK_3 & POW2(move->s.to))) {
-                    chessboard[ENPASSANT_IDX] = move->s.to;
-                    updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
+                    ENPASSANT = move->s.to;
+                    updateZobristKey(ENPASSANT_IDX, ENPASSANT);
                 }
                 break;
             case PAWN_BLACK:
                 if ((RANK_7 & POW2(move->s.from)) && (RANK_5 & POW2(move->s.to))) {
-                    chessboard[ENPASSANT_IDX] = move->s.to;
-                    updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
+                    ENPASSANT = move->s.to;
+                    updateZobristKey(ENPASSANT_IDX, ENPASSANT);
                 }
                 break;
             default:;
@@ -383,10 +383,10 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
 
     } else { //castle
         performCastle(move->s.side, move->s.type);
-        if (move->s.side == WHITE) chessboard[RIGHT_CASTLE_IDX] &= 0xcf; else chessboard[RIGHT_CASTLE_IDX] &= 0x3f;
+        if (move->s.side == WHITE) RIGHT_CASTLE &= 0xcf; else RIGHT_CASTLE &= 0x3f;
     }
 
-    for (u64 x2 = rightCastleOld ^chessboard[RIGHT_CASTLE_IDX]; x2; RESET_LSB(x2)) {
+    for (u64 x2 = rightCastleOld ^RIGHT_CASTLE; x2; RESET_LSB(x2)) {
         const int position = BITScanForward(x2);
         updateZobristKey(14, position);
     }
@@ -429,7 +429,7 @@ int GenMoves::loadFen(const string &fen) {
 }
 
 int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
-    chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
+    ENPASSANT = NO_ENPASSANT;
     memset(move, 0, sizeof(_Tmove));
     movesCount++;
     if (
@@ -532,8 +532,8 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
 void GenMoves::writeRandomFen(const vector<int> pieces) {
     while (1) {
         memset(chessboard, 0, sizeof(_Tchessboard));
-        chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
-        chessboard[SIDETOMOVE_IDX] = rand() % 2;
+        ENPASSANT = NO_ENPASSANT;
+        SIDETOMOVE = rand() % 2;
         chessboard[KING_BLACK] = POW2(rand() % 64);
         chessboard[KING_WHITE] = POW2(rand() % 64);
         u64 check = chessboard[KING_BLACK] | chessboard[KING_WHITE];

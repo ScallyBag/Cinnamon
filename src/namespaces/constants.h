@@ -76,6 +76,11 @@ namespace constants {
     static constexpr uchar KING_WHITE = 9;
     static constexpr uchar QUEEN_BLACK = 10;
     static constexpr uchar QUEEN_WHITE = 11;
+    static constexpr uchar RIGHT_CASTLE_IDX = 12;
+    static constexpr uchar ENPASSANT_IDX = 13;
+    static constexpr uchar SIDETOMOVE_IDX = 14;
+    static constexpr uchar ZOBRISTKEY_IDX = 15;
+
     static constexpr uchar SQUARE_EMPTY = 12;
 
     static constexpr int VALUEPAWN = 100;
@@ -93,11 +98,6 @@ namespace constants {
     static constexpr u64 NO_ENPASSANT = 100;
     static constexpr uchar KING_SIDE_CASTLE_MOVE_MASK = 0x4;
     static constexpr uchar QUEEN_SIDE_CASTLE_MOVE_MASK = 0x8;
-
-    static constexpr int RIGHT_CASTLE_IDX = 12;
-    static constexpr int ENPASSANT_IDX = 13;
-    static constexpr int SIDETOMOVE_IDX = 14;
-    static constexpr int ZOBRISTKEY_IDX = 15;
 
     static constexpr uchar NO_PROMOTION = 0xff;
     static constexpr uchar NO_PIECE = 0xff;
