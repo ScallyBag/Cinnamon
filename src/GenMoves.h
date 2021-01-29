@@ -594,7 +594,7 @@ protected:
     }
 
     bool allowKingSideBlack(const u64 allpieces) const {
-        const auto a = board::isCastleRight_BlackKing(RIGHT_CASTLE) &&
+        const auto a = board::isCastleRight_BlackKing(rightCastle) &&
                        board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                        board::isPieceAt(ROOK_BLACK, startPosBlackRookKingSide, chessboard) &&
                        (!board::isOccupied(G8, allpieces) || startPosBlackKing == G8 ||
@@ -612,7 +612,7 @@ protected:
     }
 
     bool allowQueenSideBlack(const u64 allpieces) const {
-        auto a = board::isCastleRight_BlackQueen(RIGHT_CASTLE) &&
+        auto a = board::isCastleRight_BlackQueen(rightCastle) &&
                  board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                  board::isPieceAt(ROOK_BLACK, startPosBlackRookQueenSide, chessboard) &&
                  (!board::isOccupied(C8, allpieces) || startPosBlackKing == C8 || startPosBlackRookQueenSide == C8) &&
@@ -637,7 +637,7 @@ protected:
     bool allowCastleWhiteKing(const u64 allpieces) const;
 
     bool allowQueenSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteQueen(RIGHT_CASTLE) &&
+        const auto a = board::isCastleRight_WhiteQueen(rightCastle) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookQueenSide, chessboard) &&
                        (!board::isOccupied(C1, allpieces) || startPosWhiteKing == C1 ||
@@ -655,7 +655,7 @@ protected:
     }
 
     bool allowKingSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteKing(RIGHT_CASTLE) &&
+        const auto a = board::isCastleRight_WhiteKing(rightCastle) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookKingSide, chessboard) &&
                        (!board::isOccupied(G1, allpieces) || startPosWhiteKing == G1 ||
@@ -735,7 +735,7 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
-        move->s.type = RIGHT_CASTLE | type;
+        move->s.type = rightCastle | type;
         move->s.side = side;
         move->s.capturedPiece = capturedPiece;
         if (type & 0x3) {

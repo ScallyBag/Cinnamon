@@ -22,13 +22,11 @@
 #include "../util/bench/Time.h"
 #include "../util/FileUtil.h"
 #include "../util/bench/Bench.h"
-#include "debug.h"
 #include "../def.h"
 #include "constants.h"
 #include <array>
 #include <cmath>
 
-using namespace _debug;
 using namespace constants;
 
 namespace _def {

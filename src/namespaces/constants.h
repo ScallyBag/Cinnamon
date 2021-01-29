@@ -38,7 +38,7 @@ namespace constants {
 #define STATIC_CONST static constexpr
 #endif
 
-#define _assert(a) if(!(a)){  print_stacktrace();cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
+#define _assert(a) if(!(a)){  cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #define X(side) ((side)^1)
 
@@ -76,10 +76,11 @@ namespace constants {
     static constexpr uchar KING_WHITE = 9;
     static constexpr uchar QUEEN_BLACK = 10;
     static constexpr uchar QUEEN_WHITE = 11;
-    static constexpr uchar RIGHT_CASTLE_IDX = 12;
+    static constexpr uchar ZOBRISTKEY_IDX = 12;
+
     static constexpr uchar ENPASSANT_IDX = 13;
     static constexpr uchar SIDETOMOVE_IDX = 14;
-    static constexpr uchar ZOBRISTKEY_IDX = 15;
+    static constexpr uchar RIGHT_CASTLE_IDX = 15;
 
     static constexpr uchar SQUARE_EMPTY = 12;
 
@@ -142,78 +143,78 @@ namespace constants {
     static constexpr u64 BIG_DIAGONAL = 0x102040810204080ULL;
     static constexpr u64 BIG_ANTIDIAGONAL = 0x8040201008040201ULL;
 
-    static constexpr int H1 = 0;
-    static constexpr int H2 = 8;
-    static constexpr int H3 = 16;
-    static constexpr int H4 = 24;
-    static constexpr int H5 = 32;
-    static constexpr int H6 = 40;
-    static constexpr int H7 = 48;
-    static constexpr int H8 = 56;
+    static constexpr uchar H1 = 0;
+    static constexpr uchar H2 = 8;
+    static constexpr uchar H3 = 16;
+    static constexpr uchar H4 = 24;
+    static constexpr uchar H5 = 32;
+    static constexpr uchar H6 = 40;
+    static constexpr uchar H7 = 48;
+    static constexpr uchar H8 = 56;
 
-    static constexpr int G1 = 1;
-    static constexpr int G2 = 9;
-    static constexpr int G3 = 17;
-    static constexpr int G4 = 25;
-    static constexpr int G5 = 33;
-    static constexpr int G6 = 41;
-    static constexpr int G7 = 49;
-    static constexpr int G8 = 57;
+    static constexpr uchar G1 = 1;
+    static constexpr uchar G2 = 9;
+    static constexpr uchar G3 = 17;
+    static constexpr uchar G4 = 25;
+    static constexpr uchar G5 = 33;
+    static constexpr uchar G6 = 41;
+    static constexpr uchar G7 = 49;
+    static constexpr uchar G8 = 57;
 
-    static constexpr int F1 = 2;
-    static constexpr int F2 = 10;
-    static constexpr int F3 = 18;
-    static constexpr int F4 = 26;
-    static constexpr int F5 = 34;
-    static constexpr int F6 = 42;
-    static constexpr int F7 = 50;
-    static constexpr int F8 = 58;
+    static constexpr uchar F1 = 2;
+    static constexpr uchar F2 = 10;
+    static constexpr uchar F3 = 18;
+    static constexpr uchar F4 = 26;
+    static constexpr uchar F5 = 34;
+    static constexpr uchar F6 = 42;
+    static constexpr uchar F7 = 50;
+    static constexpr uchar F8 = 58;
 
-    static constexpr int B1 = 6;
-    static constexpr int B2 = 14;
-    static constexpr int B3 = 22;
-    static constexpr int B4 = 30;
-    static constexpr int B5 = 38;
-    static constexpr int B6 = 46;
-    static constexpr int B7 = 54;
-    static constexpr int B8 = 62;
+    static constexpr uchar B1 = 6;
+    static constexpr uchar B2 = 14;
+    static constexpr uchar B3 = 22;
+    static constexpr uchar B4 = 30;
+    static constexpr uchar B5 = 38;
+    static constexpr uchar B6 = 46;
+    static constexpr uchar B7 = 54;
+    static constexpr uchar B8 = 62;
 
-    static constexpr int A1 = 7;
-    static constexpr int A2 = 15;
-    static constexpr int A3 = 23;
-    static constexpr int A4 = 31;
-    static constexpr int A5 = 39;
-    static constexpr int A6 = 47;
-    static constexpr int A7 = 55;
-    static constexpr int A8 = 63;
+    static constexpr uchar A1 = 7;
+    static constexpr uchar A2 = 15;
+    static constexpr uchar A3 = 23;
+    static constexpr uchar A4 = 31;
+    static constexpr uchar A5 = 39;
+    static constexpr uchar A6 = 47;
+    static constexpr uchar A7 = 55;
+    static constexpr uchar A8 = 63;
 
-    static constexpr int C1 = 5;
-    static constexpr int C2 = 13;
-    static constexpr int C3 = 21;
-    static constexpr int C4 = 29;
-    static constexpr int C5 = 37;
-    static constexpr int C6 = 45;
-    static constexpr int C7 = 53;
-    static constexpr int C8 = 61;
+    static constexpr uchar C1 = 5;
+    static constexpr uchar C2 = 13;
+    static constexpr uchar C3 = 21;
+    static constexpr uchar C4 = 29;
+    static constexpr uchar C5 = 37;
+    static constexpr uchar C6 = 45;
+    static constexpr uchar C7 = 53;
+    static constexpr uchar C8 = 61;
 
 
-    static constexpr int D1 = 4;
-    static constexpr int D2 = 12;
-    static constexpr int D3 = 20;
-    static constexpr int D4 = 28;
-    static constexpr int D5 = 36;
-    static constexpr int D6 = 44;
-    static constexpr int D7 = 52;
-    static constexpr int D8 = 60;
+    static constexpr uchar D1 = 4;
+    static constexpr uchar D2 = 12;
+    static constexpr uchar D3 = 20;
+    static constexpr uchar D4 = 28;
+    static constexpr uchar D5 = 36;
+    static constexpr uchar D6 = 44;
+    static constexpr uchar D7 = 52;
+    static constexpr uchar D8 = 60;
 
-    static constexpr int E1 = 3;
-    static constexpr int E2 = 11;
-    static constexpr int E3 = 19;
-    static constexpr int E4 = 27;
-    static constexpr int E5 = 35;
-    static constexpr int E6 = 43;
-    static constexpr int E7 = 51;
-    static constexpr int E8 = 59;
+    static constexpr uchar E1 = 3;
+    static constexpr uchar E2 = 11;
+    static constexpr uchar E3 = 19;
+    static constexpr uchar E4 = 27;
+    static constexpr uchar E5 = 35;
+    static constexpr uchar E6 = 43;
+    static constexpr uchar E7 = 51;
+    static constexpr uchar E8 = 59;
 
     static constexpr u64 POW2_0 = 0x1ULL;
     static constexpr u64 POW2_1 = 0x2ULL;

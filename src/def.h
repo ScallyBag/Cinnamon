@@ -23,7 +23,7 @@ static constexpr int MAX_PLY = 96;
 
 typedef unsigned char uchar;
 typedef long long unsigned u64;
-typedef u64 _Tchessboard[16];
+typedef u64 _Tchessboard[13];
 
 typedef struct {
     u64 allPieces;

@@ -83,23 +83,23 @@ void Search::clone(const Search *s) {
 
 int Search::SZtbProbeWDL() const {
     const auto tot = bitCount(board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard));
-    return syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE, tot);
+    return syzygy->SZtbProbeWDL(chessboard, sideToMove, tot);
 }
 
 void Search::printWdlSyzygy() {
     perftMode = true;
     ;
-    u64 friends = SIDETOMOVE == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    u64 enemies = SIDETOMOVE == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 friends = sideToMove == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 enemies = sideToMove == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
     incListId();
-    generateCaptures(SIDETOMOVE, enemies, friends);
-    generateMoves(SIDETOMOVE, friends | enemies);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     display();
 
-    unsigned res = syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE);
+    unsigned res = syzygy->SZtbProbeWDL(chessboard, sideToMove);
     cout << "current: ";
     if (res != TB_RESULT_FAILED) {
         res = TB_GET_WDL(res);
@@ -120,7 +120,7 @@ void Search::printWdlSyzygy() {
         }
         print(move, chessboard);
 
-        unsigned res = syzygy->SZtbProbeWDL(chessboard, X(SIDETOMOVE));
+        unsigned res = syzygy->SZtbProbeWDL(chessboard, X(sideToMove));
 
         if (res != TB_RESULT_FAILED) {
             res = TB_GET_WDL(res);
@@ -141,7 +141,7 @@ void Search::printWdlSyzygy() {
 void Search::printDtzSyzygy() {
     perftMode = true;
 
-    if ((SIDETOMOVE == BLACK) ? board::inCheck1<WHITE>(chessboard) : board::inCheck1<BLACK>(chessboard)) {
+    if ((sideToMove == BLACK) ? board::inCheck1<WHITE>(chessboard) : board::inCheck1<BLACK>(chessboard)) {
         cout << "invalid position" << endl;
         return;
     }
@@ -151,7 +151,7 @@ void Search::printDtzSyzygy() {
     const u64 white = board::getBitmap<WHITE>(chessboard);
     const u64 black = board::getBitmap<BLACK>(chessboard);
 
-    unsigned res = syzygy->SZtbProbeWDL(chessboard, SIDETOMOVE);
+    unsigned res = syzygy->SZtbProbeWDL(chessboard, sideToMove);
     display();
     cout << "current: ";
     if (res != TB_RESULT_FAILED) {
@@ -165,7 +165,7 @@ void Search::printDtzSyzygy() {
     } else
         cout << " none" << endl;
 
-    const unsigned res1 = syzygy->SZtbProbeRoot(white, black, chessboard, SIDETOMOVE, results);
+    const unsigned res1 = syzygy->SZtbProbeRoot(white, black, chessboard, sideToMove, results);
     if (res1 != TB_RESULT_FAILED) {
         for (unsigned i = 0; results[i] != TB_RESULT_FAILED; i++) {
 
@@ -198,15 +198,15 @@ void Search::printDtzSyzygy() {
 int Search::printDtmWdlGtb(const bool dtm) {
     perftMode = true;
 
-    u64 friends = SIDETOMOVE == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    u64 enemies = SIDETOMOVE == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 friends = sideToMove == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    u64 enemies = sideToMove == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     display();
     cout << "current: ";
     unsigned pliestomate;
-    const int res = GTB::getInstance().getDtmWdl(GTB_STM(SIDETOMOVE), 2, chessboard, &pliestomate, dtm, RIGHT_CASTLE);
+    const int res = GTB::getInstance().getDtmWdl(GTB_STM(sideToMove), 2, chessboard, &pliestomate, dtm, rightCastle);
     incListId();
-    generateCaptures(SIDETOMOVE, enemies, friends);
-    generateMoves(SIDETOMOVE, friends | enemies);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
@@ -218,7 +218,7 @@ int Search::printDtmWdlGtb(const bool dtm) {
         }
         print(move, chessboard);
 
-        GTB::getInstance().getDtmWdl(GTB_STM(X(SIDETOMOVE)), 1, chessboard, &pliestomate, dtm, RIGHT_CASTLE);
+        GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 1, chessboard, &pliestomate, dtm, rightCastle);
 
         takeback(move, oldKey, false);
 
@@ -387,21 +387,21 @@ int Search::searchRoot(const int depth, const int alpha, const int beta) {
     auto ep = ENPASSANT;
     incListId();
 
-    const u64 friends = (SIDETOMOVE == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    const u64 enemies = (SIDETOMOVE == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
-    generateCaptures(SIDETOMOVE, enemies, friends);
-    generateMoves(SIDETOMOVE, friends | enemies);
+    const u64 friends = (sideToMove == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
+    const u64 enemies = (sideToMove == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     int n_root_moves = getListSize();
     decListId();
     ENPASSANT = ep;
-    return SIDETOMOVE ? search<WHITE, searchMoves>(depth,
-                                                                   alpha,
-                                                                   beta,
-                                                                   &pvLine,
-                                                                   bitCount(board::getBitmap<WHITE>(chessboard) |
+    return sideToMove ? search<WHITE, searchMoves>(depth,
+                                                   alpha,
+                                                   beta,
+                                                   &pvLine,
+                                                   bitCount(board::getBitmap<WHITE>(chessboard) |
                                                                             board::getBitmap<BLACK>(chessboard)),
-                                                                   n_root_moves)
-                                      : search<BLACK, searchMoves>(depth, alpha, beta, &pvLine,
+                                                   n_root_moves)
+                      : search<BLACK, searchMoves>(depth, alpha, beta, &pvLine,
                                                                    bitCount(board::getBitmap<WHITE>(chessboard) |
                                                                             board::getBitmap<BLACK>(chessboard)),
                                                                    n_root_moves);
@@ -416,12 +416,12 @@ bool Search::probeRootTB(_Tmove *res) {
 
     if (tot == 3 && (chessboard[WHITE] || chessboard[BLACK])) {
         _Tmove *bestMove = nullptr;
-        u64 friends = SIDETOMOVE == WHITE ? white : black;
-        u64 enemies = SIDETOMOVE == BLACK ? white : black;
+        u64 friends = sideToMove == WHITE ? white : black;
+        u64 enemies = sideToMove == BLACK ? white : black;
 
         incListId();
-        generateCaptures(SIDETOMOVE, enemies, friends);
-        generateMoves(SIDETOMOVE, friends | enemies);
+        generateCaptures(sideToMove, enemies, friends);
+        generateMoves(sideToMove, friends | enemies);
 
         for (int i = 0; i < getListSize(); i++) {
             if (bestMove)break;
@@ -439,10 +439,10 @@ bool Search::probeRootTB(_Tmove *res) {
 
             bool p;
 
-            if (winSide != SIDETOMOVE) { // looking for draw
-                p = isDraw(winSide, X(SIDETOMOVE), kw, kb, pawnQueenPos);
+            if (winSide != sideToMove) { // looking for draw
+                p = isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
             } else { //looking for win
-                p = !isDraw(winSide, X(SIDETOMOVE), kw, kb, pawnQueenPos);
+                p = !isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
             }
             if (p &&
                 (bestMove == nullptr || move->s.capturedPiece != SQUARE_EMPTY ||
@@ -463,12 +463,12 @@ bool Search::probeRootTB(_Tmove *res) {
 #ifndef JS_MODE
     //gaviota
     if (GTB::getInstance().isInstalledPieces(tot)) {
-        u64 friends = SIDETOMOVE == WHITE ? white : black;
-        u64 enemies = SIDETOMOVE == BLACK ? white : black;
+        u64 friends = sideToMove == WHITE ? white : black;
+        u64 enemies = sideToMove == BLACK ? white : black;
         _Tmove *bestMove = nullptr;
         incListId();
-        generateCaptures(SIDETOMOVE, enemies, friends);
-        generateMoves(SIDETOMOVE, friends | enemies);
+        generateCaptures(sideToMove, enemies, friends);
+        generateMoves(sideToMove, friends | enemies);
 
         _Tmove *drawMove = nullptr;
         _Tmove *worstMove = nullptr;
@@ -487,7 +487,7 @@ bool Search::probeRootTB(_Tmove *res) {
                 continue;
             }
             BENCH_START("gtbTime")
-            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(SIDETOMOVE)), 0, chessboard, &dtz, true, RIGHT_CASTLE);
+            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 0, chessboard, &dtz, true, rightCastle);
             BENCH_STOP("gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
@@ -555,7 +555,7 @@ bool Search::probeRootTB(_Tmove *res) {
 
         const u64 allPieces = white | black;
         BENCH_START("syzygyTime")
-        const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, SIDETOMOVE, results);
+        const auto sz = syzygy->SZtbProbeRoot(white, black, chessboard, sideToMove, results);
         BENCH_STOP("syzygyTime")
         if (sz == TB_RESULT_FAILED) return false;
 
@@ -686,7 +686,7 @@ int Search::probeWdl(const int depth, const uchar side, const int N_PIECE) {
         //gaviota
         if (GTB::getInstance().isInstalledPieces(N_PIECE)) {
             BENCH_START("gtbTime")
-            tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false, RIGHT_CASTLE);
+            tbResult = GTB::getInstance().getDtmWdl(GTB_STM(side), 0, chessboard, &pliestomate, false, rightCastle);
             BENCH_STOP("gtbTime")
         }
         switch (tbResult) {

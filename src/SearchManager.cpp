@@ -117,10 +117,10 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
         pvvTmp.clear();
         pvvTmp +=
                 decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.from,
-                               threadPool->getThread(0).SIDETOMOVE);
+                               threadPool->getThread(0).sideToMove);
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
             pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.to,
-                                     threadPool->getThread(0).SIDETOMOVE);
+                                     threadPool->getThread(0).sideToMove);
         }
         pvv.append(pvvTmp);
         if (t == 1) {
@@ -259,12 +259,12 @@ void SearchManager::setPonder(const bool i) {
 
 int SearchManager::getSide() const {
 #ifdef DEBUG_MODE
-    int t = threadPool->getThread(0).SIDETOMOVE;
+    int t = threadPool->getThread(0).sideToMove;
     for (Search *s:threadPool->getPool()) {
-        ASSERT(s->SIDETOMOVE == t)
+        ASSERT(s->sideToMove == t)
     }
 #endif
-    return threadPool->getThread(0).SIDETOMOVE;
+    return threadPool->getThread(0).sideToMove;
 }
 
 int SearchManager::getScore(const uchar side) {

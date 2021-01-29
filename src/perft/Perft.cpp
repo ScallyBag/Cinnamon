@@ -168,7 +168,7 @@ void Perft::run() {
         p->loadFen(fen);
     }
     p->setPerft(true);
-    uchar side = p->SIDETOMOVE;
+    uchar side = p->sideToMove;
 
     p->display();
     cout << "fen:\t\t\t" << fen << endl;

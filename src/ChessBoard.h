@@ -52,12 +52,14 @@ public:
 
     int loadFen(const string &);
 
+    void clearChessboard();
+
     const _Tchessboard &getChessboard() const {
         return chessboard;
     }
 
     void setSide(const bool b) {
-        SIDETOMOVE = b;
+        sideToMove = b;
     }
 
     void setChess960(bool c) { chess960 = c; }
@@ -69,19 +71,20 @@ public:
     void display() const;
 
     string boardToFen() const;
-    uchar SIDETOMOVE;
+
+    uchar sideToMove;
 protected:
 
     _Tchessboard chessboard;
-    int startPosWhiteKing;
-    int startPosWhiteRookKingSide;
-    int startPosWhiteRookQueenSide;
+    uchar startPosWhiteKing;
+    uchar startPosWhiteRookKingSide;
+    uchar startPosWhiteRookQueenSide;
 
-    int startPosBlackKing;
-    int startPosBlackRookKingSide;
-    int startPosBlackRookQueenSide;
+    uchar startPosBlackKing;
+    uchar startPosBlackRookKingSide;
+    uchar startPosBlackRookQueenSide;
 
-    uchar RIGHT_CASTLE;
+    uchar rightCastle;
 
     uchar ENPASSANT;
     string MATCH_QUEENSIDE;
@@ -102,7 +105,7 @@ protected:
 
     void updateZobristKey(int piece, int position) {
         ASSERT_RANGE(position, 0, 63)
-        ASSERT_RANGE(piece, 0, 14)
+        ASSERT_RANGE(piece, 0, 15)
         chessboard[ZOBRISTKEY_IDX] ^= _random::RANDOM_KEY[piece][position];
     }
 
@@ -121,4 +124,3 @@ private:
 
     int loadFen();
 };
-

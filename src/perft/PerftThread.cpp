@@ -33,13 +33,13 @@ void PerftThread::setParam(const string &fen1, const int from1, const int to1, _
 
 unsigned PerftThread::perft(const string &fen, const int depth) {
     loadFen(fen);
-    if (SIDETOMOVE) return search<WHITE, false>(depth);
+    if (sideToMove) return search<WHITE, false>(depth);
     return search<BLACK, false>(depth);
 }
 
 vector<string> PerftThread::getSuccessorsFen(const string &fen1, const int depth) {
     loadFen(fen1);
-    if (SIDETOMOVE) return getSuccessorsFen<WHITE>(depth);
+    if (sideToMove) return getSuccessorsFen<WHITE>(depth);
     return getSuccessorsFen<BLACK>(depth);
 }
 
@@ -141,12 +141,12 @@ void PerftThread::run() {
     _Tmove *move;
     incListId();
     resetList();
-    const u64 friends = SIDETOMOVE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
+    const u64 friends = sideToMove ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
             chessboard);
-    const u64 enemies = SIDETOMOVE ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
+    const u64 enemies = sideToMove ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
             chessboard);
-    generateCaptures(SIDETOMOVE, enemies, friends);
-    generateMoves(SIDETOMOVE, friends | enemies);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
 
     makeZobristKey();
     const u64 keyold = chessboard[ZOBRISTKEY_IDX];
@@ -155,7 +155,7 @@ void PerftThread::run() {
         move = getMove(ii);
         makemove(move, false, false);
         bool fhash = Perft::hash != nullptr;
-        bool side = X(SIDETOMOVE);
+        bool side = X(sideToMove);
 
         if (fhash) {
             n_perft = side == WHITE ? search<WHITE, USE_HASH_YES>(tPerftRes->depth - 1) : search<BLACK, USE_HASH_YES>(
@@ -167,7 +167,7 @@ void PerftThread::run() {
 
         takeback(move, keyold, false);
 
-        char x = FEN_PIECE[SIDETOMOVE ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
+        char x = FEN_PIECE[sideToMove ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
                                       : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];
         x = toupper(x);
         if (x == 'P') x = ' ';
@@ -177,11 +177,11 @@ void PerftThread::run() {
         if (fhash)spinlockPrint.lock();
         cout << endl;
         string h;
-        if ((decodeBoardinv(move->s.type, move->s.to, SIDETOMOVE)).length() > 2) {
-            h = decodeBoardinv(move->s.type, move->s.to, SIDETOMOVE);
+        if ((decodeBoardinv(move->s.type, move->s.to, sideToMove)).length() > 2) {
+            h = decodeBoardinv(move->s.type, move->s.to, sideToMove);
         } else {
-            h = h + x + decodeBoardinv(move->s.type, move->s.from, SIDETOMOVE) + y
-                + decodeBoardinv(move->s.type, move->s.to, SIDETOMOVE);
+            h = h + x + decodeBoardinv(move->s.type, move->s.from, sideToMove) + y
+                + decodeBoardinv(move->s.type, move->s.to, sideToMove);
         }
         cout << setw(6) << h;
         cout << setw(20) << n_perft;
