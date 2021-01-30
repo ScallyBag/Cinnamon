@@ -25,11 +25,6 @@ TEST(StringTest, trim) {
     ASSERT_EQ("hello", s.trim());
 }
 
-TEST(StringTest, endsWith) {
-    String s("hello");
-    ASSERT_TRUE(s.endsWith("lo"));
-}
-
 TEST(StringTest, trimLeft) {
     String s(" hello ");
     ASSERT_EQ("hello ", s.trimLeft());

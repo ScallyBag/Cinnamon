@@ -20,12 +20,10 @@
 
 #include <fstream>
 #include <regex>
-#include "../namespaces/debug.h"
 #include "logger.h"
 #include "FileUtil.h"
 
 using namespace std;
-using namespace _debug;
 using namespace _logger;
 
 class IniFile {

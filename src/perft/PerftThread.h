@@ -51,14 +51,14 @@ private:
     static Spinlock spinlockPrint;
     u64 tot = 0;
 
-    template<int side, bool useHash>
+    template<uchar side, bool useHash>
     u64 search(const int depthx);
 
     int from, to;
     _TPerftRes *tPerftRes;
     u64 partialTot = 0;
 
-    template<int side>
+    template<uchar side>
     vector <string> getSuccessorsFen(const int depthx);
 };
 

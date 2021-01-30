@@ -48,7 +48,7 @@ public:
         if (promotion == 2) return 'r';
         if (promotion == 3) return 'b';
         if (promotion == 4) return 'n';
-        return GenMoves::NO_PROMOTION;
+        return NO_PROMOTION;
     }
 
     unsigned SZtbProbeRoot(const u64, const u64, const _Tchessboard &c, const bool turn, unsigned *);

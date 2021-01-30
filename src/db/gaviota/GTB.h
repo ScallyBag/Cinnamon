@@ -34,7 +34,7 @@ struct GTBchessboard {
     unsigned char wp[17];    /* what white pieces are on those squares */
     unsigned char bp[17];    /* what black pieces are on those squares */
 
-    void fromChessboard(const _Tchessboard &chessboard) {
+    void fromChessboard(const _Tchessboard &chessboard, const uchar rightCastle) {
         static const int DECODE_PIECE[13] =
                 {tb_PAWN, tb_PAWN, tb_ROOK, tb_ROOK, tb_BISHOP, tb_BISHOP, tb_KNIGHT, tb_KNIGHT, tb_KING, tb_KING,
                  tb_QUEEN,
@@ -56,7 +56,6 @@ struct GTBchessboard {
 
 
         int count = 0;
-        rightCastle = chessboard[RIGHT_CASTLE_IDX];
         //white
         for (int piece = 1; piece < 12; piece += 2) {
             for (u64 b = chessboard[piece]; b; RESET_LSB(b)) {
@@ -118,7 +117,7 @@ public:
     bool isInstalledPieces(const int p) const;
 
     int getDtmWdl(const int side, const int doPrint, const _Tchessboard &chessboard, unsigned *pliestomate,
-                  const bool dtm) const;
+                  const bool dtm, const uchar RIGHT_CASTLE) const;
 
 private:
     GTB();

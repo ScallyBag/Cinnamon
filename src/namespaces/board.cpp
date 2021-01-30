@@ -18,7 +18,7 @@
 
 #include "board.h"
 
-u64 board::colors(const int pos) {
+[[gnu::pure]]u64 board::colors(const int pos) {
     if (POW2(pos) & 0x55aa55aa55aa55aaULL)return 0x55aa55aa55aa55aaULL;
     return 0xaa55aa55aa55aa55ULL;
 }
@@ -26,28 +26,24 @@ u64 board::colors(const int pos) {
 
 #ifdef DEBUG_MODE
 
-u64 board::getBitmap(const int side, const _Tchessboard &chessboard) {
+[[gnu::pure]]u64 board::getBitmap(const uchar side, const _Tchessboard &chessboard) {
     return side ? getBitmap<WHITE>(chessboard) : getBitmap<BLACK>(chessboard);
 }
 
-int board::getPieceAt(int side, const u64 bitmapPos, const _Tchessboard &chessboard) {
+[[gnu::pure]]int board::getPieceAt(uchar side, const u64 bitmapPos, const _Tchessboard &chessboard) {
     return side == WHITE ? getPieceAt<WHITE>(bitmapPos, chessboard) : getPieceAt<BLACK>
             (bitmapPos, chessboard);
 }
 
 #endif
 
-int board::getSide(const _Tchessboard &chessboard) {
-    return chessboard[SIDETOMOVE_IDX];
-}
-
-u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces) {
+[[gnu::pure]]u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces) {
     ASSERT_RANGE(position, 0, 63)
     const u64 rankFile = Bitboard::getRankFile(position, allpieces);
     return (rankFile & enemies) | (rankFile & ~allpieces);
 }
 
-bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard) {
+[[gnu::pure]]bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard) {
     //regexp: KN?B*KB*
     switch (nPieces) {
         case 2 :
@@ -77,41 +73,41 @@ bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &che
     return false;
 }
 
-u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces) {
+[[gnu::pure]]u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces) {
     ASSERT_RANGE(position, 0, 63)
     u64 nuovo = Bitboard::getDiagonalAntiDiagonal(position, allpieces);
     return (nuovo & enemies) | (nuovo & ~allpieces);
 }
 
-u64 board::getMobilityRook(const int position, const u64 enemies, const u64 friends) {
+[[gnu::pure]]u64 board::getMobilityRook(const int position, const u64 enemies, const u64 friends) {
     ASSERT_RANGE(position, 0, 63)
     return performRankFileCaptureAndShift(position, enemies, enemies | friends);
 }
 
-bool board::isCastleRight_WhiteKing(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_WHITE_MASK;
+[[gnu::pure]]bool board::isCastleRight_WhiteKing(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_KING_CASTLE_WHITE_MASK;
 }
 
-bool board::isCastleRight_BlackKing(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_KING_CASTLE_BLACK_MASK;
+[[gnu::pure]]bool board::isCastleRight_BlackKing(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_KING_CASTLE_BLACK_MASK;
 }
 
-bool board::isCastleRight_WhiteQueen(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_WHITE_MASK;
+[[gnu::pure]]bool board::isCastleRight_WhiteQueen(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_WHITE_MASK;
 }
 
-bool board::isCastleRight_BlackQueen(const _Tchessboard &chessboard) {
-    return chessboard[RIGHT_CASTLE_IDX] & RIGHT_QUEEN_CASTLE_BLACK_MASK;
+[[gnu::pure]]bool board::isCastleRight_BlackQueen(const uchar RIGHT_CASTLE) {
+    return RIGHT_CASTLE & RIGHT_QUEEN_CASTLE_BLACK_MASK;
 }
 
-int board::getFile(const char cc) {
+[[gnu::pure]]int board::getFile(const char cc) {
     return 104 - tolower(cc);
 }
 
-bool board::isOccupied(const uchar pos, const u64 allpieces) {
+[[gnu::pure]]bool board::isOccupied(const uchar pos, const u64 allpieces) {
     return allpieces & POW2(pos);
 }
 
-bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {
+[[gnu::pure]]bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {
     return chessboard[pieces] & POW2(pos);
 }

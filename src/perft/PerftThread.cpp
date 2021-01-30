@@ -33,18 +33,18 @@ void PerftThread::setParam(const string &fen1, const int from1, const int to1, _
 
 unsigned PerftThread::perft(const string &fen, const int depth) {
     loadFen(fen);
-    if (board::getSide(chessboard)) return search<WHITE, false>(depth);
+    if (sideToMove) return search<WHITE, false>(depth);
     return search<BLACK, false>(depth);
 }
 
 vector<string> PerftThread::getSuccessorsFen(const string &fen1, const int depth) {
     loadFen(fen1);
-    if (board::getSide(chessboard)) return getSuccessorsFen<WHITE>(depth);
+    if (sideToMove) return getSuccessorsFen<WHITE>(depth);
     return getSuccessorsFen<BLACK>(depth);
 }
 
 
-template<int side>
+template<uchar side>
 vector<string> PerftThread::getSuccessorsFen(const int depthx) {
     if (depthx == 0) {
         vector<string> a;
@@ -84,7 +84,7 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
 }
 
 
-template<int side, bool useHash>
+template<uchar side, bool useHash>
 u64 PerftThread::search(const int depthx) {
     checkWait();
     if (depthx == 0) {
@@ -141,12 +141,12 @@ void PerftThread::run() {
     _Tmove *move;
     incListId();
     resetList();
-    const u64 friends = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
+    const u64 friends = sideToMove ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
             chessboard);
-    const u64 enemies = chessboard[SIDETOMOVE_IDX] ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
+    const u64 enemies = sideToMove ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
             chessboard);
-    generateCaptures(chessboard[SIDETOMOVE_IDX], enemies, friends);
-    generateMoves(chessboard[SIDETOMOVE_IDX], friends | enemies);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
 
     makeZobristKey();
     const u64 keyold = chessboard[ZOBRISTKEY_IDX];
@@ -155,7 +155,7 @@ void PerftThread::run() {
         move = getMove(ii);
         makemove(move, false, false);
         bool fhash = Perft::hash != nullptr;
-        bool side = X(chessboard[SIDETOMOVE_IDX]);
+        bool side = X(sideToMove);
 
         if (fhash) {
             n_perft = side == WHITE ? search<WHITE, USE_HASH_YES>(tPerftRes->depth - 1) : search<BLACK, USE_HASH_YES>(
@@ -167,8 +167,8 @@ void PerftThread::run() {
 
         takeback(move, keyold, false);
 
-        char x = FEN_PIECE[chessboard[SIDETOMOVE_IDX] ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
-                                                      : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];
+        char x = FEN_PIECE[sideToMove ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
+                                      : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];
         x = toupper(x);
         if (x == 'P') x = ' ';
 
@@ -177,12 +177,11 @@ void PerftThread::run() {
         if (fhash)spinlockPrint.lock();
         cout << endl;
         string h;
-        if ((decodeBoardinv(move->s.type, move->s.to, chessboard[SIDETOMOVE_IDX])).length() > 2) {
-
-            h = decodeBoardinv(move->s.type, move->s.to, chessboard[SIDETOMOVE_IDX]);
+        if ((decodeBoardinv(move->s.type, move->s.to, sideToMove)).length() > 2) {
+            h = decodeBoardinv(move->s.type, move->s.to, sideToMove);
         } else {
-            h = h + x + decodeBoardinv(move->s.type, move->s.from, chessboard[SIDETOMOVE_IDX]) + y
-                + decodeBoardinv(move->s.type, move->s.to, chessboard[SIDETOMOVE_IDX]);
+            h = h + x + decodeBoardinv(move->s.type, move->s.from, sideToMove) + y
+                + decodeBoardinv(move->s.type, move->s.to, sideToMove);
         }
         cout << setw(6) << h;
         cout << setw(20) << n_perft;

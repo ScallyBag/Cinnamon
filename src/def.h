@@ -23,7 +23,7 @@ static constexpr int MAX_PLY = 96;
 
 typedef unsigned char uchar;
 typedef long long unsigned u64;
-typedef u64 _Tchessboard[16];
+typedef u64 _Tchessboard[13];
 
 typedef struct {
     u64 allPieces;
@@ -39,13 +39,14 @@ typedef struct {
 typedef union {
     u64 u;
     struct s {
-        char promotionPiece;
-        char pieceFrom;
-        uchar capturedPiece;
-        uchar from;
-        uchar to;
-        char side;
-        uchar type;
+        uchar promotionPiece; //4
+        uchar pieceFrom; //4
+        uchar capturedPiece; //4
+        uchar from; //6
+        uchar to; //6
+        uchar side; //0
+        uchar type; //8
+        //TODO 4+4+4+6+6+0+8 = 32
     } s;
 } _Tmove;
 

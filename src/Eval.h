@@ -41,9 +41,9 @@ public:
 
     ~Eval() override;
 
-    short getScore(const u64 key, const int side, const int alpha, const int beta, const bool trace = false);
+    short getScore(const u64 key, const uchar side, const int alpha, const int beta, const bool trace = false);
 
-    template<int side>
+    template<uchar side>
     int lazyEval() const {
         return lazyEvalSide<side>() - lazyEvalSide<X(side)>();
     }
@@ -194,25 +194,25 @@ private:
         BENCH_STOP("eval king")
     }
 
-    template<int side, _Tphase phase>
+    template<uchar side, _Tphase phase>
     int evaluatePawn();
 
-    template<int side, _Tphase phase>
+    template<uchar side, _Tphase phase>
     int evaluateBishop(const u64);
 
-    template<int side, Eval::_Tphase phase>
+    template<uchar side, Eval::_Tphase phase>
     int evaluateQueen(const u64 enemies);
 
-    template<int side, _Tphase phase>
+    template<uchar side, _Tphase phase>
     int evaluateKnight(const u64);
 
-    template<int side, Eval::_Tphase phase>
+    template<uchar side, Eval::_Tphase phase>
     int evaluateRook(const u64, u64 enemies, u64 friends);
 
     template<_Tphase phase>
-    int evaluateKing(const int side, const u64 squares);
+    int evaluateKing(const uchar side, const u64 squares);
 
-    template<int side>
+    template<uchar side>
     int lazyEvalSide() const {
         return bitCount(chessboard[PAWN_BLACK + side]) * VALUEPAWN +
                bitCount(chessboard[ROOK_BLACK + side]) * VALUEROOK +

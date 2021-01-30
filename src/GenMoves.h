@@ -36,11 +36,11 @@ public:
 
     void setPerft(const bool b);
 
-    bool generateCaptures(const int side, const u64, const u64);
+    bool generateCaptures(const uchar side, const u64, const u64);
 
-    void generateMoves(const int side, const u64);
+    void generateMoves(const uchar side, const u64);
 
-    template<int side>
+    template<uchar side>
     void generateMoves(const u64 allpieces) {
         ASSERT_RANGE(side, 0, 1)
         ASSERT(chessboard[KING_BLACK])
@@ -60,7 +60,7 @@ public:
         return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
     }
 
-    template<int side>
+    template<uchar side>
     bool generateCaptures(const u64 enemies, const u64 friends) {
         ASSERT_RANGE(side, 0, 1)
         ASSERT(chessboard[KING_BLACK])
@@ -101,7 +101,7 @@ public:
 
     void setRepetitionMapCount(const int i);
 
-    template<int side>
+    template<uchar side>
     bool performKingShiftCapture(const u64 enemies, const bool isCapture) {
         BENCH_AUTO_CLOSE("kingShiftCapture")
         ASSERT_RANGE(side, 0, 1)
@@ -118,7 +118,7 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     bool performKnightShiftCapture(const u64 enemies, const bool isCapture) {
         BENCH_AUTO_CLOSE("knightShiftCapture")
         ASSERT_RANGE(side, 0, 1)
@@ -136,8 +136,8 @@ public:
         return false;
     }
 
-    template<int side>
-    bool performDiagCapture(const int piece, const u64 enemies, const u64 allpieces) {
+    template<uchar side>
+    bool performDiagCapture(const uchar piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -156,8 +156,8 @@ public:
 
     u64 getTotMoves() const;
 
-    template<int side>
-    bool performRankFileCapture(const int piece, const u64 enemies, const u64 allpieces) {
+    template<uchar side>
+    bool performRankFileCapture(const uchar piece, const u64 enemies, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileCapture")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -175,14 +175,14 @@ public:
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     bool performPawnCapture(const u64 enemies) {
         BENCH_AUTO_CLOSE("pawnCapture")
         if (!chessboard[side]) {
-            if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-                updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
+            if (ENPASSANT != NO_ENPASSANT) {
+                updateZobristKey(ENPASSANT_IDX, ENPASSANT);
             }
-            chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
+            ENPASSANT = NO_ENPASSANT;
             return false;
         }
         constexpr int sh = side ? -7 : 7;
@@ -236,24 +236,22 @@ public:
             }
         }
         //ENPASSANT
-        if (chessboard[ENPASSANT_IDX] != NO_ENPASSANT) {
-            x = ENPASSANT_MASK[X(side)][chessboard[ENPASSANT_IDX]] & chessboard[side];
+        if (ENPASSANT != NO_ENPASSANT) {
+            x = ENPASSANT_MASK[X(side)][ENPASSANT] & chessboard[side];
             for (; x; RESET_LSB(x)) {
                 const int o = BITScanForward(x);
                 BENCH_SUBPROCESS("pawnCapture", "pushmove")
-                pushmove<ENPASSANT_MOVE_MASK, side>(o,
-                                                    (side ? chessboard[ENPASSANT_IDX] + 8 : chessboard[ENPASSANT_IDX] -
-                                                                                            8),
-                                                    NO_PROMOTION, side, true);
+                pushmove<ENPASSANT_MOVE_MASK, side>(o, (side ? ENPASSANT + 8 : ENPASSANT - 8), NO_PROMOTION, side,
+                                                    true);
 
             }
-            updateZobristKey(ENPASSANT_IDX, chessboard[ENPASSANT_IDX]);
-            chessboard[ENPASSANT_IDX] = NO_ENPASSANT;
+            updateZobristKey(ENPASSANT_IDX, ENPASSANT);
+            ENPASSANT = NO_ENPASSANT;
         }
         return false;
     }
 
-    template<int side>
+    template<uchar side>
     void performPawnShift(const u64 xallpieces) {
         u64 x = chessboard[side];
         performJumpPawn<side>(x, xallpieces);
@@ -286,8 +284,8 @@ public:
 
     void clearHeuristic();
 
-    template<int side>
-    void performDiagShift(const int piece, const u64 allpieces) {
+    template<uchar side>
+    void performDiagShift(const uchar piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("diagShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -301,8 +299,8 @@ public:
         }
     }
 
-    template<int side>
-    void performRankFileShift(const int piece, const u64 allpieces) {
+    template<uchar side>
+    void performRankFileShift(const uchar piece, const u64 allpieces) {
         BENCH_AUTO_CLOSE("rankFileShift")
         ASSERT_RANGE(piece, 0, 11)
         ASSERT_RANGE(side, 0, 1)
@@ -358,7 +356,6 @@ public:
     unsigned betaEfficiencyCount = 0;
 #endif
 
-    static constexpr int NO_PROMOTION = -1;
 protected:
 
     u64 pinned;
@@ -387,7 +384,7 @@ protected:
 
     _Tmove *getNextMove(decltype(gen_list), const int depth, const Hash::_ThashData *c, const int first);
 
-    template<int side>
+    template<uchar side>
     int getMobilityCastle(const u64 allpieces) const {
         ASSERT_RANGE(side, 0, 1)
         if (chess960) return 0;
@@ -407,8 +404,9 @@ protected:
 
 #ifdef DEBUG_MODE
 
-    template<int side, uchar type>
-    bool inCheckSlow(const int from, const int to, const int pieceFrom, const int pieceTo, const int promotionPiece) {
+    template<uchar side, uchar type>
+    bool
+    inCheckSlow(const int from, const int to, const uchar pieceFrom, const uchar pieceTo, const uchar promotionPiece) {
         bool result;
         switch (type & 0x3) {
             case STANDARD_MOVE_MASK: {
@@ -484,7 +482,7 @@ protected:
 #endif
 
     template<int type, uchar side>
-    bool inCheck(const int from, const int to, const int pieceFrom, const int pieceTo, int promotionPiece) {
+    bool inCheck(const uchar from, const uchar to, const uchar pieceFrom, const uchar pieceTo, uchar promotionPiece) {
         BENCH_AUTO_CLOSE("inCheck")
 #ifdef DEBUG_MODE
         _Tchessboard a;
@@ -583,11 +581,11 @@ protected:
         return result;
     }
 
-    void performCastle(const int side, const uchar type);
+    void performCastle(const uchar side, const uchar type);
 
-    void unPerformCastle(const int side, const uchar type);
+    void unPerformCastle(const uchar side, const uchar type);
 
-    template<int side>
+    template<uchar side>
     void tryAllCastle(const u64 allpieces) {
         ASSERT_RANGE(side, 0, 1)
         BENCH_AUTO_CLOSE("castle")
@@ -596,7 +594,7 @@ protected:
     }
 
     bool allowKingSideBlack(const u64 allpieces) const {
-        const auto a = board::isCastleRight_BlackKing(chessboard) &&
+        const auto a = board::isCastleRight_BlackKing(rightCastle) &&
                        board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                        board::isPieceAt(ROOK_BLACK, startPosBlackRookKingSide, chessboard) &&
                        (!board::isOccupied(G8, allpieces) || startPosBlackKing == G8 ||
@@ -614,7 +612,7 @@ protected:
     }
 
     bool allowQueenSideBlack(const u64 allpieces) const {
-        auto a = board::isCastleRight_BlackQueen(chessboard) &&
+        auto a = board::isCastleRight_BlackQueen(rightCastle) &&
                  board::isPieceAt(KING_BLACK, startPosBlackKing, chessboard) &&
                  board::isPieceAt(ROOK_BLACK, startPosBlackRookQueenSide, chessboard) &&
                  (!board::isOccupied(C8, allpieces) || startPosBlackKing == C8 || startPosBlackRookQueenSide == C8) &&
@@ -639,7 +637,7 @@ protected:
     bool allowCastleWhiteKing(const u64 allpieces) const;
 
     bool allowQueenSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteQueen(chessboard) &&
+        const auto a = board::isCastleRight_WhiteQueen(rightCastle) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookQueenSide, chessboard) &&
                        (!board::isOccupied(C1, allpieces) || startPosWhiteKing == C1 ||
@@ -657,7 +655,7 @@ protected:
     }
 
     bool allowKingSideWhite(const u64 allpieces) const {
-        const auto a = board::isCastleRight_WhiteKing(chessboard) &&
+        const auto a = board::isCastleRight_WhiteKing(rightCastle) &&
                        board::isPieceAt(KING_WHITE, startPosWhiteKing, chessboard) &&
                        board::isPieceAt(ROOK_WHITE, startPosWhiteRookKingSide, chessboard) &&
                        (!board::isOccupied(G1, allpieces) || startPosWhiteKing == G1 ||
@@ -674,55 +672,50 @@ protected:
                 !board::anyAttack<WHITE>(kingPath, allpieces & NOTPOW2(startPosWhiteRookKingSide), chessboard));
     }
 
-    template<int side>
+    template<uchar side>
     void tryAllCastle960(const u64 allpieces) {
         if (side == WHITE) {
-
             if (allowKingSideWhite(allpieces)) {
-
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
-
             if (allowQueenSideWhite(allpieces)) {
-
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
 
         } else {
             if (allowKingSideBlack(allpieces)) {
-
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
-
             if (allowQueenSideBlack(allpieces)) {
-
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
         }
     }
 
-    template<int side>
+    template<uchar side>
     void tryAllCastleStandard(const u64 allpieces) {
         if (side == WHITE) {
             if (allowCastleWhiteKing(allpieces))
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             if (allowCastleWhiteQueen(allpieces)) {
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             }
         } else {
             if (allowCastleBlackKing(allpieces))
-                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<KING_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
             if (allowCastleBlackQueen(allpieces))
-                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(-1, -1, NO_PROMOTION, -1, false);
+                pushmove<QUEEN_SIDE_CASTLE_MOVE_MASK, side>(NO_POSITION, NO_POSITION, NO_PROMOTION, NO_PIECE, false);
         }
     }
 
-    template<uchar type, int side>
-    bool pushmove(const int from, const int to, const int promotionPiece, const int pieceFrom, const bool isCapture) {
+    template<uchar type, uchar side>
+    bool
+    pushmove(const uchar from, const uchar to, const uchar promotionPiece, const uchar pieceFrom,
+             const bool isCapture) {
         BENCH_AUTO_CLOSE("pushmove")
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
-        int capturedPiece = SQUARE_EMPTY;
+        uchar capturedPiece = SQUARE_EMPTY;
         bool res = false;
         if (((type & 0x3) != ENPASSANT_MOVE_MASK) && !(type & 0xc)) {
             if (isCapture) {
@@ -742,8 +735,8 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &gen_list[listId].moveList[getListSize()];
         ++gen_list[listId].size;
-        move->s.type = (uchar) chessboard[RIGHT_CASTLE_IDX] | type;
-        move->s.side = (char) side;
+        move->s.type = rightCastle | type;
+        move->s.side = side;
         move->s.capturedPiece = capturedPiece;
         if (type & 0x3) {
             move->s.from = (uchar) from;
@@ -801,7 +794,7 @@ private:
         return &list->moveList[i];
     }
 
-    template<int side>
+    template<uchar side>
     void performJumpPawn(u64 x, const u64 xallpieces) {
         BENCH_AUTO_CLOSE("performJumpPawn")
         x &= TABJUMPPAWN;

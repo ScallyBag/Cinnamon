@@ -208,8 +208,8 @@ void IterativeDeeping::run() {
             bestmove = searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.from, resultMove.s.side);
             if (!(resultMove.s.type & (KING_SIDE_CASTLE_MOVE_MASK | QUEEN_SIDE_CASTLE_MOVE_MASK))) {
                 bestmove += searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.to, resultMove.s.side);
-                if (resultMove.s.promotionPiece != -1) {
-                    bestmove += tolower(FEN_PIECE[(uchar) resultMove.s.promotionPiece]);
+                if (resultMove.s.promotionPiece != NO_PROMOTION) {
+                    bestmove += tolower(FEN_PIECE[resultMove.s.promotionPiece]);
                 }
             }
 

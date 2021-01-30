@@ -22,13 +22,11 @@
 #include "../util/bench/Time.h"
 #include "../util/FileUtil.h"
 #include "../util/bench/Bench.h"
-#include "debug.h"
 #include "../def.h"
 #include "constants.h"
 #include <array>
 #include <cmath>
 
-using namespace _debug;
 using namespace constants;
 
 namespace _def {
@@ -91,7 +89,7 @@ namespace _def {
 
 #endif
 
-    template<int side, int shift>
+    template<uchar side, int shift>
     static inline u64 shiftForward(const u64 bits) {
         ASSERT(shift == 7 || shift == 8 || shift == 9)
         const auto a = side == WHITE ? bits << shift : bits >> shift;

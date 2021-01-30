@@ -47,7 +47,7 @@ Eval::~Eval() {
  * 14. passed - if there isn't friend pawns forward and forward on sides until 8' rank add PAWN_PASSED[side][pos]
 
  */
-template<int side, Eval::_Tphase phase>
+template<uchar side, Eval::_Tphase phase>
 int Eval::evaluatePawn() {
     INC(evaluationCount[side]);
     int result = 0;
@@ -148,7 +148,7 @@ int Eval::evaluatePawn() {
  * 7. outposts
  * 8. bishop on big diagonal
  */
-template<int side, Eval::_Tphase phase>
+template<uchar side, Eval::_Tphase phase>
 int Eval::evaluateBishop(const u64 enemies) {
     INC(evaluationCount[side]);
     constexpr int xside = X(side);
@@ -237,7 +237,7 @@ int Eval::evaluateBishop(const u64 enemies) {
  * 5. open file - if there is any pieces on same file add OPEN_FILE_Q
  * 6. 5. bishop on queen - if there is a bishop on same diagonal add BISHOP_ON_QUEEN
  */
-template<int side, Eval::_Tphase phase>
+template<uchar side, Eval::_Tphase phase>
 int Eval::evaluateQueen(const u64 enemies) {
     INC(evaluationCount[side]);
     u64 queen = chessboard[QUEEN_BLACK + side];
@@ -296,7 +296,7 @@ int Eval::evaluateQueen(const u64 enemies) {
  * 6. outposts
 */
 
-template<int side, Eval::_Tphase phase>
+template<uchar side, Eval::_Tphase phase>
 int Eval::evaluateKnight(const u64 notMyBits) {
     INC(evaluationCount[side]);
     u64 knight = chessboard[KNIGHT_BLACK + side];
@@ -363,7 +363,7 @@ int Eval::evaluateKnight(const u64 notMyBits) {
  * 7. 2 linked towers
  * 8. Penalise if Rook is Blocked Horizontally
 */
-template<int side, Eval::_Tphase phase>
+template<uchar side, Eval::_Tphase phase>
 int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
     INC(evaluationCount[side]);
 
@@ -442,7 +442,7 @@ int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
 }
 
 template<Eval::_Tphase phase>
-int Eval::evaluateKing(const int side, const u64 squares) {
+int Eval::evaluateKing(const uchar side, const u64 squares) {
     ASSERT(evaluationCount[side] == 5)
     int result = 0;
     uchar pos_king = structureEval.posKing[side];
@@ -481,7 +481,7 @@ short Eval::getHashValue(const u64 key) {
     return noHashValue;
 }
 
-short Eval::getScore(const u64 key, const int side, const int alpha, const int beta, const bool trace) {
+short Eval::getScore(const u64 key, const uchar side, const int alpha, const int beta, const bool trace) {
     const short hashValue = getHashValue(key);
     if (hashValue != noHashValue && !trace) {
         return side ? -hashValue : hashValue;

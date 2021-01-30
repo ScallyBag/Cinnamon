@@ -8,7 +8,7 @@
 #export first="/home/geko/cinnamon_test/test/clop/cinnamon/src/cinnamon name=clop142 option.REVERSE_FUTIL_MARGIN=142"
 #export first="/home/geko/nokiller_nohist"
 #export tc="0/5:1+0.0"
-export TOT_MATCH=500
+export TOT_MATCH=4500
 #export variant="-variant fischerandom"
 #export compile_tag=cinnamon32-ARM-CLOP
 

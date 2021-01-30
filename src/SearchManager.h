@@ -39,7 +39,7 @@ public:
 
     int loadFen(const string &fen = "");
 
-    int getPieceAt(const int side, const u64 i);
+    int getPieceAt(const uchar side, const u64 i);
 
     u64 getTotMoves();
 
@@ -49,7 +49,7 @@ public:
 
     string boardToFen();
 
-    string decodeBoardinv(const uchar type, const int a, const int side);
+    string decodeBoardinv(const uchar type, const int a, const uchar side);
 
     bool setParameter(String param, const int value);
 
@@ -81,7 +81,7 @@ public:
 
     int getSide() const;
 
-    int getScore(const int side);
+    int getScore(const uchar side);
 
     int getMaxTimeMillsec() const;
 
@@ -119,7 +119,7 @@ public:
 
     unsigned SZtbProbeWDL() const;
 
-    u64 getBitmap(const int n, const int side) const {
+    u64 getBitmap(const int n, const uchar side) const {
         return side ? board::getBitmap<WHITE>(threadPool->getPool()[n]->getChessboard())
                     : board::getBitmap<BLACK>(threadPool->getPool()[n]->getChessboard());
     }
@@ -128,7 +128,7 @@ public:
         return threadPool->getPool()[n]->getChessboard();
     }
 
-    template<int side>
+    template<uchar side>
     u64 getPinned(const u64 allpieces, const u64 friends, const int kingPosition) const {
         return board::getPinned<side>(allpieces, friends, kingPosition, threadPool->getPool()[0]->getChessboard());
     }

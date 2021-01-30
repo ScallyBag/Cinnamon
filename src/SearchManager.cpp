@@ -59,7 +59,7 @@ string SearchManager::probeRootTB() const {
         string best = string(search.decodeBoardinv(bestMove.s.type, bestMove.s.from, getSide())) +
                       string(search.decodeBoardinv(bestMove.s.type, bestMove.s.to, getSide()));
 
-        if (bestMove.s.promotionPiece != GenMoves::NO_PROMOTION)
+        if (bestMove.s.promotionPiece != NO_PROMOTION)
             best += tolower(bestMove.s.promotionPiece);
 
         return best;
@@ -116,13 +116,11 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
     for (int t = 0; t < lineWin.cmove; t++) {
         pvvTmp.clear();
         pvvTmp +=
-                decodeBoardinv(lineWin.argmove[t].s.type,
-                               lineWin.argmove[t].s.from,
-                               board::getSide(threadPool->getThread(0).getChessboard()));
+                decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.from,
+                               threadPool->getThread(0).sideToMove);
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
-            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type,
-                                     lineWin.argmove[t].s.to,
-                                     board::getSide(threadPool->getThread(0).getChessboard()));
+            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.to,
+                                     threadPool->getThread(0).sideToMove);
         }
         pvv.append(pvvTmp);
         if (t == 1) {
@@ -163,7 +161,7 @@ void SearchManager::setMainPly(const int r) {
     }
 }
 
-int SearchManager::getPieceAt(const int side, const u64 i) {
+int SearchManager::getPieceAt(const uchar side, const u64 i) {
     return side == WHITE ? board::getPieceAt<WHITE>(i, threadPool->getThread(0).getChessboard())
                          : board::getPieceAt<BLACK>(i, threadPool->getThread(0).getChessboard());
 }
@@ -261,15 +259,15 @@ void SearchManager::setPonder(const bool i) {
 
 int SearchManager::getSide() const {
 #ifdef DEBUG_MODE
-    int t = board::getSide(threadPool->getThread(0).getChessboard());
+    int t = threadPool->getThread(0).sideToMove;
     for (Search *s:threadPool->getPool()) {
-        ASSERT(board::getSide(s->getChessboard()) == t)
+        ASSERT(s->sideToMove == t)
     }
 #endif
-    return board::getSide(threadPool->getThread(0).getChessboard());
+    return threadPool->getThread(0).sideToMove;
 }
 
-int SearchManager::getScore(const int side) {
+int SearchManager::getScore(const uchar side) {
     return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
 }
 
@@ -297,7 +295,7 @@ bool SearchManager::makemove(const _Tmove *i) {
     return b;
 }
 
-string SearchManager::decodeBoardinv(const uchar type, const int a, const int side) {
+string SearchManager::decodeBoardinv(const uchar type, const int a, const uchar side) {
     return threadPool->getThread(0).decodeBoardinv(type, a, side);
 }
 
