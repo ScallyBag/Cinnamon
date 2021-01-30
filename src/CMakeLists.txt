@@ -17,7 +17,6 @@ include_directories(db/gtb/sysport)
 
 set(SOURCE_FILES
         namespaces/constants.h
-        namespaces/debug.h
         namespaces/bits.h
         namespaces/random.h
         namespaces/see.h
