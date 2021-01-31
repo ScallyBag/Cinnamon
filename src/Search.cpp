@@ -88,7 +88,6 @@ int Search::SZtbProbeWDL() const {
 
 void Search::printWdlSyzygy() {
     perftMode = true;
-    ;
     u64 friends = sideToMove == WHITE ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
     u64 enemies = sideToMove == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
