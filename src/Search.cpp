@@ -118,7 +118,7 @@ void Search::printWdlSyzygy() {
             takeback(move, oldKey, false);
             continue;
         }
-        print(move, chessboard);
+        print(move);
 
         unsigned res = syzygy->SZtbProbeWDL(chessboard, X(sideToMove));
 
@@ -216,7 +216,7 @@ int Search::printDtmWdlGtb(const bool dtm) {
             takeback(move, oldKey, false);
             continue;
         }
-        print(move, chessboard);
+        print(move);
 
         GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 1, chessboard, &pliestomate, dtm, rightCastle);
 

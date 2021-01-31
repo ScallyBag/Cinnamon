@@ -21,9 +21,8 @@ ifndef SystemRoot
 		LIBS= -static-libstdc++ -lpthread
 		OS=OSX
 	else
-	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -static
-		PROFILE_USE_THREAD=" -fprofile-correction -fprofile-use "		
-		OS=Linux
+	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -static	
+	    OS=Linux
 	endif
 
 	RM=rm -f
@@ -44,7 +43,7 @@ ifeq ($(CLOP),yes)
 	DCLOP=-DCLOP
 endif
 
-CFLAGS=" -std=c++11 -Wall -Ofast -DNDEBUG -fsigned-char -funroll-loops $(DCLOP) "
+CFLAGS=" -std=c++11 -Wall -O3 -Wpedantic -W -DNDEBUG -fsigned-char -funroll-loops $(DCLOP) "
 
 help:
 

@@ -99,7 +99,7 @@ protected:
 
     void makeZobristKey();
 
-    void print(const _Tmove *move, const _Tchessboard &chessboard);
+    void print(const _Tmove *move);
 
 #ifdef DEBUG_MODE
 

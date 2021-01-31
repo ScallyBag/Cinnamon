@@ -167,7 +167,7 @@ string ChessBoard::moveToString(const _Tmove *move) {
     return a + b;
 }
 
-void ChessBoard::print(const _Tmove *move, const _Tchessboard &chessboard) {
+void ChessBoard::print(const _Tmove *move) {
     cout << moveToString(move) << " " << flush;
 }
 
