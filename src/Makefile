@@ -21,7 +21,7 @@ ifndef SystemRoot
 		LIBS= -static-libstdc++ -lpthread
 		OS=OSX
 	else
-	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -static	
+	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -static
 	    OS=Linux
 	endif
 
@@ -43,7 +43,7 @@ ifeq ($(CLOP),yes)
 	DCLOP=-DCLOP
 endif
 
-CFLAGS=" -std=c++11 -Wall -O3 -Wpedantic -W -DNDEBUG -fsigned-char -funroll-loops $(DCLOP) "
+CFLAGS=" -std=c++11 -Wall -flto -fno-stack-protector -fno-rtti -fno-exceptions -fomit-frame-pointer -O3 -Wpedantic -W -DNDEBUG -fsigned-char -funroll-loops $(DCLOP) "
 
 help:
 
