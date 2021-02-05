@@ -53,11 +53,18 @@ public:
 
     void loadBook(const string);
 
-    int loadFen(const string& fen = "");
+    int loadFen(const string &fen = "");
 
     int getRunning() const {
         return running;
     }
+
+#ifdef JS_MODE
+    string go() {
+        run();
+        return bestmove;
+    }
+#endif
 
 #if defined(FULL_TEST)
     const string &getBestmove() const {
@@ -72,7 +79,7 @@ private:
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     int maxDepth;
     string bestmove;
-    Hash& hash = Hash::getInstance();
+    Hash &hash = Hash::getInstance();
     volatile int running;
     OpenBook *openBook = nullptr;
     bool ponderEnabled;
