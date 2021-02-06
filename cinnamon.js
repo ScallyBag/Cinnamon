@@ -52,22 +52,12 @@ var onSnapEnd = function() {
   board.position(game.fen());
 };
 
-function addMatchCount()
-{
-$.ajax({
-  type: "POST",
-  url: 'http://cinnamonchess.altervista.org/getfile.php?file=match'
-});
-countMoves = 0;
-};
-
 function engineGo()
 {
   var time=$('#maxTimeMillsec option:selected').val()*1000;
 	cinnamonCommand("setMaxTimeMillsec",time.toString())
 	cinnamonCommand("position",game.fen())
-
-    if(countMoves==4) addMatchCount();
+   
     countMoves=countMoves+1;
 	var move=cinnamonCommand("go","")
 	
