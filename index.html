@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html><head>
+	<style type="text/css" media="screen">
+	
+		
+		code {font-size: 120%;}
+		
+		
+		pre code {
+			background-color: #eee;
+			border: 1px solid #999;
+			display: block;
+			padding: 20px;
+		}
+		
+	</style>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="KEYWORDS" content="javascript chess engine,uci chess engine,open source,chess for android,chess on line,chess960">
+
+<title>Cinnamon chess engine on line- open source chess engine</title>
+  
+    
+  <link type="text/css" rel="stylesheet" href="css/core.css">
+  
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/codesite/ph/18376132045800511552/css/ph_detail.css">
+  
+ 
+
+ </style><link rel="stylesheet" href="./chessboardjs/css/chessboard.css"></head><body>
+
+<script>
+var width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+
+if (width < 1000) {alert('mobile');window.location.href = "https://gekomad.github.io/Cinnamon/m.index.html";}
+
+</script>
+
+<div style="height: 19px;" class="headbg">
+<div id="gaia"> <span> 
+</span> </div>
+
+<table style="margin: 0px 0px 10px; padding: 0px; width: 1293px; height: 47px;" cellpadding="0" cellspacing="0">
+  <tbody>
+    <tr style="height: 58px;">
+
+      <td style="padding-left: 0.5em; color: rgb(80, 80, 80);">
+
+
+      <div id="pname"> <span itemprop="name">Cinnamon chess engine <small style="color: rgb(255, 88, 126);"></small></span> </div>
+      </td>
+      <td style="white-space: nowrap; text-align: right; vertical-align: bottom;">
+
+      <br>
+</td>
+    </tr>
+
+  </tbody>
+
+</table>
+</div>
+<div id="mt" class="gtb">
+&nbsp;
+</div>
+<div id="maincol">
+<table width="100%">
+  <tbody>
+    <tr class="pscontent">
+      <td style="width: 277px;" class="pscolumnl">
+     
+      <div class="psicon">
+      <div class="psicon-container goog-inline-block"> </div>     
+       </div>
+     
+<div>  
+
+
+<div align="center">
+<br>
+Time:    
+
+<select name="maxTimeMillsec" id="maxTimeMillsec">
+<option value="0">0</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="5">5</option>
+<option value="10">10</option>
+<option value="30">30</option>
+</select> seconds
+
+<div id="board" style="width: 300px;"></div>
+<p>Status: <span id="status"></span></p>
+</div>
+<p style="font-size:9px"><b>FEN:</b> <input type="text" id="fen" style="width: 90%; border: 0px; font-size: 8pt" readonly></p>
+<p style="font-size:9px"><b>PGN:</b> <input type="text" id="pgn" style="width: 90%; border: 0px; font-size: 8pt" readonly></p>
+<p align="center">
+
+</p>
+<script src="./cinnamon_2.3.4.js"></script>
+<script src="./chessboardjs/chess.js"></script>
+<script src="./chessboardjs/json3.min.js"></script>
+<script src="./chessboardjs/jquery-1.10.1.min.js"></script>
+<script src="./chessboardjs/chessboard.js"></script>
+<script src="./cinnamon.js"></script>
+</div>
+<noscript><br><b>Enable Javascript to play on line</b></noscript>
+
+</div>
+<br>
+<div class="phead">External Links</div>
+      <ul class="pslist" style="white-space: nowrap;">
+        <li class="psmeta"><b><br>
+          </b></li>
+        <li class="psmeta"> <a href="https://gekomad.github.io/BitboardCalculator">Bitboard Calculator</a> </li>
+        <li class="psmeta"> <a href="https://github.com/gekomad/BlockingThreadPool">C++ thread pool</a> </li>
+        <li class="psmeta"> <a href="https://github.com/gekomad/Auriga">Auriga Distributed Perft</a> </li>
+        <li class="psmeta"> <a href="https://github.com/gekomad/chess-engine-eval-debugger">Web Eval debugger</a> </li>
+        <li class="psmeta"> <a href="https://www.chessprogramming.org"">Wiki
+Chess Programming</a> </li>
+        <li class="psmeta"> <a href="https://www.digitalgametechnology.com/index.php/products/revelation-ii/533-dgt-pi-chess-computer-for-dgt-e-boards" rel="nofollow">Cinnamon on DGT Pi</a> </li>
+       
+   
+        <br>
+<p>
+<a href="https://www.jetbrains.com/?from=CINNAMON_CHESS_ENGINE">Powered by Clion</a><a href="https://www.jetbrains.com/?from=CINNAMON_CHESS_ENGINE">
+<img border="0" alt="W3Schools" src="img/icon_CLion.svg" width="100" height="100">
+</a>
+</p>
+		<li class="psgap"><br>
+ </li>
+       
+      
+        <li class="psgap"><br>
+        </li>
+        <li class="psgap"><br>
+        </li>
+
+
+<br>
+      </ul>
+
+
+ 
+      <br>
+      </td>
+      <td style="width: 992px;" id="wikicontent" class="psdescription">
+      <blockquote>
+        <h4><i><strong></strong></i></h4>
+      </blockquote>
+      <table style="text-align: left; width: 100%;" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td colspan="2" rowspan="1" style="vertical-align: top; width: 526px;">Cinnamon
+is a chess program for Windows, Linux, Mac OS, ARM and Android, is a console-based
+chess engine for use with <a href="https://www.gnu.org/software/xboard/" rel="nofollow">Xboard</a>, <a href="http://www.playwitharena.de" rel="nofollow">Arena</a>, <a href="https://triplehappy.com/" rel="nofollow">Tarrasch</a>, <a href="https://play.google.com/store/apps/details?hl=it&id=org.petero.droidfish" rel="nofollow">Droidfish</a> or any UCI-compatible GUI. Cinnamon is also a javascript library to play with <a href="https://chessboardjs.com" rel="nofollow">chessboardjs</a> or any js GUI.<br>
+          <br><br>
+            </td>
+          </tr>
+          <tr>
+            <td style="vertical-align: top; width: 446px;">
+            <div style="width: 436px;" class="phead">Features</div>
+            <ul>
+              <li><a href="https://github.com/gekomad/Cinnamon/releases">Download</a></li>
+              <li>GPL 3 License </li>
+              <li>UCI protocol </li>
+              <li>Chess 960</li>
+              <li>PVS</li>
+              <li>Parallel Search - Lazy SMP</li>
+              <li>C++11 source </li>
+              <li>Rotated bitboards </li>
+              <li>Null moves </li>
+              <li>Futility pruning </li>
+              <li>Delta pruning </li>
+              <li>Razoring </li>
+              <li>Interruptible multithread Perft test <a href="perft.html">standard</a> and <a href="https://www.chessprogramming.org/Chess960_Perft_Results">chess 960</a></li>
+              <li>32/64 bit architectures </li>
+              <li>Iterative deeping </li>
+              <li>History heuristics </li>
+              <li>Killer heuristics </li>
+              <li>Lazy evaluation </li>
+              <li>MVV/LVA </li>
+              <li>Two-tier Transposition Table</li>
+              <li>Aspiration Windows </li>
+              <li>Late Move Reduction </li>
+              <li>Ponder </li>
+              <li>Open Book (Polyglot)</li>
+              <li>Gaviota Tablebases</li>
+              <li>Syzygy Tablebases</li>
+              <li><a href="https://www.computerchess.org.uk/ccrl/404/cgi/compare_engines.cgi?family=Cinnamon" rel="nofollow">Elo ratings</a> </li>
+            </ul>
+
+          </tr>
+        </tbody>
+      </table>
+<pre>
+
+
+<div style="width: 436px;" class="phead">Command line tools</div>
+
+<b>Perft</b> (Setting -F and -h you can stop (Ctrl-c) and restart the perft process)
+<code>
+cinnamon.exe -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"]
+</code>
+
+<b>Gaviota DTM</b> (distance to mate)
+<code>
+cinnamon.exe -dtm-gtb -f "fen position" -p path
+</code>
+<b>Gaviota WDL</b> (win/draw/loss)
+<code>
+cinnamon.exe -wdl-gtb -f "fen position" -p path
+</code>
+<b>SYZYFY DTZ</b> (distance to zero)
+<code>
+cinnamon.exe -dtz-syzygy -f "fen position" -p path
+</code>
+<b>SYZYFY WDL</b> (win/draw/loss)
+<code>
+cinnamon.exe -wdl-syzygy -f "fen position" -p path
+</code>
+<b>EPD generator</b> (example: cinnamon -puzzle_epd -t KRKPP)
+<code>
+cinnamon.exe -puzzle_epd -t K?K?
+ 
+</code></pre>
+      <br>
+      <br>
+      <br>
+      <br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div align="center">
+<div class="phead">
+<img style="width: 206px; height: 22px;" alt="" src="img/email.gif"></div>
+</div>
+</div>
+
+
+</body></html>
