@@ -46,8 +46,8 @@ void ChessBoard::makeZobristKey() {
         updateZobristKey(RIGHT_CASTLE_IDX, position);//12
     }
 
-    if (ENPASSANT != NO_ENPASSANT) {
-        updateZobristKey(ENPASSANT_IDX, ENPASSANT);//13
+    if (enPassant != NO_ENPASSANT) {
+        updateZobristKey(ENPASSANT_IDX, enPassant);//13
     }
 
     updateZobristKey(SIDETOMOVE_IDX, sideToMove); //14
@@ -115,11 +115,11 @@ string ChessBoard::boardToFen() const {
     if (!cst) {
         fen.append("-");
     }
-    if (ENPASSANT == NO_ENPASSANT) {
+    if (enPassant == NO_ENPASSANT) {
         fen.append(" -");
     } else {
         fen.append(" ");
-        sideToMove ? fen.append(BOARD[ENPASSANT + 8]) : fen.append(BOARD[ENPASSANT - 8]);
+        sideToMove ? fen.append(BOARD[enPassant + 8]) : fen.append(BOARD[enPassant - 8]);
     }
     fen.append(" 0 ");
     fen.append(to_string(movesCount));
@@ -152,7 +152,7 @@ void ChessBoard::display() const {
     cout << endl;
 
     cout << "ep:\t\t\t"
-         << (ENPASSANT == NO_ENPASSANT ? "" : (sideToMove ? BOARD[ENPASSANT + 8] : BOARD[ENPASSANT -
+         << (enPassant == NO_ENPASSANT ? "" : (sideToMove ? BOARD[enPassant + 8] : BOARD[enPassant -
                                                                                          8])) << endl;
     cout << "Chess960:\t" << (chess960 ? "true" : "false") << endl;
     DEBUG(cout << "zobristKey:\t0x" << hex << chessboard[ZOBRISTKEY_IDX] << "ull" << dec << endl)
@@ -193,7 +193,7 @@ string ChessBoard::decodeBoardinv(const uchar type, const int a, const uchar sid
 
 void ChessBoard::clearChessboard() {
     memset(chessboard, 0, sizeof(_Tchessboard));
-    ENPASSANT = NO_ENPASSANT;
+    enPassant = NO_ENPASSANT;
     rightCastle = 0;
     sideToMove=0;
 }
@@ -337,16 +337,16 @@ int ChessBoard::loadFen(const string &fen) {
 
         }
     }
-    ENPASSANT = NO_ENPASSANT;
+    enPassant = NO_ENPASSANT;
     for (int i = 0; i < 64; i++) {
         if (enpassant == BOARD[i]) {
-            ENPASSANT = i;
+            enPassant = i;
             if (sideToMove) {
-                ENPASSANT -= 8;
+                enPassant -= 8;
             } else {
-                ENPASSANT += 8;
+                enPassant += 8;
             }
-            updateZobristKey(ENPASSANT_IDX, ENPASSANT);
+            updateZobristKey(ENPASSANT_IDX, enPassant);
             break;
         }
     }

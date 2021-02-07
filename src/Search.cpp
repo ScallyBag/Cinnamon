@@ -92,8 +92,7 @@ void Search::printWdlSyzygy() {
     u64 enemies = sideToMove == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
     incListId();
-    generateCaptures(sideToMove, enemies, friends);
-    generateMoves(sideToMove, friends | enemies);
+    generateMoves(sideToMove, enemies, friends);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     display();
@@ -112,7 +111,7 @@ void Search::printWdlSyzygy() {
         cout << " none" << endl;
 
     for (int i = 0; i < getListSize(); i++) {
-        move = &gen_list[listId].moveList[i];
+        move = &genList[listId].moveList[i];
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;
@@ -204,13 +203,12 @@ int Search::printDtmWdlGtb(const bool dtm) {
     unsigned pliestomate;
     const int res = GTB::getInstance().getDtmWdl(GTB_STM(sideToMove), 2, chessboard, &pliestomate, dtm, rightCastle);
     incListId();
-    generateCaptures(sideToMove, enemies, friends);
-    generateMoves(sideToMove, friends | enemies);
+    generateMoves(sideToMove, enemies, friends);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
     for (int i = 0; i < getListSize(); i++) {
-        move = &gen_list[listId].moveList[i];
+        move = &genList[listId].moveList[i];
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;
@@ -283,7 +281,7 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
 
     u64 friends = board::getBitmap<side>(chessboard);
     u64 enemies = board::getBitmap<X(side)>(chessboard);
-    if (generateCaptures<side>(enemies, friends)) {
+    if (generateMoves<side, true>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth + depth);
     }
@@ -296,7 +294,7 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
 
     int first = 0;
     if (!(numMoves % 2048)) setRunning(checkTime());
-    while ((move = getNextMoveQ(&gen_list[listId], first++))) {
+    while ((move = getNextMoveQ(&genList[listId], first++))) {
         if (!makemove(move, false, true)) {
             takeback(move, oldKey, false);
             continue;
@@ -383,27 +381,28 @@ void Search::setMainParam(const int depth) {
 template<bool searchMoves>
 int Search::searchRoot(const int depth, const int alpha, const int beta) {
     ASSERT_RANGE(depth, 0, MAX_PLY)
-    auto ep = ENPASSANT;
+    auto ep = enPassant;
     incListId();
 
-    const u64 friends = (sideToMove == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
-    const u64 enemies = (sideToMove == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(chessboard);
-    generateCaptures(sideToMove, enemies, friends);
-    generateMoves(sideToMove, friends | enemies);
+    const u64 friends = (sideToMove == WHITE) ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(
+            chessboard);
+    const u64 enemies = (sideToMove == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
+            chessboard);
+    generateMoves(sideToMove, enemies, friends);
     int n_root_moves = getListSize();
     decListId();
-    ENPASSANT = ep;
+    enPassant = ep;
     return sideToMove ? search<WHITE, searchMoves>(depth,
                                                    alpha,
                                                    beta,
                                                    &pvLine,
                                                    bitCount(board::getBitmap<WHITE>(chessboard) |
-                                                                            board::getBitmap<BLACK>(chessboard)),
+                                                            board::getBitmap<BLACK>(chessboard)),
                                                    n_root_moves)
                       : search<BLACK, searchMoves>(depth, alpha, beta, &pvLine,
-                                                                   bitCount(board::getBitmap<WHITE>(chessboard) |
-                                                                            board::getBitmap<BLACK>(chessboard)),
-                                                                   n_root_moves);
+                                                   bitCount(board::getBitmap<WHITE>(chessboard) |
+                                                            board::getBitmap<BLACK>(chessboard)),
+                                                   n_root_moves);
 }
 
 bool Search::probeRootTB(_Tmove *res) {
@@ -419,12 +418,11 @@ bool Search::probeRootTB(_Tmove *res) {
         u64 enemies = sideToMove == BLACK ? white : black;
 
         incListId();
-        generateCaptures(sideToMove, enemies, friends);
-        generateMoves(sideToMove, friends | enemies);
+        generateMoves(sideToMove, enemies, friends);
 
         for (int i = 0; i < getListSize(); i++) {
             if (bestMove)break;
-            _Tmove *move = &gen_list[listId].moveList[i];
+            _Tmove *move = &genList[listId].moveList[i];
             if (!makemove(move, false, true)) {
                 takeback(move, oldKey, false);
                 continue;
@@ -466,8 +464,7 @@ bool Search::probeRootTB(_Tmove *res) {
         u64 enemies = sideToMove == BLACK ? white : black;
         _Tmove *bestMove = nullptr;
         incListId();
-        generateCaptures(sideToMove, enemies, friends);
-        generateMoves(sideToMove, friends | enemies);
+        generateMoves(sideToMove, enemies, friends);
 
         _Tmove *drawMove = nullptr;
         _Tmove *worstMove = nullptr;
@@ -480,13 +477,14 @@ bool Search::probeRootTB(_Tmove *res) {
         unsigned dtz;
 
         for (int i = 0; i < getListSize(); i++) {
-            _Tmove *move = &gen_list[listId].moveList[i];
+            _Tmove *move = &genList[listId].moveList[i];
             if (!makemove(move, false, true)) {
                 takeback(move, oldKey, false);
                 continue;
             }
             BENCH_START("gtbTime")
-            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 0, chessboard, &dtz, true, rightCastle);
+            const auto res = GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 0, chessboard, &dtz, true,
+                                                          rightCastle);
             BENCH_STOP("gtbTime")
             if (res == TB_WIN && !worstMove && !drawMove) {
                 if ((int) dtz > minDtz) {
@@ -832,11 +830,10 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     ASSERT_RANGE(KING_BLACK + (X(side)), 0, 11)
     const u64 friends = board::getBitmap<side>(chessboard);
     const u64 enemies = board::getBitmap<X(side)>(chessboard);
-    if (generateCaptures<side>(enemies, friends)) {
+    if (generateMoves<side, false>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth - depth + 1);
     }
-    generateMoves<side>(friends | enemies);
     const int listcount = getListSize();
     if (!listcount) {
         --listId;
@@ -846,9 +843,9 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             return -lazyEval<side>() * 2;
         }
     }
-    ASSERT(gen_list[listId].size > 0)
+    ASSERT(genList[listId].size > 0)
 
-    _Tmove *best = &gen_list[listId].moveList[0];
+    _Tmove *best = &genList[listId].moveList[0];
 
     INC(totGen);
     _Tmove *move;
@@ -860,7 +857,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                                                                      : (hashAlwaysItem1.dataS.flags &
                                                                         0x3) ? &hashAlwaysItem1
                                                                              : nullptr;
-    while ((move = getNextMove(&gen_list[listId], depth, c, first++))) {
+    while ((move = getNextMove(&genList[listId], depth, c, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;
 

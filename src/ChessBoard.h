@@ -86,7 +86,7 @@ protected:
 
     uchar rightCastle;
 
-    uchar ENPASSANT;
+    uchar enPassant;
     string MATCH_QUEENSIDE;
     string MATCH_QUEENSIDE_WHITE;
     string MATCH_KINGSIDE_WHITE;

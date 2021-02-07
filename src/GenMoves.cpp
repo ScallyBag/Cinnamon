@@ -17,15 +17,14 @@
 */
 
 #include "GenMoves.h"
-#include "namespaces/see.h"
 
 GenMoves::GenMoves() : perftMode(false), listId(-1) {
     currentPly = 0;
-    gen_list = (_TmoveP *) calloc(MAX_PLY, sizeof(_TmoveP));
-    _assert(gen_list)
+    genList = (_TmoveP *) calloc(MAX_PLY, sizeof(_TmoveP));
+    _assert(genList)
     for (int i = 0; i < MAX_PLY; i++) {
-        gen_list[i].moveList = (_Tmove *) calloc(MAX_MOVE, sizeof(_Tmove));
-        _assert(gen_list[i].moveList)
+        genList[i].moveList = (_Tmove *) calloc(MAX_MOVE, sizeof(_Tmove));
+        _assert(genList[i].moveList)
     }
     repetitionMap = (u64 *) malloc(sizeof(u64) * MAX_REP_COUNT);
     _assert(repetitionMap)
@@ -33,14 +32,9 @@ GenMoves::GenMoves() : perftMode(false), listId(-1) {
     init();
 }
 
-void GenMoves::generateMoves(const uchar side, const u64 allpieces) {
+bool GenMoves::generateMoves(const uchar side, const u64 enemies, const u64 friends) {
     ASSERT_RANGE(side, 0, 1)
-    side ? generateMoves<WHITE>(allpieces) : generateMoves<BLACK>(allpieces);
-}
-
-bool GenMoves::generateCaptures(const uchar side, const u64 enemies, const u64 friends) {
-    ASSERT_RANGE(side, 0, 1)
-    return side ? generateCaptures<WHITE>(enemies, friends) : generateCaptures<BLACK>(enemies, friends);
+    return side ? generateMoves<WHITE, false>(enemies, friends) : generateMoves<BLACK, false>(enemies, friends);
 }
 
 void GenMoves::setPerft(const bool b) {
@@ -115,9 +109,9 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
 
 GenMoves::~GenMoves() {
     for (int i = 0; i < MAX_PLY; i++) {
-        free(gen_list[i].moveList);
+        free(genList[i].moveList);
     }
-    free(gen_list);
+    free(genList);
     free(repetitionMap);
 }
 
@@ -248,10 +242,8 @@ void GenMoves::unPerformCastle(const uchar side, const uchar type) {
             if (startPosWhiteRookQueenSide != D1)
                 chessboard[ROOK_WHITE] = (chessboard[ROOK_WHITE] | POW2(startPosWhiteRookQueenSide)) & NOTPOW2_4;
         }
-//void GenMoves::unPerformCastle(const uchar side, const uchar type) {
         ASSERT(chessboard[KING_WHITE] & POW2(startPosWhiteKing))
     } else {
-//    ASSERT_RANGE(side, 0, 1)
         if (type & KING_SIDE_CASTLE_MOVE_MASK) {
             ASSERT(board::getPieceAt(side, POW2_57, chessboard) == KING_BLACK)
             ASSERT(board::getPieceAt(side, POW2_58, chessboard) == ROOK_BLACK)
@@ -276,7 +268,7 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
     BENCH_AUTO_CLOSE("takeback")
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;
-    ENPASSANT = NO_ENPASSANT;
+    enPassant = NO_ENPASSANT;
     rightCastle = move->s.type & 0xf0;
 
     if (move->s.type & 0x1) {
@@ -369,14 +361,14 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         switch (move->s.pieceFrom) {
             case PAWN_WHITE:
                 if ((RANK_2 & POW2(move->s.from)) && (RANK_3 & POW2(move->s.to))) {
-                    ENPASSANT = move->s.to;
-                    updateZobristKey(ENPASSANT_IDX, ENPASSANT);
+                    enPassant = move->s.to;
+                    updateZobristKey(ENPASSANT_IDX, enPassant);
                 }
                 break;
             case PAWN_BLACK:
                 if ((RANK_7 & POW2(move->s.from)) && (RANK_5 & POW2(move->s.to))) {
-                    ENPASSANT = move->s.to;
-                    updateZobristKey(ENPASSANT_IDX, ENPASSANT);
+                    enPassant = move->s.to;
+                    updateZobristKey(ENPASSANT_IDX, enPassant);
                 }
                 break;
             default:;
@@ -430,7 +422,7 @@ int GenMoves::loadFen(const string &fen) {
 }
 
 int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
-    ENPASSANT = NO_ENPASSANT;
+    enPassant = NO_ENPASSANT;
     memset(move, 0, sizeof(_Tmove));
     movesCount++;
     if (

@@ -15,6 +15,7 @@ News
 - Reverse Futility Pruning
 - Stalemate improvement
 - Fix bug in castle
+- Perft improvement
 
 Features
 ----------
