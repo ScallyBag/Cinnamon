@@ -76,11 +76,11 @@ private:
 
     static void ctrlChandler(int s) {
         if (dumping) {
-            cout << "dumping hash... " << endl;
+            cout << "dumping hash... " << endl << flush;
             return;
         }
         Perft::getInstance().dump();
-        if (s < 0)cout << s;
+        cout << "exit" << endl << endl;
         exit(0);
     }
 

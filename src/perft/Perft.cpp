@@ -73,9 +73,9 @@ bool Perft::load() {
     getline(f, fen1);
     f.read(reinterpret_cast<char *>(&depthHash), sizeof(int));
     if (depthHash > perftRes.depth) {
-        fatal("error depth < hash depth");
+        fatal("File wrong, depth < hash depth");
         f.close();
-        std::exit(0);
+        std::exit(1);
     };
     f.read(reinterpret_cast<char *>(&nCpuHash), sizeof(int));
     f.read(reinterpret_cast<char *>(&mbSizeHash), sizeof(u64));
@@ -220,15 +220,16 @@ void Perft::run() {
 
 void Perft::endRun() {
     time.stop();
-    int t = time.getMill() / 1000;
-
+    const double t = time.getMill() / 1000.0;
     cout << endl << endl << "Perft moves: " << perftRes.totMoves;
 
-    cout << " in " << t << " seconds";
-
     if (t) {
-        cout << " (" << (perftRes.totMoves / t) / 1000 - ((perftRes.totMoves / t) / 1000) % 1000 <<
-             "k nodes per seconds" << ")";
+        if (t > 60 * 60) cout << " in " << (t / 60.0) << " minutes";
+        else cout << " in " << t << " seconds";
+
+        if ((perftRes.totMoves / t) / 1000.0 <= 1000.0)
+            cout << " (" << round((perftRes.totMoves / t) / 1000.0) << " K nodes per seconds" << ")";
+        cout << " (" << round((perftRes.totMoves / t) / 1000000.0) << " M nodes per seconds" << ")";
     }
     cout << endl;
     dump();
