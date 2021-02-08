@@ -79,6 +79,7 @@ private:
             cout << "dumping hash... " << endl << flush;
             return;
         }
+        if (s < 0)cout << s;
         Perft::getInstance().dump();
         cout << "exit" << endl << endl;
         exit(0);

@@ -99,6 +99,8 @@ void Uci::listner(IterativeDeeping *it) {
             }
             cout << "Score: " << t << endl;
             knowCommand = true;
+        } else if (token.toLower() == "perft") {
+            cout << "Can't run perft here, view \"cinnamon.exe -help\"" << endl;
         } else if (token.toLower() == "stop") {
             knowCommand = true;
             searchManager.setPonder(false);

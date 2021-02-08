@@ -15,7 +15,16 @@ News
 - Reverse Futility Pruning
 - Stalemate improvement
 - Fix bug in castle
-- Perft improvement
+- Speeded up Perft
+
+|   | qperft  | stockfish 12 | cinnamon |  vajolet 2.8.0  |  cheng4 4.39   |
+| ------------ | ------------ |  ------------ | ------------ | ------------ | ----- | 
+| **perft 7**  | 13 sec.  | 14 sec. | 17 sec. | 25 sec. |  32 sec. | 
+
+|   |   cinnamon 8 core 512M hash    |  qperft 512M hash | cinnamon 512M hash |
+| ------------ | ------------ | ------------------ | ------ |
+| **perft 7**  |   1.76 sec. |  1.93 sec. | 5.23 sec. |
+
 
 Features
 ----------
