@@ -85,13 +85,10 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
 template<uchar side, bool useHash>
 u64 PerftThread::search(const int depthx) {
     checkWait();
-    if (depthx == 0) {
-        return 1;
-    }
 
-    const u64 friends = board::getBitmap<side>(chessboard);
-    const u64 enemies = board::getBitmap<X(side)>(chessboard);
     if (depthx == 1) {
+        const u64 friends = board::getBitmap<side>(chessboard);
+        const u64 enemies = board::getBitmap<X(side)>(chessboard);
         incListId();
         generateMoves<side, false>(enemies, friends);
         const int listcount = getListSize();
@@ -114,6 +111,8 @@ u64 PerftThread::search(const int depthx) {
     }
 
     incListId();
+    const u64 friends = board::getBitmap<side>(chessboard);
+    const u64 enemies = board::getBitmap<X(side)>(chessboard);
     generateMoves<side, false>(enemies, friends);
 
     const int listcount = getListSize();
