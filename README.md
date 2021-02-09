@@ -51,6 +51,7 @@ Features
 - Two-tier Transposition Table
 - Aspiration Windows
 - Late Move Reduction
+- Reverse Futility Pruning
 - Ponder
 - Open Book (Polyglot)
 - Gaviota Tablebases
