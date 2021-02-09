@@ -15,10 +15,11 @@ News
 - Fix bug in castle
 - Speeded up Perft
 
-[Play on line][11]
+
 
 Useful links
 ----------
+- [Play on line](https://gekomad.github.io/Cinnamon/)
 - [Bitboard Calculator](https://gekomad.github.io/BitboardCalculator)
 - [C++ thread pool](https://github.com/gekomad/BlockingThreadPool)
 - [Auriga Distributed Perft](https://github.com/gekomad/Auriga)
@@ -153,4 +154,4 @@ Cinnamon was written by Giuseppe Cannella at gmail dot com.
   [8]: https://chessboardjs.com
   [9]: https://gekomad.github.io/Cinnamon/perft.html
   [10]: https://www.chessprogramming.org/Chess960_Perft_Results
-  [11]: https://gekomad.github.io/Cinnamon/
+
