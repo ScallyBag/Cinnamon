@@ -2,8 +2,6 @@ Cinnamon
 ==========
 ### UCI Chess Engine
 
-[Go to website][11]
-
 Cinnamon is a chess program for Windows, Linux, Mac OS, Android and Raspberry Pi, is a console-based chess engine for use with [xboard][4], [Arena][5], [Tarrasch][6], [Droidfish][7] or any UCI-compatible GUI. Cinnamon is also a javascript library to play with [chessboardjs][8] or any js GUI.
 
 Version
@@ -17,13 +15,17 @@ News
 - Fix bug in castle
 - Speeded up Perft
 
-| **perft 7**  | qperft  | stockfish 12 | cinnamon |  vajolet 2.8.0  |  cheng4 4.39   |
-| ------------ | ------------ |  ------------ | ------------ | ------------ | ----- | 
-| i7-9750H 2.6GHz  | 13 sec.  | 14 sec. | 17 sec. | 25 sec. |  32 sec. | 
+[Play on line][11]
 
-| **perft 7**  |   cinnamon 8 core 512M hash    |  qperft 512M hash | cinnamon 512M hash |
-| ------------ | ------------ | ------------------ | ------ |
-| i7-9750H 2.6GHz | 1.76 sec. |  1.93 sec. | 5.23 sec. |
+Useful links
+----------
+- [Bitboard Calculator](https://gekomad.github.io/BitboardCalculator)
+- [C++ thread pool](https://github.com/gekomad/BlockingThreadPool)
+- [Auriga](https://github.com/gekomad/Auriga">Auriga Distributed Perft)
+- [Web Eval debugger](https://github.com/gekomad/chess-engine-eval-debugger)
+- [Android App](https://play.google.com/store/apps/details?id=com.github.gekomad.cinnamonengine)
+- [Cinnamon on DGT Pi](https://www.digitalgametechnology.com/index.php/products/revelation-ii/533-dgt-pi-chess-computer-for-dgt-e-boards)
+- [Clion IDE](https://www.jetbrains.com/?from=CINNAMON_CHESS_ENGINE)
 
 
 Features
@@ -70,6 +72,15 @@ Command line tools
 `cinnamon -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"] `
 
 Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
+
+| **perft 7**  | qperft  | stockfish 12 | cinnamon |  vajolet 2.8.0  |  cheng4 4.39   |
+| ------------ | ------------ |  ------------ | ------------ | ------------ | ----- | 
+| i7-9750H 2.6GHz  | 13 sec.  | 14 sec. | 17 sec. | 25 sec. |  32 sec. | 
+
+| **perft 7**  |   cinnamon 8 core 512M hash    |  qperft 512M hash | cinnamon 512M hash |
+| ------------ | ------------ | ------------------ | ------ |
+| i7-9750H 2.6GHz | 1.76 sec. |  1.93 sec. | 5.23 sec. |
+
 
 #### Gaviota DTM (distance to mate)
 
