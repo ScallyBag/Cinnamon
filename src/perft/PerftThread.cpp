@@ -39,8 +39,8 @@ unsigned PerftThread::perft(const string &fen, const int depth) {
 
 vector<string> PerftThread::getSuccessorsFen(const string &fen1, const int depth) {
     loadFen(fen1);
-    if (sideToMove) return getSuccessorsFen < WHITE > (depth);
-    return getSuccessorsFen < BLACK > (depth);
+    if (sideToMove) return getSuccessorsFen<WHITE>(depth);
+    return getSuccessorsFen<BLACK>(depth);
 }
 
 template<uchar side>
@@ -71,7 +71,7 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
         u64 keyold = chessboard[ZOBRISTKEY_IDX];
         makemove(move, false, false);
         setSide(X(side));
-        vector<string> bb = getSuccessorsFen < X(side) > (depthx - 1);
+        vector<string> bb = getSuccessorsFen<X(side)>(depthx - 1);
         n_perft.insert(n_perft.end(), bb.begin(), bb.end());
         takeback(move, keyold, false);
         setSide(X(side));
@@ -86,6 +86,7 @@ template<uchar side, bool useHash>
 u64 PerftThread::search(const int depthx) {
     checkWait();
 
+    if (depthx == 0) return 1;
     if (depthx == 1) {
         const u64 friends = board::getBitmap<side>(chessboard);
         const u64 enemies = board::getBitmap<X(side)>(chessboard);

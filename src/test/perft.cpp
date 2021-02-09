@@ -21,6 +21,14 @@
 #include <gtest/gtest.h>
 #include "../perft/Perft.h"
 
+TEST(perftTest, one) {
+    Perft *perft = &Perft::getInstance();
+    perft->setParam(STARTPOS, 1, 1, 0, "",false);
+    perft->start();
+    perft->join();
+    ASSERT_EQ(20, perft->getResult());
+}
+
 TEST(perftTest, oneCore) {
     Perft *perft = &Perft::getInstance();
     perft->setParam("4k2r/3bbp2/p1p1p1p1/4B3/4n2r/PP3B2/2P2P1P/R3K2R w KQk - 0 13", 4, 1, 0, "",false);
