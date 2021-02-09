@@ -1,5 +1,11 @@
 <!DOCTYPE html>
 <html><head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+</style>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
 	<style type="text/css" media="screen">
 	
@@ -194,6 +200,7 @@ chess engine for use with <a href="https://www.gnu.org/software/xboard/" rel="no
               <li>Two-tier Transposition Table</li>
               <li>Aspiration Windows </li>
               <li>Late Move Reduction </li>
+              <li>Reverse Futility Pruning </li>
               <li>Ponder </li>
               <li>Open Book (Polyglot)</li>
               <li>Gaviota Tablebases</li>
@@ -213,6 +220,48 @@ chess engine for use with <a href="https://www.gnu.org/software/xboard/" rel="no
 <code>
 cinnamon.exe -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"]
 </code>
+
+<table>
+<thead>
+<tr>
+<th><strong>perft 7</strong></th>
+<th>qperft</th>
+<th>stockfish 12</th>
+<th>cinnamon</th>
+<th>vajolet 2.8.0</th>
+<th>cheng4 4.39</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i7-9750H 2.6GHz</td>
+<td>13 sec.</td>
+<td>14 sec.</td>
+<td>17 sec.</td>
+<td>25 sec.</td>
+<td>32 sec.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>perft 7</strong></th>
+<th>cinnamon 8 core 512M hash</th>
+<th>qperft 512M hash</th>
+<th>cinnamon 512M hash</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>i7-9750H 2.6GHz</td>
+<td>1.76 sec.</td>
+<td>1.93 sec.</td>
+<td>5.23 sec.</td>
+</tr>
+</tbody>
+</table>
+
 
 <b>Gaviota DTM</b> (distance to mate)
 <code>
