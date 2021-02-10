@@ -71,7 +71,7 @@ All files are compiled statically, no further libraries are necessary.
 Command line tools
 ----------
 #### Perft
-`cinnamon -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"] `
+`cinnamon.exe -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"] `
 
 Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 
@@ -86,23 +86,23 @@ Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 
 #### Gaviota DTM (distance to mate)
 
-`cinnamon -dtm-gtb -f "fen position" -p path`
+`cinnamon.exe -dtm-gtb -f "fen position" -p path`
 
 #### Gaviota WDL (win/draw/loss)
 
-`cinnamon -wdl-gtb -f "fen position" -p path`
+`cinnamon.exe -wdl-gtb -f "fen position" -p path`
 
 #### SYZYFY DTZ (distance to zero)
 
-`cinnamon -dtz-syzygy -f "fen position" -p path`
+`cinnamon.exe -dtz-syzygy -f "fen position" -p path`
 
 #### SYZYFY WDL (win/draw/loss)
 
-`cinnamon -wdl-syzygy -f "fen position" -p path`
+`cinnamon.exe -wdl-syzygy -f "fen position" -p path`
 
 #### EPD generator
-`cinnamon -puzzle_epd -t K?K?`
- example: `cinnamon -puzzle_epd -t KRKP`
+`cinnamon.exe -puzzle_epd -t K?K?`
+ example: `cinnamon.exe -puzzle_epd -t KRKP`
 
 Compiling
 ---------
