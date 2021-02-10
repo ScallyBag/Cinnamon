@@ -21,7 +21,6 @@ News
 Useful links
 ----------
 - [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
-- [C++ thread pool](https://github.com/gekomad/BlockingThreadPool)
 - [Auriga Distributed Perft](https://github.com/gekomad/Auriga)
 - [Web Eval debugger](https://github.com/gekomad/chess-engine-eval-debugger)
 - [Android App](https://play.google.com/store/apps/details?id=com.github.gekomad.cinnamonengine)
