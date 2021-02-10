@@ -20,7 +20,7 @@ News
 Useful links
 ----------
 - [Play on line](https://gekomad.github.io/Cinnamon/)
-- [Bitboard Calculator](https://gekomad.github.io/BitboardCalculator)
+- [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
 - [C++ thread pool](https://github.com/gekomad/BlockingThreadPool)
 - [Auriga Distributed Perft](https://github.com/gekomad/Auriga)
 - [Web Eval debugger](https://github.com/gekomad/chess-engine-eval-debugger)
