@@ -18,7 +18,6 @@ News
 - Speeded up Perft
 
 
-
 Useful links
 ----------
 - [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
