@@ -176,7 +176,7 @@ void Perft::run() {
     cout << "#cpu:\t\t\t" << perftRes.nCpu << endl;
     cout << "cache size:\t\t" << mbSize << endl;
     cout << "dump file:\t\t" << dumpFile << endl;
-    cout << "chess960:\t\t" << chess960 << endl;
+    cout << "chess960:\t\t" << (chess960 ? "true" : "false") << endl;
     cout << endl << Time::getLocalTime() << " start perft test..." << endl;
 
     Timer t2(minutesToDump * 60);
