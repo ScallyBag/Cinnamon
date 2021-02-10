@@ -4,6 +4,7 @@ Cinnamon
 
 Cinnamon is a chess program for Windows, Linux, Mac OS, Android and Raspberry Pi, is a console-based chess engine for use with [xboard][4], [Arena][5], [Tarrasch][6], [Droidfish][7] or any UCI-compatible GUI. Cinnamon is also a javascript library to play with [chessboardjs][8] or any js GUI.
 
+- [Play on line](https://gekomad.github.io/Cinnamon/)
 Version
 ----------
 2.4.0
@@ -19,7 +20,6 @@ News
 
 Useful links
 ----------
-- [Play on line](https://gekomad.github.io/Cinnamon/)
 - [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
 - [C++ thread pool](https://github.com/gekomad/BlockingThreadPool)
 - [Auriga Distributed Perft](https://github.com/gekomad/Auriga)

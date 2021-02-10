@@ -32,9 +32,14 @@ GenMoves::GenMoves() : perftMode(false), listId(-1) {
     init();
 }
 
-bool GenMoves::generateMoves(const uchar side, const u64 enemies, const u64 friends) {
+void GenMoves::generateMoves(const uchar side, const u64 allpieces) {
     ASSERT_RANGE(side, 0, 1)
-    return side ? generateMoves<WHITE, false>(enemies, friends) : generateMoves<BLACK, false>(enemies, friends);
+    side ? generateMoves<WHITE>(allpieces) : generateMoves<BLACK>(allpieces);
+}
+
+bool GenMoves::generateCaptures(const uchar side, const u64 enemies, const u64 friends) {
+    ASSERT_RANGE(side, 0, 1)
+    return side ? generateCaptures<WHITE>(enemies, friends) : generateCaptures<BLACK>(enemies, friends);
 }
 
 void GenMoves::setPerft(const bool b) {

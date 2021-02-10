@@ -92,7 +92,8 @@ void Search::printWdlSyzygy() {
     u64 enemies = sideToMove == BLACK ? board::getBitmap<WHITE>(chessboard) : board::getBitmap<BLACK>(chessboard);
 
     incListId();
-    generateMoves(sideToMove, enemies, friends);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     display();
@@ -203,7 +204,8 @@ int Search::printDtmWdlGtb(const bool dtm) {
     unsigned pliestomate;
     const int res = GTB::getInstance().getDtmWdl(GTB_STM(sideToMove), 2, chessboard, &pliestomate, dtm, rightCastle);
     incListId();
-    generateMoves(sideToMove, enemies, friends);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
 
@@ -281,7 +283,7 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
 
     u64 friends = board::getBitmap<side>(chessboard);
     u64 enemies = board::getBitmap<X(side)>(chessboard);
-    if (generateMoves<side, true>(enemies, friends)) {
+    if (generateCaptures<side>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth + depth);
     }
@@ -388,7 +390,8 @@ int Search::searchRoot(const int depth, const int alpha, const int beta) {
             chessboard);
     const u64 enemies = (sideToMove == WHITE) ? board::getBitmap<BLACK>(chessboard) : board::getBitmap<WHITE>(
             chessboard);
-    generateMoves(sideToMove, enemies, friends);
+    generateCaptures(sideToMove, enemies, friends);
+    generateMoves(sideToMove, friends | enemies);
     int n_root_moves = getListSize();
     decListId();
     enPassant = ep;
@@ -418,7 +421,8 @@ bool Search::probeRootTB(_Tmove *res) {
         u64 enemies = sideToMove == BLACK ? white : black;
 
         incListId();
-        generateMoves(sideToMove, enemies, friends);
+        generateCaptures(sideToMove, enemies, friends);
+        generateMoves(sideToMove, friends | enemies);
 
         for (int i = 0; i < getListSize(); i++) {
             if (bestMove)break;
@@ -464,8 +468,9 @@ bool Search::probeRootTB(_Tmove *res) {
         u64 enemies = sideToMove == BLACK ? white : black;
         _Tmove *bestMove = nullptr;
         incListId();
-        generateMoves(sideToMove, enemies, friends);
-
+        generateCaptures(sideToMove, enemies, friends);
+        generateMoves(sideToMove, friends | enemies);
+  
         _Tmove *drawMove = nullptr;
         _Tmove *worstMove = nullptr;
 
@@ -830,10 +835,11 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     ASSERT_RANGE(KING_BLACK + (X(side)), 0, 11)
     const u64 friends = board::getBitmap<side>(chessboard);
     const u64 enemies = board::getBitmap<X(side)>(chessboard);
-    if (generateMoves<side, false>(enemies, friends)) {
+    if (generateCaptures<side>(enemies, friends)) {
         decListId();
         return _INFINITE - (mainDepth - depth + 1);
     }
+    generateMoves<side>(friends | enemies);
     const int listcount = getListSize();
     if (!listcount) {
         --listId;

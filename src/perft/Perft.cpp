@@ -73,10 +73,10 @@ bool Perft::load() {
     getline(f, fen1);
     f.read(reinterpret_cast<char *>(&depthHash), sizeof(int));
     if (depthHash > perftRes.depth) {
-        fatal("File wrong, depth < hash depth");
+        fatal("File wrong, depth < hash depth")
         f.close();
         std::exit(1);
-    };
+    }
     f.read(reinterpret_cast<char *>(&nCpuHash), sizeof(int));
     f.read(reinterpret_cast<char *>(&mbSizeHash), sizeof(u64));
 
@@ -117,12 +117,12 @@ void Perft::dealloc() const {
 void Perft::alloc() {
     dealloc();
     hash = (_ThashPerft **) calloc(perftRes.depth + 1, sizeof(_ThashPerft *));
-    _assert(hash);
+    _assert(hash)
     const u64 k = 1024 * 1024 * mbSize / POW2(perftRes.depth);
     for (int i = 1; i <= perftRes.depth; i++) {
         perftRes.sizeAtDepth[i] = k * POW2(i - 1) / sizeof(_ThashPerft);
         hash[i] = (_ThashPerft *) calloc(perftRes.sizeAtDepth[i], sizeof(_ThashPerft));
-        _assert(hash[i]);
+        _assert(hash[i])
 
         DEBUG(cout << "alloc hash[" << i << "] " << perftRes.sizeAtDepth[i] * sizeof(_ThashPerft) << endl)
 
@@ -197,7 +197,8 @@ void Perft::run() {
     p->incListId();
     u64 friends = side ? board::getBitmap<WHITE>(p->getChessboard()) : board::getBitmap<BLACK>(p->getChessboard());
     u64 enemies = side ? board::getBitmap<BLACK>(p->getChessboard()) : board::getBitmap<WHITE>(p->getChessboard());
-    p->generateMoves(side, enemies, friends);
+    p->generateCaptures(side, enemies, friends);
+    p->generateMoves(side, friends | enemies);
     int listcount = p->getListSize();
     count = listcount;
     delete (p);
