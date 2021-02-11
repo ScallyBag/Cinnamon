@@ -260,9 +260,7 @@ template<uchar side>
 int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth) {
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     if (!getRunning()) return 0;
-    if (depth >= MAX_PLY - 1) {
-        return getScore(zobristKeyR, side, alpha, beta);
-    }
+
     ++numMovesq;
     int score = getScore(zobristKeyR, side, alpha, beta);
     if (score > alpha) {
