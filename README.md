@@ -23,7 +23,7 @@ Useful links
 - [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
 - [Auriga Distributed Perft](https://github.com/gekomad/Auriga)
 - [Web Eval debugger](https://github.com/gekomad/chess-engine-eval-debugger)
-- [Android App](https://play.google.com/store/apps/details?id=com.github.gekomad.cinnamonengine)
+- [Cinnamon on Android](https://play.google.com/store/apps/details?id=com.github.gekomad.cinnamonengine)
 - [Cinnamon on DGT Pi](https://www.digitalgametechnology.com/index.php/products/revelation-ii/533-dgt-pi-chess-computer-for-dgt-e-boards)
 - [Clion IDE](https://www.jetbrains.com/?from=CINNAMON_CHESS_ENGINE)
 
