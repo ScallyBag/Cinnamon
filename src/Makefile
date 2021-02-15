@@ -77,6 +77,8 @@ else
 endif
 
 	$(STRIP) $(EXE)
+	@echo "create static library..."
+	ar rcs libCinnamon.a Bitboard.o board.o ChessBoard.o Uci.o Timer.o WrapperCinnamon.o String.o Search.o IterativeDeeping.o Eval.o GenMoves.o Perft.o Hash.o PerftThread.o SearchManager.o OpenBook.o
 
 cinnamon-js:
 	emcc -std=c++11 -w -DJS_MODE -DDLOG_LEVEL=_FATAL util/Bitboard.cpp -fsigned-char namespaces/board.cpp ChessBoard.cpp Eval.cpp Hash.cpp IterativeDeeping.cpp GenMoves.cpp js/main.cpp \
@@ -219,5 +221,5 @@ WrapperCinnamon.o: WrapperCinnamon.cpp
 	$(COMP) -c WrapperCinnamon.cpp ${CFLAGS} ${ARC}
 
 clean:
-	$(RM) *.o $(EXE) cinnamon.js
+	$(RM) *.o $(EXE) cinnamon.js libCinnamon.a
 

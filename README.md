@@ -92,7 +92,7 @@ Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 #### EPD generator
 `cinnamon.exe -puzzle_epd -t K?K?`
 
- example: `cinnamon.exe -puzzle_epd -t KRKP`
+ example: `cinnamon.exe -puzzle_epd -t KRRKPN`
 
 Compiling
 ---------
