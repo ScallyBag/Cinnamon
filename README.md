@@ -14,7 +14,7 @@ News
 ----------
 - Reverse Futility Pruning
 - Stalemate improvement
-- Fix bug in castle
+- Fixed bug in castle
 - Speeded up Perft
 
 
@@ -53,7 +53,6 @@ Features
 - Two-tier Transposition Table
 - Aspiration Windows
 - Late Move Reduction
-- Reverse Futility Pruning
 - Ponder
 - Open Book (Polyglot)
 - Gaviota Tablebases
@@ -72,14 +71,6 @@ Command line tools
 `cinnamon.exe -perft [-d depth] [-c nCpu] [-h hash size (mb) [-F dump file]] [-Chess960] [-f "fen position"] `
 
 Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
-
-| **perft 7**  | qperft  | stockfish 12 | cinnamon |  vajolet 2.8.0  |  cheng4 4.39   |
-| ------------ | ------------ |  ------------ | ------------ | ------------ | ----- | 
-| i7-9750H 2.6GHz  | 13 sec.  | 14 sec. | 17 sec. | 25 sec. |  32 sec. | 
-
-| **perft 7**  |   cinnamon 8 core 512M hash    |  qperft 512M hash | cinnamon 512M hash |
-| ------------ | ------------ | ------------------ | ------ |
-| i7-9750H 2.6GHz | 1.76 sec. |  1.93 sec. | 5.23 sec. |
 
 
 #### Gaviota DTM (distance to mate)
@@ -100,6 +91,7 @@ Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 
 #### EPD generator
 `cinnamon.exe -puzzle_epd -t K?K?`
+
  example: `cinnamon.exe -puzzle_epd -t KRKP`
 
 Compiling
