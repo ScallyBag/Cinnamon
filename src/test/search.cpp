@@ -82,5 +82,16 @@ TEST(search, ep) {
     EXPECT_EQ("e5f6", it.getBestmove());
 }
 
+TEST(search, enpassant) {
+    IterativeDeeping it;
+    it.loadFen("4r1k1/8/8/8/3pP3/8/3Q1K2/8 b - e3 0 27");
+    SearchManager &searchManager = Singleton<SearchManager>::getInstance();
+    searchManager.setMaxTimeMillsec(1000);
+    it.setMaxDepth(5);
+    it.start();
+    it.join();
+    EXPECT_EQ("d4e3", it.getBestmove());
+}
+
 
 #endif
