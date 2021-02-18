@@ -299,9 +299,9 @@ string SearchManager::decodeBoardinv(const uchar type, const int a, const uchar 
     return threadPool->getThread(0).decodeBoardinv(type, a, side);
 }
 
-void SearchManager::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
+void SearchManager::takeback(const _Tmove *move, const u64 oldkey,const uchar oldEnpassant, const bool rep) {
     for (Search *s:threadPool->getPool()) {
-        s->takeback(move, oldkey, rep);
+        s->takeback(move, oldkey, oldEnpassant,rep);
     }
 }
 

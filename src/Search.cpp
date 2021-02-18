@@ -96,6 +96,7 @@ void Search::printWdlSyzygy() {
     generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
+    uchar oldEnpassant = enPassant;
     display();
 
     unsigned res = syzygy->SZtbProbeWDL(chessboard, sideToMove);
@@ -114,7 +115,7 @@ void Search::printWdlSyzygy() {
     for (int i = 0; i < getListSize(); i++) {
         move = &genList[listId].moveList[i];
         if (!makemove(move, false, true)) {
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
         print(move);
@@ -131,7 +132,7 @@ void Search::printWdlSyzygy() {
 
         } else
             cout << " none" << endl;
-        takeback(move, oldKey, false);
+        takeback(move, oldKey, oldEnpassant, false);
     }
     cout << endl;
     decListId();
@@ -208,18 +209,18 @@ int Search::printDtmWdlGtb(const bool dtm) {
     generateMoves(sideToMove, friends | enemies);
     _Tmove *move;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
-
+    uchar oldEnpassant = enPassant;
     for (int i = 0; i < getListSize(); i++) {
         move = &genList[listId].moveList[i];
         if (!makemove(move, false, true)) {
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
         print(move);
 
         GTB::getInstance().getDtmWdl(GTB_STM(X(sideToMove)), 1, chessboard, &pliestomate, dtm, rightCastle);
 
-        takeback(move, oldKey, false);
+        takeback(move, oldKey, oldEnpassant, false);
 
     }
     cout << endl;
@@ -291,31 +292,31 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
     }
     _Tmove *move;
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
-
+    uchar oldEnpassant = enPassant;
     int first = 0;
     if (!(numMoves % 2048)) setRunning(checkTime());
     while ((move = getNextMoveQ(&genList[listId], first++))) {
         if (!makemove(move, false, true)) {
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
 
         if (badCapure<side>(*move, friends | enemies)) {
             INC(nCutBadCaputure);
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
         /// **************Delta Pruning ****************
         if (fprune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
             fscore + PIECES_VALUE[move->s.capturedPiece] <= alpha) {
             INC(nCutFp);
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
         /// ************ end Delta Pruning *************
         int val = -qsearch<X(side)>(-beta, -alpha, move->s.promotionPiece, depth - 1);
         score = max(score, val);
-        takeback(move, oldKey, false);
+        takeback(move, oldKey, oldEnpassant, false);
         if (score > alpha) {
             if (score >= beta) {
                 decListId();
@@ -412,7 +413,7 @@ bool Search::probeRootTB(_Tmove *res) {
     const auto tot = bitCount(white | black);
 
     const u64 oldKey = chessboard[ZOBRISTKEY_IDX];
-
+    uchar oldEnpassant = enPassant;
     if (tot == 3 && (chessboard[WHITE] || chessboard[BLACK])) {
         _Tmove *bestMove = nullptr;
         u64 friends = sideToMove == WHITE ? white : black;
@@ -426,7 +427,7 @@ bool Search::probeRootTB(_Tmove *res) {
             if (bestMove)break;
             _Tmove *move = &genList[listId].moveList[i];
             if (!makemove(move, false, true)) {
-                takeback(move, oldKey, false);
+                takeback(move, oldKey, oldEnpassant, false);
                 continue;
             }
 
@@ -448,7 +449,7 @@ bool Search::probeRootTB(_Tmove *res) {
                  move->s.promotionPiece != NO_PROMOTION)) {
                 bestMove = move;
             }
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
         }
 
         decListId();
@@ -468,7 +469,7 @@ bool Search::probeRootTB(_Tmove *res) {
         incListId();
         generateCaptures(sideToMove, enemies, friends);
         generateMoves(sideToMove, friends | enemies);
-  
+
         _Tmove *drawMove = nullptr;
         _Tmove *worstMove = nullptr;
 
@@ -482,7 +483,7 @@ bool Search::probeRootTB(_Tmove *res) {
         for (int i = 0; i < getListSize(); i++) {
             _Tmove *move = &genList[listId].moveList[i];
             if (!makemove(move, false, true)) {
-                takeback(move, oldKey, false);
+                takeback(move, oldKey, oldEnpassant, false);
                 continue;
             }
             BENCH_START("gtbTime")
@@ -508,7 +509,7 @@ bool Search::probeRootTB(_Tmove *res) {
                         maxDtzWorst--;
                 }
             }
-            takeback(move, oldKey, false);
+            takeback(move, oldKey, oldEnpassant, false);
         }
 
         if (worstMove) {
@@ -712,6 +713,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     ASSERT_RANGE(side, 0, 1)
     if (!getRunning()) return 0;
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
+    uchar oldEnpassant = enPassant;
     if (depth >= MAX_PLY - 1) {
         return getScore(oldKey, side, alpha, beta);
     }
@@ -866,14 +868,14 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         countMove++;
 
         if (!makemove(move, true, checkInCheck)) {
-            takeback(move, oldKey, true);
+            takeback(move, oldKey, oldEnpassant, true);
             continue;
         }
         checkInCheck = true;
         if (futilPrune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
             futilScore + PIECES_VALUE[move->s.capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
             INC(nCutFp);
-            takeback(move, oldKey, true);
+            takeback(move, oldKey, oldEnpassant, true);
             continue;
         }
         //Late Move Reduction
@@ -932,7 +934,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             }
         }
         score = max(score, val);
-        takeback(move, oldKey, true);
+        takeback(move, oldKey, oldEnpassant, true);
         ASSERT(chessboard[KING_BLACK])
         ASSERT(chessboard[KING_WHITE])
 

@@ -68,12 +68,13 @@ vector<string> PerftThread::getSuccessorsFen(const int depthx) {
     }
     for (int ii = 0; ii < listcount; ii++) {
         move = getMove(ii);
-        u64 keyold = chessboard[ZOBRISTKEY_IDX];
+        const u64 keyold = chessboard[ZOBRISTKEY_IDX];
+        const uchar oldEnpassant = enPassant;
         makemove(move, false, false);
         setSide(X(side));
         vector<string> bb = getSuccessorsFen<X(side)>(depthx - 1);
         n_perft.insert(n_perft.end(), bb.begin(), bb.end());
-        takeback(move, keyold, false);
+        takeback(move, keyold, oldEnpassant, false);
         setSide(X(side));
     }
     decListId();
@@ -122,10 +123,11 @@ u64 PerftThread::search(const int depthx) {
     _Tmove *move;
     for (int ii = 0; ii < listcount; ii++) {
         move = getMove(ii);
-        u64 keyold = chessboard[ZOBRISTKEY_IDX];
+        const u64 keyold = chessboard[ZOBRISTKEY_IDX];
+        const uchar oldEnpassant = enPassant;
         makemove(move, false, false);
         nPerft += search<X(side), useHash>(depthx - 1);
-        takeback(move, keyold, false);
+        takeback(move, keyold, oldEnpassant, false);
     }
     decListId();
     if (useHash) {
@@ -153,6 +155,7 @@ void PerftThread::run() {
 
     makeZobristKey();
     const u64 keyold = chessboard[ZOBRISTKEY_IDX];
+    const uchar oldEnpassant = enPassant;
     for (int ii = from; ii <= to - 1; ii++) {
         u64 n_perft;
         move = getMove(ii);
@@ -168,7 +171,7 @@ void PerftThread::run() {
                     tPerftRes->depth - 1);
         }
 
-        takeback(move, keyold, false);
+        takeback(move, keyold, oldEnpassant, false);
 
         char x = FEN_PIECE[sideToMove ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
                                       : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];

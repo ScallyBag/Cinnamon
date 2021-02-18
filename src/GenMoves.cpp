@@ -269,11 +269,11 @@ void GenMoves::unPerformCastle(const uchar side, const uchar type) {
 
 }
 
-void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const bool rep) {
+void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant,const bool rep) {
     BENCH_AUTO_CLOSE("takeback")
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;
-    enPassant = NO_ENPASSANT;
+    enPassant = oldEnpassant;
     rightCastle = move->s.type & 0xf0;
 
     if (move->s.type & 0x1) {

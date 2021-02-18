@@ -59,6 +59,10 @@ public:
 
     u64 getZobristKey(const int id) const;
 
+    u64 getEnpassant(const int id) const {
+        return threadPool->getThread(id).getEnpassant();
+    }
+
     void setForceCheck(const bool a);
 
     void setRunningThread(const bool r);
@@ -91,7 +95,7 @@ public:
 
     bool makemove(const _Tmove *i);
 
-    void takeback(const _Tmove *move, const u64 oldkey, const bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep);
 
     void setSide(const bool i);
 

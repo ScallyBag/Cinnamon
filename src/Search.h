@@ -54,7 +54,7 @@ public:
 
     void setMaxTimeMillsec(const int);
 
-    bool setParameter(String& param,const int value);
+    bool setParameter(String &param, const int value);
 
     int getMaxTimeMillsec() const;
 
@@ -105,6 +105,10 @@ public:
     }
 
     u64 getZobristKey() const;
+
+    uchar getEnpassant() const {
+        return enPassant;
+    }
 
 #ifdef DEBUG_MODE
     unsigned cumulativeMovesCount;
@@ -162,10 +166,10 @@ private:
     int mainDepth;
 
     inline int checkHash(const int type,
-                                            const int alpha,
-                                            const int beta,
-                                            const int depth,
-                                            const u64 zobristKeyR, Hash::_ThashData &checkHashStruct) {
+                         const int alpha,
+                         const int beta,
+                         const int depth,
+                         const u64 zobristKeyR, Hash::_ThashData &checkHashStruct) {
 
         if ((checkHashStruct.dataU = hash.readHash(type, zobristKeyR))) {
             if (checkHashStruct.dataS.depth >= depth) {
