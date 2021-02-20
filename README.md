@@ -32,6 +32,7 @@ Useful links
 Features
 ----------
 
+- [Elo ratings][3]
 - Available for both Unix, Windows, Mac, Android, ARM and Javascript
 - UCI protocol
 - GPL 3 License
@@ -58,7 +59,6 @@ Features
 - Open Book (Polyglot)
 - Gaviota Tablebases
 - Syzygy Tablebases
-- [Elo ratings][3]
 
 Binaries
 ----------
