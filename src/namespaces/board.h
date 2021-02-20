@@ -31,18 +31,18 @@ class board {
 public:
     [[gnu::pure]] static u64 colors(const int pos);
 
-    [[gnu::pure]] static bool isOccupied(const uchar pos, const u64 allpieces);
+    static bool isOccupied(const uchar pos, const u64 allpieces);
 
     [[gnu::pure]] static int getFile(const char cc);
 
-    [[gnu::pure]]  static bool checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard);
+    static bool checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard);
 
-    [[gnu::pure]]  static u64 performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces);
+    static u64 performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces);
 
     template<uchar side>
-    [[gnu::pure]] static u64
+    static u64
     getPinned(const u64 allpieces, const u64 friends, const int kingPosition, const _Tchessboard &chessboard) {
-        BENCH_AUTO_CLOSE( "getPinned")
+        BENCH_AUTO_CLOSE("getPinned")
         u64 result = 0;
         ASSERT_RANGE(kingPosition, 0, 63)
         const u64 *s = LINK_SQUARE[kingPosition];
@@ -65,11 +65,11 @@ public:
         return result;
     }
 
-    [[gnu::pure]] static u64 getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces);
+    static u64 getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces);
 
     [[gnu::pure]] static bool isCastleRight_WhiteKing(const uchar RIGHT_CASTLE);
 
-    [[gnu::pure]] static u64 getMobilityRook(const int position, const u64 enemies, const u64 friends);
+    static u64 getMobilityRook(const int position, const u64 enemies, const u64 friends);
 
     [[gnu::pure]] static bool isCastleRight_BlackKing(const uchar RIGHT_CASTLE);
 
@@ -77,16 +77,16 @@ public:
 
     [[gnu::pure]]static bool isCastleRight_BlackQueen(const uchar RIGHT_CASTLE);
 
-    [[gnu::pure]]static bool isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard);
+    static bool isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard);
 
     template<uchar side>
-    [[gnu::pure]] static u64 getBitmap(const _Tchessboard &chessboard) {
+    static u64 getBitmap(const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("getBitmap")
         return chessboard[PAWN_BLACK + side] | chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] |
                chessboard[KNIGHT_BLACK + side] | chessboard[KING_BLACK + side] | chessboard[QUEEN_BLACK + side];
     }
 
-    [[gnu::pure]] static u64 getBitmap(const _Tchessboard &chessboard) {
+    static u64 getBitmap(const _Tchessboard &chessboard) {
         return chessboard[PAWN_BLACK] | chessboard[ROOK_BLACK] | chessboard[BISHOP_BLACK] |
                chessboard[KNIGHT_BLACK] | chessboard[KING_BLACK] | chessboard[QUEEN_BLACK] | chessboard[PAWN_WHITE] |
                chessboard[ROOK_WHITE] | chessboard[BISHOP_WHITE] |
@@ -94,7 +94,7 @@ public:
     }
 
     template<uchar side>
-    [[gnu::pure]] static int getPieceAt(const u64 bitmapPos, const _Tchessboard &chessboard) {
+    static int getPieceAt(const u64 bitmapPos, const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("getPieceAt")
         if ((chessboard[PAWN_BLACK + side] & bitmapPos))return PAWN_BLACK + side;
         if ((chessboard[ROOK_BLACK + side] & bitmapPos))return ROOK_BLACK + side;
@@ -114,7 +114,7 @@ public:
 #endif
 
     template<uchar side>
-    [[gnu::pure]]static u64 getAttackers(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
+    static u64 getAttackers(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("getAttackers")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
@@ -143,13 +143,13 @@ public:
         return attackers;
     }
 
-    [[gnu::pure]] static bool isAttacked(const uchar side, const int position, const u64 allpieces, const _Tchessboard &chessboard) {
+    static bool isAttacked(const uchar side, const int position, const u64 allpieces, const _Tchessboard &chessboard) {
         if (side == WHITE)return isAttacked < WHITE > (position, allpieces, chessboard);
         return isAttacked < BLACK > (position, allpieces, chessboard);
     }
 
     template<uchar side>
-    [[gnu::pure]]  static bool isAttacked(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
+    static bool isAttacked(const int position, const u64 allpieces, const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("isAttacked")
         ASSERT_RANGE(position, 0, 63)
         ASSERT_RANGE(side, 0, 1)
@@ -185,7 +185,7 @@ public:
     }
 
     template<uchar side>
-    [[gnu::pure]]  static bool anyAttack(u64 sq, const u64 allpieces, const _Tchessboard &chessboard) {
+    static bool anyAttack(u64 sq, const u64 allpieces, const _Tchessboard &chessboard) {
         for (; sq; RESET_LSB(sq)) {
             if (isAttacked<side>(BITScanForward(sq), allpieces, chessboard))return true;
         }
@@ -193,13 +193,13 @@ public:
     }
 
     template<uchar side>
-    [[gnu::pure]] static bool inCheck1(const _Tchessboard &chessboard) {
+    static bool inCheck1(const _Tchessboard &chessboard) {
         return isAttacked<side>(BITScanForward(chessboard[KING_BLACK + side]),
                                 getBitmap<BLACK>(chessboard) | getBitmap<WHITE>(chessboard), chessboard);
     }
 
     template<uchar side>
-    [[gnu::pure]] static u64 getBitmapNoPawnsNoKing(const _Tchessboard &chessboard) {
+    static u64 getBitmapNoPawnsNoKing(const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("getBitmapNoPawns")
         return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
                chessboard[QUEEN_BLACK + side];
@@ -207,7 +207,7 @@ public:
 
 
     template<uchar side>
-    [[gnu::pure]]  static u64 getPiecesNoKing(const _Tchessboard &chessboard) {
+    static u64 getPiecesNoKing(const _Tchessboard &chessboard) {
         BENCH_AUTO_CLOSE("getPiecesNoKing")
         return chessboard[ROOK_BLACK + side] | chessboard[BISHOP_BLACK + side] | chessboard[KNIGHT_BLACK + side] |
                chessboard[PAWN_BLACK + side] | chessboard[QUEEN_BLACK + side];

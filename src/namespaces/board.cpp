@@ -26,24 +26,24 @@
 
 #ifdef DEBUG_MODE
 
-[[gnu::pure]]u64 board::getBitmap(const uchar side, const _Tchessboard &chessboard) {
+u64 board::getBitmap(const uchar side, const _Tchessboard &chessboard) {
     return side ? getBitmap<WHITE>(chessboard) : getBitmap<BLACK>(chessboard);
 }
 
-[[gnu::pure]]int board::getPieceAt(uchar side, const u64 bitmapPos, const _Tchessboard &chessboard) {
+int board::getPieceAt(uchar side, const u64 bitmapPos, const _Tchessboard &chessboard) {
     return side == WHITE ? getPieceAt<WHITE>(bitmapPos, chessboard) : getPieceAt<BLACK>
             (bitmapPos, chessboard);
 }
 
 #endif
 
-[[gnu::pure]]u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces) {
+u64 board::performRankFileCaptureAndShift(const int position, const u64 enemies, const u64 allpieces) {
     ASSERT_RANGE(position, 0, 63)
     const u64 rankFile = Bitboard::getRankFile(position, allpieces);
     return (rankFile & enemies) | (rankFile & ~allpieces);
 }
 
-[[gnu::pure]]bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard) {
+bool board::checkInsufficientMaterial(const int nPieces, const _Tchessboard &chessboard) {
     //regexp: KN?B*KB*
     switch (nPieces) {
         case 2 :
@@ -73,13 +73,13 @@
     return false;
 }
 
-[[gnu::pure]]u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces) {
+u64 board::getDiagShiftAndCapture(const int position, const u64 enemies, const u64 allpieces) {
     ASSERT_RANGE(position, 0, 63)
     u64 nuovo = Bitboard::getDiagonalAntiDiagonal(position, allpieces);
     return (nuovo & enemies) | (nuovo & ~allpieces);
 }
 
-[[gnu::pure]]u64 board::getMobilityRook(const int position, const u64 enemies, const u64 friends) {
+u64 board::getMobilityRook(const int position, const u64 enemies, const u64 friends) {
     ASSERT_RANGE(position, 0, 63)
     return performRankFileCaptureAndShift(position, enemies, enemies | friends);
 }
@@ -104,10 +104,10 @@
     return 104 - tolower(cc);
 }
 
-[[gnu::pure]]bool board::isOccupied(const uchar pos, const u64 allpieces) {
+bool board::isOccupied(const uchar pos, const u64 allpieces) {
     return allpieces & POW2(pos);
 }
 
-[[gnu::pure]]bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {
+bool board::isPieceAt(const uchar pieces, const uchar pos, const _Tchessboard &chessboard) {
     return chessboard[pieces] & POW2(pos);
 }
