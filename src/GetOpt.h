@@ -121,7 +121,7 @@ private:
             }
         }
         if (useDump && !FileUtil::fileExists(dumpFile) && !perftHashSize) {
-            cout << "Error: with '-F' parameter you have to specify an existing dump file or an hash size (-h)"
+            cout << "Error: with '-F' parameter you have to specify either an existing dump file or a hash size (-h)"
                  << endl << endl;
             help(argv);
             return;
