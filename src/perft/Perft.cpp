@@ -23,11 +23,9 @@ _ThashPerft **Perft::hash = nullptr;
 bool Perft::dumping;
 
 void Perft::dump() {
-    if (dumping || dumpFile.empty() || !hash) {
-        return;
-    }
+    if (depthHashFile > perftRes.depth) return;
+    if (dumping || dumpFile.empty() || !hash) return;
     dumping = true;
-
     cout << endl << "Dump hash table in " << dumpFile << " file..." << flush;
     ofstream f;
     string tmpFile = dumpFile + ".tmp";
@@ -38,6 +36,9 @@ void Perft::dump() {
     }
 
     sleepAll(true);
+    f << NAME;
+    f.put(10);
+    f << "1"; //version
     f.put(10);
     f << fen;
     f.put(10);
@@ -60,26 +61,33 @@ bool Perft::load() {
     }
     ifstream f;
     string fen1;
-    int nCpuHash, depthHash;
-    u64 mbSizeHash;
+    string perftVersion;
+    int nCpuHash;
+
     if (!FileUtil::fileExists(dumpFile)) {
         return false;
     }
     f.open(dumpFile, ios_base::in | ios_base::binary);
     cout << endl << "load hash table from " << dumpFile << " file.." << endl;
-    string detailType;
-    getline(f, detailType);
 
+    getline(f, fen1);//name
+    getline(f, perftVersion);
     getline(f, fen1);
-    f.read(reinterpret_cast<char *>(&depthHash), sizeof(int));
-    if (depthHash > perftRes.depth) {
-        fatal("File wrong, depth < hash depth")
-        f.close();
-        std::exit(1);
-    }
-    f.read(reinterpret_cast<char *>(&nCpuHash), sizeof(int));
-    f.read(reinterpret_cast<char *>(&mbSizeHash), sizeof(u64));
+    cout << " Fen: " << fen1 << endl;
+    cout << " Perft version: " << perftVersion << endl;
 
+    cout << " Depth: " << perftRes.depth << endl;
+    cout << flush;
+    f.read(reinterpret_cast<char *>(&depthHashFile), sizeof(int));
+//    if (depthHash > perftRes.depth) {
+//        fatal("File wrong, depth < hash depth")
+//        f.close();
+//        std::exit(1);
+//    }
+    f.read(reinterpret_cast<char *>(&nCpuHash), sizeof(int));
+    f.read(reinterpret_cast<char *>(&mbSize), sizeof(u64));
+    cout << " Hash size (MB): " << mbSize << endl;
+    cout << flush;
     alloc();
     if (fen.empty()) {
         fen = fen1;
@@ -87,12 +95,9 @@ bool Perft::load() {
     if (!perftRes.nCpu) {
         perftRes.nCpu = nCpuHash;
     }
-    cout << " fen: " << fen << endl;
-    cout << " mbSize: " << mbSize << endl;
-    cout << " depth: " << perftRes.depth << endl;
-    cout << " nCpu: " << perftRes.nCpu << endl;
+//    cout << " #cpu: " << perftRes.nCpu << endl;
 
-    for (int i = 1; i <= depthHash; i++) {
+    for (int i = 1; i <= depthHashFile; i++) {
         f.read(reinterpret_cast<char *>(hash[i]), perftRes.sizeAtDepth[i] * sizeof(_ThashPerft));
     }
     f.close();

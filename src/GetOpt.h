@@ -98,25 +98,38 @@ private:
         bool chess960 = false;
         int opt;
         string iniFile;
+        bool useDump = false;
         while ((opt = getopt(argc, argv, "d:f:h:f:c:F:9:C:")) != -1) {
             if (opt == 'd') {    //depth
                 perftDepth = atoi(optarg);
+            } else if (opt == 'c') {  //N cpu
+                nCpu = atoi(optarg);
+            } else if (opt == 'h') {  //hash
+                perftHashSize = atoi(optarg);
             } else if (opt == 'F') { //use dump
                 dumpFile = optarg;
                 if (dumpFile.empty()) {
                     cout << "use: " << argv[0] << " " << PERFT_HELP << endl;
                     return;
                 }
-            } else if (opt == 'c') {  //N cpu
-                nCpu = atoi(optarg);
-            } else if (opt == 'h') {  //hash
-                perftHashSize = atoi(optarg);
+                useDump = true;
             } else if (opt == 'f') {  //fen
                 fen = optarg;
             } else if (opt == 'C') {  //chess960
                 if (!string(optarg).compare("hess960"))
                     chess960 = true;
             }
+        }
+        if (useDump && !FileUtil::fileExists(dumpFile) && !perftHashSize) {
+            cout << "Error: with '-F' parameter you have to specify an existing dump file or an hash size (-h)"
+                 << endl << endl;
+            help(argv);
+            return;
+        }
+        if (useDump && FileUtil::fileExists(dumpFile) && perftHashSize) {
+            cout << "Error: with '-F' parameter and existing dump file you can't specify hash size (-h)" << endl << endl;
+            help(argv);
+            return;
         }
         Perft *perft = &Perft::getInstance();
         perft->setParam(fen, perftDepth, nCpu, perftHashSize, dumpFile, chess960);

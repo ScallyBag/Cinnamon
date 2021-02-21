@@ -63,9 +63,9 @@ private:
     Time time;
     string fen;
     string dumpFile;
-    u64 mbSize;
+    int mbSize;
     bool chess960;
-
+    int depthHashFile;
     void alloc();
 
     void dealloc() const;
