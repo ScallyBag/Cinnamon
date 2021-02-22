@@ -29,7 +29,7 @@ using namespace std;
 namespace _logger {
 
     enum LOG_LEVEL {
-        _TRACE = 0, _DEBUG = 1, _INFO = 2, _WARN = 3, _ERROR = 4, _FATAL = 5, _OFF = 6
+        _TRACE = 0, _DEBUG1 = 1, _INFO = 2, _WARN = 3, _ERROR = 4, _FATAL = 5, _OFF = 6
     };
 
 #if !defined DLOG_LEVEL
@@ -95,7 +95,7 @@ namespace _logger {
 #define LINE_INFO __FILENAME__,":",__LINE__," "
 
 #define trace(...) if (_TRACE >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_TRACE>( LINE_INFO,__VA_ARGS__);}
-#define debug(...) if (_DEBUG >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_DEBUG>( LINE_INFO,__VA_ARGS__);}
+#define debug(...) if (_DEBUG1 >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_DEBUG1>( LINE_INFO,__VA_ARGS__);}
 #define info(...)  if (_INFO  >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_INFO> ( LINE_INFO,__VA_ARGS__);}
 #define warn(...)  if (_WARN  >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_WARN> ( LINE_INFO,__VA_ARGS__);}
 #define error(...) if (_ERROR >= DLOG_LEVEL) {logger._log<LOG_LEVEL::_ERROR>( LINE_INFO,__VA_ARGS__);}

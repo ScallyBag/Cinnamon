@@ -327,7 +327,7 @@ void SearchManager::printWdlSyzygy() {
 
 #endif
 
-int SearchManager::getMoveFromSan(const String &string, _Tmove *ptr) const {
+int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) const {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {
@@ -364,7 +364,7 @@ void SearchManager::stopAllThread() {
     Search::setRunningThread(false);
 }
 
-bool SearchManager::setParameter(String param, const int value) {
+bool SearchManager::setParameter(string param, const int value) {
     bool b = false;
     for (Search *s:threadPool->getPool()) {
         b = s->setParameter(param, value);

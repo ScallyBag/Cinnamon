@@ -18,11 +18,11 @@
 
 #pragma once
 
-#include <unistd.h>
+#include "unistd.h"
 #include "Search.h"
 #include "threadPool/ThreadPool.h"
 #include <condition_variable>
-#include "util/String.h"
+#include "namespaces/String.h"
 #include "util/IniFile.h"
 #include <algorithm>
 #include <future>
@@ -51,7 +51,7 @@ public:
 
     string decodeBoardinv(const uchar type, const int a, const uchar side);
 
-    bool setParameter(String param, const int value);
+    bool setParameter(string param, const int value);
 
     void clearHeuristic();
 
@@ -99,7 +99,7 @@ public:
 
     void setSide(const bool i);
 
-    int getMoveFromSan(const String &string, _Tmove *ptr) const;
+    int getMoveFromSan(const string &string, _Tmove *ptr) const;
 
 #ifndef JS_MODE
 

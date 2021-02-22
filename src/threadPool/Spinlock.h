@@ -22,17 +22,23 @@
 #pragma once
 
 #include <atomic>
-
 using namespace std;
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#pragma intrinsic(_InterlockedExchange)
+#define LOCK_TEST_AND_SET(_lock) _InterlockedExchange(&_lock, 1)
+#define LOCK_RELEASE(_lock) _InterlockedExchange(&_lock, 0)
+#else
 #define LOCK_TEST_AND_SET(_lock) __sync_lock_test_and_set(&_lock, 1)
 #define LOCK_RELEASE(_lock) __sync_lock_release(&_lock)
+#endif
 
 class Spinlock {
 private:
     std::atomic_flag flag = ATOMIC_FLAG_INIT;
     volatile long _write = 0;
-    volatile atomic_int _read = {0};
+    volatile atomic_int _read = { 0 };
 
     void _lock() {
         while (true) {
@@ -43,7 +49,7 @@ private:
     }
 
 public:
-    Spinlock() : flag(ATOMIC_FLAG_INIT) { }
+    Spinlock() { }
 
     inline void lock() {
         while (flag.test_and_set(std::memory_order_acquire));

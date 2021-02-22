@@ -19,36 +19,37 @@
 #if defined(FULL_TEST)
 
 #include <gtest/gtest.h>
+#include "../namespaces/String.h"
 
 TEST(StringTest, trim) {
-    String s(" hello ");
-    ASSERT_EQ("hello", s.trim());
+    string s(" hello ");
+    auto ff = string::trim(s);
+    ASSERT_EQ("hello", string::trim(s));
 }
 
 TEST(StringTest, trimLeft) {
-    String s(" hello ");
-    ASSERT_EQ("hello ", s.trimLeft());
+    string s(" hello ");
+    ASSERT_EQ("hello ", string::trimLeft(s));
 }
 
 TEST(StringTest, trimRight) {
-    String s(" hello ");
-    ASSERT_EQ(" hello", s.trimRight());
+    string s(" hello ");
+    ASSERT_EQ(" hello", string::trimRight(s));
 }
 
-
 TEST(StringTest, replace) {
-    String s(" hello ");
-    ASSERT_EQ(" hexxo ", s.replace("l", "x"));
+    string s(" hello ");
+    ASSERT_EQ(" hexxo ", string::replace(s, "l", "x"));
 }
 
 TEST(StringTest, replaceChar) {
-    String s(" hello ");
-    ASSERT_EQ(" hexxo ", s.replace('l', 'x'));
+    string s(" hello ");
+    ASSERT_EQ(" hexxo ", string::replace(s, 'l', 'x'));
 }
 
 TEST(StringTest, toLower) {
-    String s("HELLO");
-    ASSERT_EQ("hello", s.toLower());
+    string s("HELLO");
+    ASSERT_EQ("hello", string::toLower(s));
 }
 
 #endif

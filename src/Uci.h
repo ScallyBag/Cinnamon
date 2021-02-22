@@ -20,7 +20,7 @@
 
 #include "IterativeDeeping.h"
 #include <cstring>
-#include "util/String.h"
+#include "namespaces/String.h"
 
 class Uci : public Singleton<Uci> {
     friend class Singleton<Uci>;
@@ -36,7 +36,7 @@ private:
 
     void listner(IterativeDeeping *it);
 
-    void getToken(istringstream &uip, String &token) const;
+    void getToken(istringstream &uip, string &token) const;
 
     void startListner();
 

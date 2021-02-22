@@ -998,9 +998,9 @@ void Search::setSearchMoves(const vector<int> &s) {
     searchMovesVector = s;
 }
 
-bool Search::setParameter(String &param, const int value) {
+bool Search::setParameter(string &param, const int value) {
 #if defined(CLOP) || defined(DEBUG_MODE)
-    param.toUpper();
+    param = String::toUpper(param);
     bool res = true;
     cout << "setParameter " << param << " " << value << endl;
     if (param == "FUTIL_MARGIN") {

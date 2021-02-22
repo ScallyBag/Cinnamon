@@ -40,7 +40,7 @@ using namespace std;
 
 class Bench {
 public:
-    Bench(Times &time, const char *name) {
+    Bench(Times &time, const string &name) {
         this->time = &time;
         this->name = name;
         time.start(name);
@@ -50,6 +50,6 @@ public:
         time->stop(name);
     };
 private:
-    String name;
+    string name;
     Times *time;
 };

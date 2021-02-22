@@ -67,7 +67,8 @@ pair<string, string> *IniFile::get() {
             params.first = line;
             params.second = "";
         } else if (std::regex_search(line2.begin(), line2.end(), match, rgxLine)) {
-            params.first = String(match[1]).trim();
+            string x=string(match[1]);
+            params.first = String::trim(x);
             if (params.first.empty())continue;
             params.second = match[2];
         } else {

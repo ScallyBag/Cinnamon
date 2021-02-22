@@ -20,13 +20,13 @@
 
 #include <cstring>
 #include <string.h>
-#include "util/String.h"
+#include "namespaces/String.h"
 #include "SearchManager.h"
 #include "threadPool/Thread.h"
 #include "db/OpenBook.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include "unistd.h"
 #include <iomanip>
 
 class IterativeDeeping : public Thread<IterativeDeeping> {
@@ -80,7 +80,7 @@ private:
     int maxDepth;
     string bestmove;
     Hash &hash = Hash::getInstance();
-    volatile int running;
+    volatile long running;
     OpenBook *openBook = nullptr;
     bool ponderEnabled;
 

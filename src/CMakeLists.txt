@@ -76,11 +76,10 @@ set(SOURCE_FILES
         util/IniFile.h
         util/logger.h
         util/Singleton.h
-        util/String.cpp
-        util/String.h
         util/bench/Time.h
         util/Timer.cpp
         util/Timer.h
+        util/getopt.h
         ChessBoard.cpp
         ChessBoard.h
         Eval.cpp
@@ -97,7 +96,9 @@ set(SOURCE_FILES
         SearchManager.cpp
         SearchManager.h
         Uci.cpp
-        Uci.h)
+        Uci.h
+        unistd.h
+        )
 
 set(CMAKE_CXX_COMPILER "clang++")
 add_executable(cinnamon_debug ${SOURCE_FILES})

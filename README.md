@@ -17,6 +17,7 @@ News
 - Fixed bug in castle
 - Fixed bug in en passant
 - Speeded up Perft
+- Compilable with MS Visual Studio
 
 
 Useful links
@@ -98,8 +99,16 @@ Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 Compiling
 ---------
 
-Cinnamon requires C++11 or greater, use unique Makefile to compile for many architectures:
+Cinnamon requires C++11 or greater
 
+- use MS Visual Studio (cinnamon.vcxproj)
+
+- use cmake (CMakeLists.txt)
+
+- use make use unique Makefile to compile for many architectures:
+
+
+```
     $ make
 
 
@@ -126,6 +135,7 @@ Cinnamon requires C++11 or greater, use unique Makefile to compile for many arch
     g++ is the default compiler, add COMP=yourcompiler to use another compiler
      example: make cinnamon64-modern-INTEL COMP=clang++
 
+```
 
 License
 -------

@@ -22,7 +22,7 @@
 #include <iomanip>
 #include <atomic>
 #include <fstream>
-#include <unistd.h>
+#include "../unistd.h"
 #include "../util/Timer.h"
 #include "PerftThread.h"
 #include "../threadPool/ThreadPool.h"

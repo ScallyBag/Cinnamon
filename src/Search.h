@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include <unistd.h>
+#include "unistd.h"
 #include "Hash.h"
 #include "Eval.h"
 #include "namespaces/bits.h"
@@ -54,7 +54,7 @@ public:
 
     void setMaxTimeMillsec(const int);
 
-    bool setParameter(String &param, const int value);
+    bool setParameter(string &param, const int value);
 
     int getMaxTimeMillsec() const;
 

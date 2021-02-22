@@ -28,6 +28,8 @@
 using namespace constants;
 
 class board {
+private:
+    board() {}
 public:
     [[gnu::pure]] static u64 colors(const int pos);
 

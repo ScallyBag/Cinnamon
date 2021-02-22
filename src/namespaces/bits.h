@@ -27,6 +27,10 @@
 #include <array>
 #include <cmath>
 
+#ifdef _MSC_VER
+#include <intrin.h>
+#endif
+
 using namespace constants;
 
 namespace _def {
@@ -39,8 +43,12 @@ namespace _def {
 
 #ifdef HAS_POPCNT
 
+#ifdef _MSC_VER
+
+#define bitCount(bits)  _mm_popcnt_u64(bits)
+#else
 #define bitCount(bits)  __builtin_popcountll(bits)
-    
+#endif
 #else
 
     static inline int bitCount(u64 bits) {
@@ -54,10 +62,23 @@ namespace _def {
 
 
 #ifdef HAS_BSF
+#ifdef _MSC_VER
 
+    static int BITScanForward(u64 x) {
+        unsigned long index;        
+        _BitScanForward64(&index, x);
+        return (int)index;
+    }
+
+    static int BITScanReverse(u64 x) {
+        unsigned long index;
+        _BitScanReverse64(&index, x);
+        return (int)index;
+    }
+#else
 #define BITScanForward(bits)  __builtin_ctzll(bits)
 #define BITScanReverse(bits) (63 - __builtin_clzll(bits))
-
+#endif
 #else
 
     static inline int BITScanForward(u64 bb) {

@@ -19,7 +19,6 @@
 #pragma once
 
 #include <iostream>
-#include "../String.h"
 #include "Time.h"
 #include <map>
 #include <iomanip>

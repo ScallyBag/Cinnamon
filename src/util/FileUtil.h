@@ -19,11 +19,9 @@
 #pragma once
 
 #include <fstream>
-#include "String.h"
-
+#include "../namespaces/String.h"
 #include <sys/types.h>
 #include <sys/stat.h>
-
 
 using namespace std;
 
@@ -40,11 +38,6 @@ public:
     }
 
     static string getFileName(string path) {
-        String s(path);
-        s.replace(':', '/');
-        s.replace("\\", "/");
-        s.replace("//", "/");
-        path = s;
         istringstream iss(path);
         string token;
         while (getline(iss, token, '/'));

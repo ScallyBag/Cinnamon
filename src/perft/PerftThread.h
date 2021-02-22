@@ -24,7 +24,7 @@
 #include <iomanip>
 #include <atomic>
 #include <fstream>
-#include <unistd.h>
+#include "../unistd.h"
 #include "../util/Timer.h"
 
 class PerftThread: public Thread<PerftThread>, public GenMoves {

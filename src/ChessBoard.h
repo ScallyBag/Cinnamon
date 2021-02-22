@@ -21,7 +21,7 @@
 #include <iostream>
 #include <string.h>
 #include <sstream>
-#include "util/String.h"
+#include "namespaces/String.h"
 #include "namespaces/bits.h"
 #include <unordered_map>
 #include "namespaces/random.h"

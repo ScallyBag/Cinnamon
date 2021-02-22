@@ -20,7 +20,7 @@
 
 #include "Thread.h"
 #include <atomic>
-#include <unistd.h>
+#include "../unistd.h"
 #include "ObserverThread.h"
 #include "../namespaces/bits.h"
 #include <condition_variable>
