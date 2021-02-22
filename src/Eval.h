@@ -80,6 +80,13 @@ protected:
     STATIC_CONST int ROOK_TRAPPED = 6;
     STATIC_CONST int UNDEVELOPED_KNIGHT = 4;
     STATIC_CONST int UNDEVELOPED_BISHOP = 4;
+
+    STATIC_CONST int KNIGHT_PINNED = 20;
+    STATIC_CONST int ROOK_PINNED = 35;
+    STATIC_CONST int BISHOP_PINNED = 20;
+    STATIC_CONST int QUEEN_PINNED = 30;
+    STATIC_CONST int PAWN_PINNED = 10;
+
 #ifdef DEBUG_MODE
     typedef struct {
         int BAD_BISHOP[2];
@@ -87,7 +94,11 @@ protected:
         int UNDEVELOPED_BISHOP[2];
         int OPEN_DIAG_BISHOP[2];
         int BONUS2BISHOP[2];
-
+        int PAWN_PINNED[2];
+        int BISHOP_PINNED[2];
+        int QUEEN_PINNED[2];
+        int KNIGHT_PINNED[2];
+        int ROOK_PINNED[2];
         int ATTACK_KING_PAWN[2];
         int PAWN_CENTER[2];
         int PAWN_7H[2];

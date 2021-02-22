@@ -33,6 +33,7 @@ typedef struct {
     u64 posKingBit[2];
     int kingSecurity[2];
     uchar posKing[2];
+    u64 pinned[2];
 } _Tboard;
 
 

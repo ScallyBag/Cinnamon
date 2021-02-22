@@ -63,6 +63,8 @@ int Eval::evaluatePawn() {
 
     // 7.
     if (phase != OPEN) {
+        if (structureEval.pinned[side] & ped_friends) result -= PAWN_PINNED;
+        ADD(SCORE_DEBUG.PAWN_PINNED[side], -PAWN_PINNED);
         structureEval.kingSecurity[side] +=
                 FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & ped_friends);
 
@@ -147,6 +149,7 @@ int Eval::evaluatePawn() {
  * 6. if only one bishop and pawns on same square color substracts n_pawns * BISHOP_PAWN_ON_SAME_COLOR
  * 7. outposts
  * 8. bishop on big diagonal
+ * 9. pinned
  */
 template<uchar side, Eval::_Tphase phase>
 int Eval::evaluateBishop(const u64 enemies) {
@@ -174,6 +177,9 @@ int Eval::evaluateBishop(const u64 enemies) {
 
     // 3. *king security*
     if (phase != OPEN) {
+        // 9. pinned
+        if (structureEval.pinned[side] & bishop) result -= BISHOP_PINNED;
+        ADD(SCORE_DEBUG.BISHOP_PINNED[side], -BISHOP_PINNED);
         structureEval.kingSecurity[side] -=
                 ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & bishop);
         ADD(SCORE_DEBUG.KING_SECURITY_BISHOP[side],
@@ -245,6 +251,8 @@ int Eval::evaluateQueen(const u64 enemies) {
     constexpr int xside = X(side);
     // 2. *king security*
     if (phase != OPEN) {
+        if (structureEval.pinned[side] & queen) result -= QUEEN_PINNED;
+        ADD(SCORE_DEBUG.QUEEN_PINNED[side], -QUEEN_PINNED);
         structureEval.kingSecurity[side] +=
                 FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
         ADD(SCORE_DEBUG.KING_SECURITY_QUEEN[side],
@@ -314,6 +322,8 @@ int Eval::evaluateKnight(const u64 notMyBits) {
 
     // 4. king security
     if (phase != OPEN) {
+        if (structureEval.pinned[side] & knight) result -= KNIGHT_PINNED;
+        ADD(SCORE_DEBUG.KNIGHT_PINNED[side], -KNIGHT_PINNED);
         structureEval.kingSecurity[side] +=
                 FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
         ADD(SCORE_DEBUG.KING_SECURITY_KNIGHT[side],
@@ -382,6 +392,8 @@ int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
 
     // 4. king security
     if (phase != OPEN) {
+        if (structureEval.pinned[side] & rook) result -= ROOK_PINNED;
+        ADD(SCORE_DEBUG.ROOK_PINNED[side], -ROOK_PINNED);
         structureEval.kingSecurity[side] +=
                 FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
         ADD(SCORE_DEBUG.KING_SECURITY_ROOK[side],
@@ -521,6 +533,16 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
     structureEval.posKingBit[WHITE] = POW2(structureEval.posKing[WHITE]);
     structureEval.kingAttackers[WHITE] = structureEval.kingAttackers[BLACK] = 0;
 
+    if (phase != OPEN) {
+        structureEval.pinned[WHITE] = board::getPinned<WHITE>(structureEval.allPieces,
+                                                              structureEval.allPiecesSide[WHITE],
+                                                              structureEval.posKing[WHITE], chessboard);
+        structureEval.pinned[BLACK] = board::getPinned<BLACK>(structureEval.allPieces,
+                                                              structureEval.allPiecesSide[BLACK],
+                                                              structureEval.posKing[BLACK], chessboard);
+    } else {
+        structureEval.pinned[WHITE] = structureEval.pinned[BLACK] = 0;
+    }
     _Tresult Tresult;
     switch (phase) {
         case OPEN :
@@ -626,7 +648,8 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
              (double) (SCORE_DEBUG.ENEMIES_PAWNS_ALL[BLACK]) / 100.0 << "\n";
         cout << "|       none:                     " << setw(10) << (double) (SCORE_DEBUG.NO_PAWNS[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.NO_PAWNS[BLACK]) / 100.0 << "\n";
-
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.PAWN_PINNED[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.PAWN_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Knight:           " << setw(10) <<
              (double) (Tresult.knights[WHITE] - Tresult.knights[BLACK]) / 100.0 << setw(15) <<
@@ -639,7 +662,8 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
              (double) (SCORE_DEBUG.KNIGHT_TRAPPED[BLACK]) / 100.0 << "\n";
         cout << "|       mobility:                 " << setw(10) << (double) (SCORE_DEBUG.MOB_KNIGHT[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.MOB_KNIGHT[BLACK]) / 100.0 << "\n";
-
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.KNIGHT_PINNED[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.KNIGHT_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Bishop:           " << setw(10) << (double) (Tresult.bishop[WHITE] - Tresult.bishop[BLACK]) / 100.0 <<
              setw(15) << (double) (Tresult.bishop[WHITE]) / 100.0 << setw(10)
@@ -658,7 +682,8 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
         cout << "|       bonus 2 bishops:          " << setw(10) <<
              (double) (SCORE_DEBUG.BONUS2BISHOP[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.BONUS2BISHOP[BLACK]) / 100.0 << "\n";
-
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.BISHOP_PINNED[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.BISHOP_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Rook:             " << setw(10) << (double) (Tresult.rooks[WHITE] - Tresult.rooks[BLACK]) / 100.0 <<
              setw(15) << (double) (Tresult.rooks[WHITE]) / 100.0 << setw(10) << (double) (Tresult.rooks[BLACK]) / 100.0
@@ -681,7 +706,8 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
         cout << "|       connected:                " << setw(10) <<
              (double) (SCORE_DEBUG.CONNECTED_ROOKS[WHITE]) / 100.0 << setw(10) <<
              (double) (SCORE_DEBUG.CONNECTED_ROOKS[BLACK]) / 100.0 << "\n";
-
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.ROOK_PINNED[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.ROOK_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Queen:            " << setw(10) << (double) (Tresult.queens[WHITE] - Tresult.queens[BLACK]) / 100.0 <<
              setw(15) << (double) (Tresult.queens[WHITE]) / 100.0 << setw(10)
@@ -692,7 +718,8 @@ short Eval::getScore(const u64 key, const uchar side, const int alpha, const int
         cout << "|       bishop on queen:          " << setw(10) <<
              (double) (SCORE_DEBUG.BISHOP_ON_QUEEN[WHITE]) / 100.0 << setw(10) <<
              (double) (SCORE_DEBUG.BISHOP_ON_QUEEN[BLACK]) / 100.0 << "\n";
-
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.QUEEN_PINNED[WHITE]) / 100.0 <<
+             setw(10) << (double) (SCORE_DEBUG.QUEEN_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|King:             " << setw(10) << (double) (Tresult.kings[WHITE] - Tresult.kings[BLACK]) / 100.0 <<
              setw(15) << (double) (Tresult.kings[WHITE]) / 100.0 << setw(10) << (double) (Tresult.kings[BLACK]) / 100.0
