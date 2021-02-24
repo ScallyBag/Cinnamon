@@ -105,7 +105,7 @@ Cinnamon requires C++11 or greater
 
 - use cmake (CMakeLists.txt)
 
-- use make use unique Makefile to compile for many architectures:
+- use make - unique Makefile to compile for many architectures:
 
 
 ```
