@@ -260,7 +260,7 @@ void Uci::listner(IterativeDeeping *it) {
             _Tmove move;
             if (String::toLower(token) == "startpos") {
                 it->setUseBook(it->getUseBook());
-                searchManager.loadFen();
+                searchManager.loadFen(STARTPOS);
                 getToken(uip, token);
             }
             if (String::toLower(token) == "fen") {
