@@ -55,6 +55,13 @@ public:
 //        value = ss.str();
 //    }
 
+    static bool isNumber(const string &value) {
+        for(const char& c : value) {
+            if(!isdigit(c))return false;
+        }
+        return true;
+    }
+
     static const string trim(string &value) {
         string value1 = trimLeft(value);
         return trimRight(value1);

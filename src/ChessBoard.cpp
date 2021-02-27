@@ -225,7 +225,8 @@ int ChessBoard::loadFen(const string &fen) {
     iss >> a1;
     iss >> a2;
     a2 += " 1";
-    movesCount = stoi(a2);
+    if (String::isNumber(a2))
+    	movesCount = stoi(a2);
 
     int ix = 0;
     array<int, 64> s;
