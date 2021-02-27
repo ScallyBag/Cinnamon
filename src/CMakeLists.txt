@@ -25,8 +25,6 @@ set(SOURCE_FILES
         perft/_TPerftRes.h
         perft/Perft.cpp
         perft/Perft.h
-        db/OpenBook.cpp
-        db/OpenBook.h
         db/syzygy/SYZYGY.h
         db/syzygy/SYZYGY.cpp
         db/syzygy/tbprobe.c

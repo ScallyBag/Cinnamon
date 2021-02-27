@@ -76,8 +76,6 @@ void Uci::listner(IterativeDeeping *it) {
                  << (0xffffffff / (1024 * 1024 / (sizeof(Hash::_Thash) * 2))) << endl;
             cout << "option name Clear Hash type button" << endl;
             cout << "option name Nullmove type check default true" << endl;
-            cout << "option name Book File type string default cinnamon.bin" << endl;
-            cout << "option name OwnBook type check default " << _BOOLEAN[it->getUseBook()] << "" << endl;
             cout << "option name Ponder type check default " << _BOOLEAN[it->getPonderEnabled()] << "" << endl;
             cout << "option name Threads type spin default 1 min 1 max 64" << endl;
             cout << "option name UCI_Chess960 type check default false" << endl;
@@ -211,23 +209,6 @@ void Uci::listner(IterativeDeeping *it) {
                         knowCommand = true;
                         searchManager.setChess960(String::toLower(token) == "true");
                     }
-                } else if (String::toLower(token) == "ownbook") {
-                    getToken(uip, token);
-                    if (String::toLower(token) == "value") {
-                        getToken(uip, token);
-                        it->setUseBook(String::toLower(token) == "true");
-                        knowCommand = true;
-                    }
-                } else if (String::toLower(token) == "book") {
-                    getToken(uip, token);
-                    if (String::toLower(token) == "file") {
-                        getToken(uip, token);
-                        if (String::toLower(token) == "value") {
-                            getToken(uip, token);
-                            it->loadBook(token);
-                            knowCommand = true;
-                        }
-                    }
                 } else if (String::toLower(token) == "ponder") {
                     getToken(uip, token);
                     if (String::toLower(token) == "value") {
@@ -259,7 +240,6 @@ void Uci::listner(IterativeDeeping *it) {
             getToken(uip, token);
             _Tmove move;
             if (String::toLower(token) == "startpos") {
-                it->setUseBook(it->getUseBook());
                 searchManager.loadFen(STARTPOS);
                 getToken(uip, token);
             }

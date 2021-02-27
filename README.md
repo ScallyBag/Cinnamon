@@ -57,7 +57,6 @@ Features
 - Aspiration Windows
 - Late Move Reduction
 - Ponder
-- Open Book (Polyglot)
 - Gaviota Tablebases
 - Syzygy Tablebases
 

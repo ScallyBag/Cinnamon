@@ -18,8 +18,7 @@
 
 #include "IterativeDeeping.h"
 
-IterativeDeeping::IterativeDeeping() : maxDepth(MAX_PLY), running(false), openBook(nullptr), ponderEnabled(false) {
-    setUseBook(false);
+IterativeDeeping::IterativeDeeping() : maxDepth(MAX_PLY), running(false), ponderEnabled(false) {
     setId(-1);
     SET(checkSmp2, 0);
 }
@@ -39,25 +38,6 @@ bool IterativeDeeping::getPonderEnabled() const {
     return ponderEnabled;
 }
 
-bool IterativeDeeping::getUseBook() const {
-    return openBook;
-}
-
-void IterativeDeeping::loadBook(const string f) {
-    openBook = OpenBook::getInstance(f);
-}
-
-void IterativeDeeping::setUseBook(const bool b) {
-    if (!openBook && b) {
-        openBook = OpenBook::getInstance("cinnamon.bin");
-        return;
-    }
-    if (!b && openBook) {
-        openBook->dispose();
-        openBook = nullptr;
-    }
-}
-
 void IterativeDeeping::run() {
 
     if (LOCK_TEST_AND_SET(running)) {
@@ -69,24 +49,7 @@ void IterativeDeeping::run() {
     searchManager.setRunning(2);
     searchManager.setRunningThread(true);
 
-    //openbook
-    if (openBook) {
-        ASSERT(openBook)
-        string obMove = openBook->search(searchManager.boardToFen());
-        if (!obMove.empty()) {
-            _Tmove move;
-            searchManager.getMoveFromSan(obMove, &move);
-            searchManager.makemove(&move);
-            cout << "bestmove " << obMove << endl;
-            ADD(checkSmp2, -1);
-            ASSERT(!checkSmp2)
-            LOCK_RELEASE(running);
-            return;
-        }
-    }
-
     //Tablebase
-
     string tb = searchManager.probeRootTB();
     if (!tb.empty()) {
         debug("info string returned move from TB\n")

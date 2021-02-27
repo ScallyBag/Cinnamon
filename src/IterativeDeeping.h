@@ -23,7 +23,6 @@
 #include "namespaces/String.h"
 #include "SearchManager.h"
 #include "threadPool/Thread.h"
-#include "db/OpenBook.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "unistd.h"
@@ -43,15 +42,9 @@ public:
 
     bool getPonderEnabled() const;
 
-    bool getUseBook() const;
-
-    void setUseBook(const bool b);
-
     void enablePonder(const bool);
 
     void setMaxDepth(const int);
-
-    void loadBook(const string);
 
     int loadFen(const string &fen = "");
 
@@ -81,7 +74,6 @@ private:
     string bestmove;
     Hash &hash = Hash::getInstance();
     volatile long running;
-    OpenBook *openBook = nullptr;
     bool ponderEnabled;
 
 };
