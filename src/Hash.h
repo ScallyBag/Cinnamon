@@ -109,7 +109,7 @@ public:
 #endif
 
         _Thash *rootHashA = &(hashArray[HASH_GREATER][kMod]);
-        DEBUG(if (rootHashA->u.dataU) INC(collisions))
+        DEBUG(if (rootHashA->u.dataU && rootHashA->key != zobristKey) INC(collisions))
         if (rootHashA->u.dataS.depth >= tmp.dataS.depth && rootHashA->u.dataS.entryAge) return;
         tmp.dataS.entryAge = 1;
         rootHashA->key = (zobristKey ^ tmp.dataU);
