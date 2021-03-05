@@ -103,36 +103,30 @@ void IterativeDeeping::run() {
         totMoves += searchManager.getTotMoves();
 
 #ifdef DEBUG_MODE
-        int totStoreHash = hash.nRecordHashA + hash.nRecordHashB + hash.nRecordHashE + 1;
-        int percStoreHashA = hash.nRecordHashA * 100 / totStoreHash;
-        int percStoreHashB = hash.nRecordHashB * 100 / totStoreHash;
-        int percStoreHashE = hash.nRecordHashE * 100 / totStoreHash;
-        int totCutHash = hash.n_cut_hashA + hash.n_cut_hashB + 1;
-        int percCutHashA = hash.n_cut_hashA * 100 / totCutHash;
-        int percCutHashB = hash.n_cut_hashB * 100 / totCutHash;
-        cout << "\ninfo string ply: " << mply << endl;
-        cout << "info string tot moves: " << totMoves << endl;
-        unsigned cumulativeMovesCount = searchManager.getCumulativeMovesCount();
-        cout << "info string hash stored " << totStoreHash * 100 / (1 + cumulativeMovesCount) << "% (alpha=" <<
-             percStoreHashA << "% beta=" << percStoreHashB << "% exact=" << percStoreHashE << "%)" << endl;
+        const int totStoreHash = hash.nRecordHashA + hash.nRecordHashB + hash.nRecordHashE + 1;
+        const int percStoreHashA = hash.nRecordHashA * 100 / totStoreHash;
+        const int percStoreHashB = hash.nRecordHashB * 100 / totStoreHash;
+        const int percStoreHashE = hash.nRecordHashE * 100 / totStoreHash;
+        const int totCutHash = hash.n_cut_hashA + hash.n_cut_hashB + 1;
+        const int percCutHashA = hash.n_cut_hashA * 100 / totCutHash;
+        const int percCutHashB = hash.n_cut_hashB * 100 / totCutHash;
+        const int percCutHashE = hash.n_cut_hashE * 100 / totCutHash;
 
-        cout << "info string cut hash " << totCutHash * 100 / (1 + searchManager.getCumulativeMovesCount()) <<
-             "% (alpha=" << percCutHashA << "% beta=" << percCutHashB << "%)" << endl;
+        const unsigned cumulativeMovesCount = searchManager.getCumulativeMovesCount();
 
         u64 nps = 0;
         if (timeTaken) {
             nps = totMoves * 1000 / timeTaken;
         }
-        int nCutAB = searchManager.getNCutAB();
+        const int nCutAB = searchManager.getNCutAB();
 
-        int LazyEvalCuts = searchManager.getLazyEvalCuts();
-        int nCutFp = searchManager.getNCutFp();
-        int nCutRazor = searchManager.getNCutRazor();
-        int nBadCaputure = searchManager.getTotBadCaputure();
+        const int LazyEvalCuts = searchManager.getLazyEvalCuts();
+        const int nCutFp = searchManager.getNCutFp();
+        const int nCutRazor = searchManager.getNCutRazor();
+        const int nBadCaputure = searchManager.getTotBadCaputure();
 
-        int collisions = hash.collisions;
-        unsigned readCollisions = hash.readCollisions;
-        int nNullMoveCut = hash.cutFailed;
+        cout << "\ninfo string ply: " << mply << endl;
+        cout << "info string tot moves: " << totMoves << endl;
 
         if (nCutAB) cout << "info string beta efficiency: " << (searchManager.getBetaEfficiency()) << "%" << endl;
 
@@ -146,23 +140,28 @@ void IterativeDeeping::run() {
         cout << "info string futility pruning cut: " << nCutFp << endl;
         cout << "info string razor cut: " << nCutRazor << endl;
         cout << "info string bad caputure cut: " << nBadCaputure << endl;
-        cout << "info string null move cut: " << nNullMoveCut << endl;
-        cout << "info string hash write collisions : " << collisions * 100 / totStoreHash << "%" << endl;
-        cout << "info string hash read collisions : " << readCollisions * 100 / totStoreHash << "%" << endl;
+        printf("info string hash stored %d%% (alpha=%d%% beta=%d%% exact=%d%%)\n", totStoreHash * 100 / (1 + cumulativeMovesCount),percStoreHashA,percStoreHashB,percStoreHashE);
+
+        printf("info string hash cut %d%% (alpha=%d%% beta=%d%% exact=%d%%)\n",
+               totCutHash * 100 / (1 + searchManager.getCumulativeMovesCount()), percCutHashA, percCutHashB,
+               percCutHashE);
+        printf("info string hash write collisions: %d%%\n", hash.collisions * 100 / totStoreHash);
+        printf("info string hash read collisions: %d%%\n", hash.readCollisions * 100 / hash.hashProbeCount);
+
 #endif
 
         bool trace = true;
         if (abs(sc) > _INFINITE - MAX_PLY) {
             const bool b = searchManager.getForceCheck();
             const u64 oldKey = searchManager.getZobristKey(0);
-            int oldEnpassant = searchManager.getEnpassant(0);
+            const int oldEnpassant = searchManager.getEnpassant(0);
             searchManager.setForceCheck(true);
             const bool valid = searchManager.makemove(&resultMove);
             if (!valid) {
                 extension++;
                 trace = false;
             }
-            searchManager.takeback(&resultMove, oldKey,oldEnpassant, true);
+            searchManager.takeback(&resultMove, oldKey, oldEnpassant, true);
             searchManager.setForceCheck(b);
         }
         if (trace) {

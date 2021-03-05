@@ -24,7 +24,7 @@
 bool volatile Search::runningThread;
 high_resolution_clock::time_point Search::startTime;
 using namespace _bitbase;
-
+DEBUG(unsigned Search::cumulativeMovesCount)
 void Search::run() {
     if (getRunning()) {
         if (searchMovesVector.size())

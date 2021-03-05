@@ -67,20 +67,19 @@ public:
     };
 
 #ifdef DEBUG_MODE
-    unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions;
-
-    int n_cut_hashA, n_cut_hashB, cutFailed, probeHash;
+    unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, hashProbeCount, readCollisions, n_cut_hashE,n_cut_hashA, n_cut_hashB, probeHash;
 #endif
 
     void setHashSize(const int mb);
 
     void clearHash();
 
-    u64 readHash( const u64 zobristKeyR)
+    u64 readHash(const u64 zobristKeyR)
 #ifndef DEBUG_MODE
     const
 #endif
     {
+        INC(hashProbeCount);
         const _Thash *hash = &(hashArray[zobristKeyR % HASH_SIZE]);
         const u64 data = hash->u.dataU;
         const u64 k = hash->key;
@@ -90,12 +89,17 @@ public:
     }
 
     void recordHash(const u64 zobristKey, _ThashData &tmp) {
+#ifdef DEBUG_MODE
         ASSERT(zobristKey)
-        const unsigned kMod = zobristKey % HASH_SIZE;
-        _Thash *rootHashG = &(hashArray[kMod]);
-        rootHashG->key = (zobristKey ^ tmp.dataU);
-        rootHashG->u.dataU = tmp.dataU;
-
+        if (tmp.dataS.flags == hashfALPHA) nRecordHashA++;
+        else if (tmp.dataS.flags == hashfBETA)
+            nRecordHashB++;
+        else nRecordHashE++;
+#endif
+        _Thash *hash = &(hashArray[zobristKey % HASH_SIZE]);
+        DEBUG(if (hash->key && hash->key != zobristKey) collisions++)
+        hash->key = (zobristKey ^ tmp.dataU);
+        hash->u.dataU = tmp.dataU;
     }
 
 private:

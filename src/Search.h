@@ -111,7 +111,7 @@ public:
     }
 
 #ifdef DEBUG_MODE
-    unsigned cumulativeMovesCount;
+    static unsigned cumulativeMovesCount;
     unsigned totGen;
 
 #endif
@@ -196,7 +196,6 @@ private:
                 }
             }
         }
-        INC(hash.cutFailed);
         return INT_MAX;
     }
 

@@ -142,11 +142,7 @@ public:
 #ifdef DEBUG_MODE
 
     unsigned getCumulativeMovesCount() const {
-        unsigned i = 0;
-        for (Search *s:threadPool->getPool()) {
-            i += s->cumulativeMovesCount;
-        }
-        return i;
+        return Search::cumulativeMovesCount;
     }
 
     unsigned getNCutAB() const {

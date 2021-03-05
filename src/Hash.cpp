@@ -22,8 +22,7 @@
 Hash::Hash() {
     HASH_SIZE = 0;
     hashArray =  nullptr;
-    DEBUG(n_cut_hashA = n_cut_hashB = cutFailed = probeHash = readCollisions = nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0)
-
+    DEBUG(n_cut_hashA = n_cut_hashB = probeHash = readCollisions = nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0)
     setHashSize(HASH_SIZE_DEFAULT);
 }
 
