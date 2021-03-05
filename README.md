@@ -53,7 +53,7 @@ Features
 - Killer heuristics
 - Lazy evaluation
 - MVV/LVA
-- Two-tier Transposition Table
+- Transposition Table
 - Aspiration Windows
 - Late Move Reduction
 - Ponder

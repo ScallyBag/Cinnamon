@@ -165,13 +165,13 @@ private:
 
     int mainDepth;
 
-    inline int checkHash(const int type,
+    inline int checkHash(
                          const int alpha,
                          const int beta,
                          const int depth,
                          const u64 zobristKeyR, Hash::_ThashData &checkHashStruct) {
 
-        if ((checkHashStruct.dataU = hash.readHash(type, zobristKeyR))) {
+        if ((checkHashStruct.dataU = hash.readHash( zobristKeyR))) {
             if (checkHashStruct.dataS.depth >= depth) {
                 INC(hash.probeHash);
                 if (currentPly) {

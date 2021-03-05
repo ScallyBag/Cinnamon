@@ -33,9 +33,6 @@ class Hash : public Singleton<Hash> {
 
 public:
 
-    static constexpr int HASH_ALWAYS = 1;
-    static constexpr int HASH_GREATER = 0;
-
     typedef union _ThashData {
         u64 dataU;
 
@@ -44,21 +41,20 @@ public:
             char depth;
             uchar from;
             uchar to;
-            uchar entryAge;
             uchar flags;
 
             __dataS() {};
 
-            __dataS(const short score, const char depth, const uchar from, const uchar to, const uchar entryAge,
+            __dataS(const short score, const char depth, const uchar from, const uchar to,
                     const uchar flags) :
-                    score(score), depth(depth), from(from), to(to), entryAge(entryAge), flags(flags) {};
+                    score(score), depth(depth), from(from), to(to), flags(flags) {};
         } dataS;
 
         _ThashData() {};
 
-        _ThashData(const short score, const char depth, const uchar from, const uchar to, const uchar entryAge,
+        _ThashData(const short score, const char depth, const uchar from, const uchar to,
                    const uchar flags) :
-                dataS(score, depth, from, to, entryAge, flags) {};
+                dataS(score, depth, from, to, flags) {};
     } __Tdata;
 
     typedef struct {
@@ -80,14 +76,12 @@ public:
 
     void clearHash();
 
-    void clearAge();
-
-    u64 readHash(const int type, const u64 zobristKeyR)
+    u64 readHash( const u64 zobristKeyR)
 #ifndef DEBUG_MODE
     const
 #endif
     {
-        const _Thash *hash = &(hashArray[type][zobristKeyR % HASH_SIZE]);
+        const _Thash *hash = &(hashArray[zobristKeyR % HASH_SIZE]);
         const u64 data = hash->u.dataU;
         const u64 k = hash->key;
         if (zobristKeyR == (k ^ data)) return data;
@@ -98,22 +92,10 @@ public:
     void recordHash(const u64 zobristKey, _ThashData &tmp) {
         ASSERT(zobristKey)
         const unsigned kMod = zobristKey % HASH_SIZE;
-        _Thash *rootHashG = &(hashArray[HASH_ALWAYS][kMod]);
+        _Thash *rootHashG = &(hashArray[kMod]);
         rootHashG->key = (zobristKey ^ tmp.dataU);
         rootHashG->u.dataU = tmp.dataU;
 
-#ifdef DEBUG_MODE
-        if (tmp.dataS.flags == hashfALPHA) nRecordHashA++;
-        else if (tmp.dataS.flags == hashfBETA) nRecordHashB++;
-        else nRecordHashE++;
-#endif
-
-        _Thash *rootHashA = &(hashArray[HASH_GREATER][kMod]);
-        DEBUG(if (rootHashA->u.dataU && rootHashA->key != zobristKey) INC(collisions))
-        if (rootHashA->u.dataS.depth >= tmp.dataS.depth && rootHashA->u.dataS.entryAge) return;
-        tmp.dataS.entryAge = 1;
-        rootHashA->key = (zobristKey ^ tmp.dataU);
-        rootHashA->u.dataU = tmp.dataU;
     }
 
 private:
@@ -128,6 +110,6 @@ private:
 
     void dispose();
 
-    _Thash *hashArray[2];
+    _Thash *hashArray;
 };
 

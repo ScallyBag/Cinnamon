@@ -745,16 +745,12 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     /// ************* hash ****************
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
-    Hash::_ThashData hashGreaterItem1;
-    const int hashGreaterValue = checkHash(Hash::HASH_GREATER, alpha, beta, depth, zobristKeyR, hashGreaterItem1);
-    if (hashGreaterValue != INT_MAX) {
-        return hashGreaterValue;
+    Hash::_ThashData hashItem;
+    const int hashValue = checkHash(alpha, beta, depth, zobristKeyR, hashItem);
+    if (hashValue != INT_MAX) {
+        return hashValue;
     }
-    Hash::_ThashData hashAlwaysItem1;
-    const int hashAlwaysValue = checkHash(Hash::HASH_ALWAYS, alpha, beta, depth, zobristKeyR, hashAlwaysItem1);
-    if (hashAlwaysValue != INT_MAX) {
-        return hashAlwaysValue;
-    }
+
     /// ********** end hash ***************
 
     if (!(numMoves % 2048)) setRunning(checkTime());
@@ -859,10 +855,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     int countMove = 0;
     char hashf = Hash::hashfALPHA;
     int first = 0;
-    const Hash::_ThashData *c = (hashGreaterItem1.dataS.flags & 0x3) ? &hashGreaterItem1
-                                                                     : (hashAlwaysItem1.dataS.flags &
-                                                                        0x3) ? &hashAlwaysItem1
-                                                                             : nullptr;
+    const Hash::_ThashData *c = (hashItem.dataS.flags & 0x3) ? &hashItem : nullptr;
     while ((move = getNextMove(&genList[listId], depth, c, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;
@@ -950,7 +943,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                               (100.0 - ((double) countMove * 100.0 / (double) listcount)) +
                               (((double) countMove * 100.0 / (double) listcount) / (double) countMove))
                 if (getRunning()) {
-                    Hash::_ThashData data(score, depth, move->s.from, move->s.to, 0, Hash::hashfBETA);
+                    Hash::_ThashData data(score, depth, move->s.from, move->s.to, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data);
                 }
 
@@ -970,7 +963,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             setHistoryHeuristic(best->s.from, best->s.to, depth - extension);
             setKiller(best->s.from, best->s.to, depth - extension);
         }
-        Hash::_ThashData data(score, depth - extension, best->s.from, best->s.to, 0, hashf);
+        Hash::_ThashData data(score, depth - extension, best->s.from, best->s.to, hashf);
         hash.recordHash(zobristKeyR, data);
     }
     decListId();

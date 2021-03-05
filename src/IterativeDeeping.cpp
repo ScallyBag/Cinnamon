@@ -69,7 +69,6 @@ void IterativeDeeping::run() {
 
     searchManager.startClock();
     searchManager.clearHeuristic();
-    hash.clearAge();
     searchManager.setForceCheck(false);
 
     auto start1 = std::chrono::high_resolution_clock::now();
