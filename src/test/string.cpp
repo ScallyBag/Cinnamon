@@ -23,33 +23,33 @@
 
 TEST(StringTest, trim) {
     string s(" hello ");
-    auto ff = string::trim(s);
-    ASSERT_EQ("hello", string::trim(s));
+    auto ff = String::trim(s);
+    ASSERT_EQ("hello", String::trim(s));
 }
 
 TEST(StringTest, trimLeft) {
     string s(" hello ");
-    ASSERT_EQ("hello ", string::trimLeft(s));
+    ASSERT_EQ("hello ", String::trimLeft(s));
 }
 
 TEST(StringTest, trimRight) {
     string s(" hello ");
-    ASSERT_EQ(" hello", string::trimRight(s));
+    ASSERT_EQ(" hello", String::trimRight(s));
 }
 
 TEST(StringTest, replace) {
     string s(" hello ");
-    ASSERT_EQ(" hexxo ", string::replace(s, "l", "x"));
+    ASSERT_EQ(" hexxo ", String::replace(s, "l", "x"));
 }
 
 TEST(StringTest, replaceChar) {
     string s(" hello ");
-    ASSERT_EQ(" hexxo ", string::replace(s, 'l', 'x'));
+    ASSERT_EQ(" hexxo ", String::replace(s, 'l', 'x'));
 }
 
 TEST(StringTest, toLower) {
     string s("HELLO");
-    ASSERT_EQ("hello", string::toLower(s));
+    ASSERT_EQ("hello", String::toLower(s));
 }
 
 #endif

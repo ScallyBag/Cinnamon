@@ -97,7 +97,7 @@ public:
 
     int loadFen(const string &fen = "");
 
-    void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant,const bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep);
 
     void setRepetitionMapCount(const int i);
 
@@ -238,7 +238,7 @@ public:
         //enPassant
         if (enPassant != NO_ENPASSANT) {
             x = ENPASSANT_MASK[X(side)][enPassant] & chessboard[side];
-            for (; x; RESET_LSB(x)) {//TODO eliminare for
+            for (; x; RESET_LSB(x)) {
                 const int o = BITScanForward(x);
                 BENCH_SUBPROCESS("pawnCapture", "pushmove")
                 pushmove<ENPASSANT_MOVE_MASK, side>(o, (side ? enPassant + 8 : enPassant - 8), NO_PROMOTION, side,
@@ -246,7 +246,7 @@ public:
 
             }
             updateZobristKey(ENPASSANT_IDX, enPassant);
-            enPassant = NO_ENPASSANT; //TODO cancellare ?
+            enPassant = NO_ENPASSANT;
         }
         return false;
     }

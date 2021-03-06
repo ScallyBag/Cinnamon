@@ -40,7 +40,7 @@ void Hash::setHashSize(const int mb) {
         u64 tmp = (u64) mb * 1024 * 1024 / (sizeof(_Thash));
         hashArray = (_Thash *) calloc(tmp, sizeof(_Thash));
         if (!hashArray) {
-            fatal("info string error - no memory");
+            fatal("info string error - no memory")
             exit(1);
         }
         HASH_SIZE = tmp;
@@ -49,7 +49,7 @@ void Hash::setHashSize(const int mb) {
 
 void Hash::dispose() {
     if (hashArray != nullptr) free(hashArray);
-    hashArray = hashArray = nullptr;
+    hashArray = nullptr;
     HASH_SIZE = 0;
 }
 

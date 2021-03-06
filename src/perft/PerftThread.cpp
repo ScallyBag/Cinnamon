@@ -109,7 +109,6 @@ u64 PerftThread::search(const int depthx) {
         const auto k = phashe->key;
         const auto d = phashe->nMoves;
         if (zobristKeyR == (k ^ d)) {
-            partialTot += d;
             return d;
         }
     }
@@ -203,6 +202,3 @@ void PerftThread::run() {
 PerftThread::~PerftThread() {
 }
 
-u64 PerftThread::getPartial() {
-    return partialTot;
-}

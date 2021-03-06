@@ -122,10 +122,6 @@ public:
 
 private:
 
-    typedef struct {
-        Hash::_ThashData phasheType[2];
-    } _TcheckHash;
-
     Hash &hash = Hash::getInstance();
 #ifndef JS_MODE
     SYZYGY *syzygy = &SYZYGY::getInstance();

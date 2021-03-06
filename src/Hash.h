@@ -45,8 +45,7 @@ public:
 
             __dataS() {};
 
-            __dataS(const short score, const char depth, const uchar from, const uchar to,
-                    const uchar flags) :
+            __dataS(const short score, const char depth, const uchar from, const uchar to, const uchar flags) :
                     score(score), depth(depth), from(from), to(to), flags(flags) {};
         } dataS;
 

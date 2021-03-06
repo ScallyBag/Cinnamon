@@ -229,7 +229,7 @@ void Uci::listner(IterativeDeeping *it) {
                     if (String::toLower(token) == "value") {
                         getToken(uip, value);
                         knowCommand = true;
-                        _assert(searchManager.setParameter(paramName, stoi(value)));
+                        _assert(searchManager.setParameter(paramName, stoi(value)))
                     }
                 }
             }

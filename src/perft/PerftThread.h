@@ -40,8 +40,6 @@ public:
 
     void endRun();
 
-    u64 getPartial();
-
     unsigned perft(const string &fen, const int depth);
 
     vector <string> getSuccessorsFen(const string &fen1, const int depth);
@@ -56,7 +54,6 @@ private:
 
     int from, to;
     _TPerftRes *tPerftRes;
-    u64 partialTot = 0;
 
     template<uchar side>
     vector <string> getSuccessorsFen(const int depthx);

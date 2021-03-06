@@ -37,8 +37,10 @@ public:
         return in.tellg();
     }
 
-    static string getFileName(string path) {
-        istringstream iss(path);
+    static string getFileName(const string &path) {
+        string pp = path;
+        auto p = String::replace(pp, '\\', '/');
+        istringstream iss(p);
         string token;
         while (getline(iss, token, '/'));
         return token;
