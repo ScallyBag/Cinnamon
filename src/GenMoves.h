@@ -382,7 +382,7 @@ protected:
 
     _Tmove *getNextMoveQ(_TmoveP *list, const int first);
 
-    _Tmove *getNextMove(decltype(genList), const int depth, const Hash::_ThashData *c, const int first);
+    _Tmove *getNextMove(decltype(genList), const int depth, const Hash::_ThashData &, const int first);
 
     template<uchar side>
     int getMobilityCastle(const u64 allpieces) const {

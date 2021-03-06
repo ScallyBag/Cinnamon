@@ -74,7 +74,7 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
     return swap(list, first, bestId);
 }
 
-_Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData *hash, const int first) {
+_Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_ThashData &hash, const int first) {
     BENCH_AUTO_CLOSE("getNextMove")
     int bestId = -1;
     int bestScore = -1;
@@ -88,7 +88,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const Hash::_Thash
             ASSERT_RANGE(move.s.to, 0, 63)
             ASSERT_RANGE(move.s.from, 0, 63)
 
-            if (hash && (hash->dataS.from == move.s.from && hash->dataS.to == move.s.to)) {
+            if (hash.dataS.from == move.s.from && hash.dataS.to == move.s.to) {
                 return swap(list, first, i);
             }
             score += historyHeuristic[move.s.from][move.s.to];

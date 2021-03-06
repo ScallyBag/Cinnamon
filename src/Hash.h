@@ -67,7 +67,7 @@ public:
     };
 
 #ifdef DEBUG_MODE
-    unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, hashProbeCount, readCollisions, n_cut_hashE,n_cut_hashA, n_cut_hashB, probeHash;
+    unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions, hashProbeCount, n_cut_hashA, n_cut_hashB, n_cut_hashE, probeHash;
 #endif
 
     void setHashSize(const int mb);

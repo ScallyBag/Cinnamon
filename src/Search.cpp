@@ -855,8 +855,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     int countMove = 0;
     char hashf = Hash::hashfALPHA;
     int first = 0;
-    const Hash::_ThashData *c = (hashItem.dataS.flags & 0x3) ? &hashItem : nullptr;
-    while ((move = getNextMove(&genList[listId], depth, c, first++))) {
+    while ((move = getNextMove(&genList[listId], depth, hashItem, first++))) {
         if (!checkSearchMoves<checkMoves>(move) && depth == mainDepth) continue;
         countMove++;
 
