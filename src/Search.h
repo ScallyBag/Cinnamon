@@ -170,7 +170,7 @@ private:
         if ((checkHashStruct.dataU = hash.readHash( zobristKeyR))) {
             if (checkHashStruct.dataS.depth >= depth) {
                 INC(hash.probeHash);
-                if (currentPly) {
+                if (currentPly) { //TODO eliminare currentPly
                     switch (checkHashStruct.dataS.flags) {
                         case Hash::hashfEXACT:
                         case Hash::hashfBETA:
