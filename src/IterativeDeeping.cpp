@@ -140,13 +140,14 @@ void IterativeDeeping::run() {
         cout << "info string futility pruning cut: " << nCutFp << endl;
         cout << "info string razor cut: " << nCutRazor << endl;
         cout << "info string bad caputure cut: " << nBadCaputure << endl;
-        printf("info string hash stored %d%% (alpha=%d%% beta=%d%% exact=%d%%)\n", totStoreHash * 100 / (1 + cumulativeMovesCount),percStoreHashA,percStoreHashB,percStoreHashE);
+        printf("info string hash stored %d%% (alpha=%d%% beta=%d%% exact=%d%%)\n",
+               totStoreHash * 100 / (1 + cumulativeMovesCount), percStoreHashA, percStoreHashB, percStoreHashE);
 
         printf("info string hash cut %d%% (alpha=%d%% beta=%d%% exact=%d%%)\n",
                totCutHash * 100 / (1 + searchManager.getCumulativeMovesCount()), percCutHashA, percCutHashB,
                percCutHashE);
-        printf("info string hash write collisions: %d%%\n", hash.collisions * 100 / totStoreHash);
-        printf("info string hash read collisions: %d%%\n", hash.readCollisions * 100 / hash.hashProbeCount);
+        printf("info string hash write collisions: %d%%\n", hash.collisions * 100 / (totStoreHash + 1));
+        printf("info string hash read collisions: %d%%\n", hash.readCollisions * 100 / (hash.readHashCount + 1));
 
 #endif
 

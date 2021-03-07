@@ -161,40 +161,6 @@ private:
 
     int mainDepth;
 
-    inline int checkHash(
-                         const int alpha,
-                         const int beta,
-                         const int depth,
-                         const u64 zobristKeyR, Hash::_ThashData &checkHashStruct) {
-
-        if ((checkHashStruct.dataU = hash.readHash( zobristKeyR))) {
-            if (checkHashStruct.dataS.depth >= depth) {
-                INC(hash.probeHash);
-                if (currentPly) { //TODO eliminare currentPly
-                    switch (checkHashStruct.dataS.flags) {
-                        case Hash::hashfEXACT:
-                        case Hash::hashfBETA:
-                            if (checkHashStruct.dataS.score >= beta) {
-                                INC(hash.n_cut_hashB);
-                                return beta;
-                            }
-                            break;
-                        case Hash::hashfALPHA:
-                            if (checkHashStruct.dataS.score <= alpha) {
-                                INC(hash.n_cut_hashA);
-                                return alpha;
-                            }
-                            break;
-                        default:
-                            fatal("error checkHash")
-                            break;
-                    }
-                }
-            }
-        }
-        return INT_MAX;
-    }
-
     template<uchar side>
     bool badCapure(const _Tmove &move, const u64 allpieces);
 };

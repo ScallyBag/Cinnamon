@@ -22,7 +22,7 @@
 Hash::Hash() {
     HASH_SIZE = 0;
     hashArray =  nullptr;
-    DEBUG(n_cut_hashA = n_cut_hashB = probeHash = readCollisions = hashProbeCount = nRecordHashA = nRecordHashB = nRecordHashE = collisions = 0)
+    DEBUG(n_cut_hashA = n_cut_hashB = readCollisions = nRecordHashA = nRecordHashB = nRecordHashE = readCollisions = collisions = 0)
 
     setHashSize(HASH_SIZE_DEFAULT);
 }
@@ -43,7 +43,7 @@ void Hash::setHashSize(const int mb) {
             fatal("info string error - no memory")
             exit(1);
         }
-        HASH_SIZE = tmp;
+        HASH_SIZE = tmp - BUCKETS;
     }
 }
 

@@ -25,6 +25,7 @@ bool volatile Search::runningThread;
 high_resolution_clock::time_point Search::startTime;
 using namespace _bitbase;
 DEBUG(unsigned Search::cumulativeMovesCount)
+
 void Search::run() {
     if (getRunning()) {
         if (searchMovesVector.size())
@@ -746,7 +747,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     /// ************* hash ****************
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     Hash::_ThashData hashItem;
-    const int hashValue = checkHash(alpha, beta, depth, zobristKeyR, hashItem);
+    const int hashValue = hash.readHash(alpha, beta, depth, zobristKeyR, hashItem, currentPly);
     if (hashValue != INT_MAX) {
         return hashValue;
     }
