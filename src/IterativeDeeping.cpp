@@ -20,6 +20,7 @@
 
 IterativeDeeping::IterativeDeeping() : maxDepth(MAX_PLY), running(false), ponderEnabled(false) {
     setId(-1);
+    ply = 0;
     SET(checkSmp2, 0);
 }
 
@@ -69,6 +70,7 @@ void IterativeDeeping::run() {
 
     searchManager.startClock();
     searchManager.clearHeuristic();
+    ply++;
     searchManager.setForceCheck(false);
 
     auto start1 = std::chrono::high_resolution_clock::now();
@@ -87,7 +89,7 @@ void IterativeDeeping::run() {
         ++mply;
         searchManager.init();
 
-        auto sc = searchManager.search(mply);
+        auto sc = searchManager.search(ply, mply);
 
         searchManager.setRunningThread(1);
         searchManager.setRunning(1);
@@ -107,7 +109,7 @@ void IterativeDeeping::run() {
         const int percStoreHashA = hash.nRecordHashA * 100 / totStoreHash;
         const int percStoreHashB = hash.nRecordHashB * 100 / totStoreHash;
         const int percStoreHashE = hash.nRecordHashE * 100 / totStoreHash;
-        const int totCutHash = hash.n_cut_hashA + hash.n_cut_hashB + 1;
+        const int totCutHash = hash.n_cut_hashA + hash.n_cut_hashB + hash.n_cut_hashE + 1;
         const int percCutHashA = hash.n_cut_hashA * 100 / totCutHash;
         const int percCutHashB = hash.n_cut_hashB * 100 / totCutHash;
         const int percCutHashE = hash.n_cut_hashE * 100 / totCutHash;

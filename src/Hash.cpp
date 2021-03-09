@@ -21,17 +21,14 @@
 
 Hash::Hash() {
     HASH_SIZE = 0;
-    hashArray =  nullptr;
+    hashArray = nullptr;
     DEBUG(n_cut_hashA = n_cut_hashB = readCollisions = nRecordHashA = nRecordHashB = nRecordHashE = readCollisions = collisions = 0)
-
     setHashSize(HASH_SIZE_DEFAULT);
 }
 
 void Hash::clearHash() {
-    if (!HASH_SIZE) {
-        return;
-    }
-    memset(static_cast<void *>(hashArray), 0, sizeof(_Thash) * HASH_SIZE);
+    if (!HASH_SIZE) return;
+    memset(static_cast<void *>(hashArray), 0, sizeof(_Thash) * (HASH_SIZE + BUCKETS));
 }
 
 void Hash::setHashSize(const int mb) {

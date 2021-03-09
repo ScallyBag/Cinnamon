@@ -239,8 +239,9 @@ void Search::startClock() {
     startTime = std::chrono::high_resolution_clock::now();
 }
 
-void Search::setMainPly(const int m) {
-    mainDepth = m;
+void Search::setMainPly(const int ply, const int mply) {
+    mainDepth = mply;
+    this->ply = ply;
 }
 
 int Search::checkTime() const {
@@ -746,7 +747,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     /// ************* hash ****************
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
-    Hash::_ThashData hashItem;
+    u64 hashItem;
     const int hashValue = hash.readHash(alpha, beta, depth, zobristKeyR, hashItem, currentPly);
     if (hashValue != INT_MAX) {
         return hashValue;
@@ -943,8 +944,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                               (100.0 - ((double) countMove * 100.0 / (double) listcount)) +
                               (((double) countMove * 100.0 / (double) listcount) / (double) countMove))
                 if (getRunning()) {
-                    Hash::_ThashData data(score, depth, move->s.from, move->s.to, Hash::hashfBETA);
-                    hash.recordHash(zobristKeyR, data);
+                    Hash::_Thash data(score, depth, move->s.from, move->s.to, Hash::hashfBETA);
+                    hash.recordHash(zobristKeyR, data, ply);
                 }
 
                 if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
@@ -963,8 +964,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             setHistoryHeuristic(best->s.from, best->s.to, depth - extension);
             setKiller(best->s.from, best->s.to, depth - extension);
         }
-        Hash::_ThashData data(score, depth - extension, best->s.from, best->s.to, hashf);
-        hash.recordHash(zobristKeyR, data);
+        Hash::_Thash data(score, depth, best->s.from, best->s.to, hashf);
+        hash.recordHash(zobristKeyR, data, ply);
     }
     decListId();
     return score;

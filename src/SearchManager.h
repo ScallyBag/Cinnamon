@@ -197,7 +197,7 @@ public:
 
 #endif
 
-    int search(const int mply);
+    int search(const int ply,const int mply);
 
 private:
 
@@ -207,7 +207,7 @@ private:
 
     _TpvLine lineWin;
 
-    void setMainPly(const int r);
+    void setMainPly(const int ply,const int r);
 
     void startThread(Search &thread, const int depth);
 

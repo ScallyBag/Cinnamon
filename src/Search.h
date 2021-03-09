@@ -86,7 +86,7 @@ public:
 
 #endif
 
-    void setMainPly(const int);
+    void setMainPly(const int, const int);
 
     STATIC_CONST int NULL_DIVISOR = 7;
     STATIC_CONST int NULL_DEPTH = 3;
@@ -160,6 +160,7 @@ private:
     void updatePv(_TpvLine *pline, const _TpvLine *line, const _Tmove *move);
 
     int mainDepth;
+    int ply;
 
     template<uchar side>
     bool badCapure(const _Tmove &move, const u64 allpieces);

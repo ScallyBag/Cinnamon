@@ -67,7 +67,7 @@ string SearchManager::probeRootTB() const {
         return "";
 }
 
-int SearchManager::search(const int mply) {
+int SearchManager::search(const int ply, const int mply) {
 
     constexpr int SkipStep[64] =
             {0, 1, 2, 3, 1, 1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3, 0, 1, 1, 2,
@@ -76,7 +76,7 @@ int SearchManager::search(const int mply) {
 
     debug("start singleSearch -------------------------------")
     lineWin.cmove = -1;
-    setMainPly(mply);
+    setMainPly(ply, mply);
     ASSERT(bitCount(threadPool->getBitCount()) < 2)
     debug("start lazySMP --------------------------")
 
@@ -155,9 +155,9 @@ void SearchManager::startThread(Search &thread, const int depth) {
     thread.start();
 }
 
-void SearchManager::setMainPly(const int r) {
+void SearchManager::setMainPly(const int ply, const int mply) {
     for (Search *s:threadPool->getPool()) {
-        s->setMainPly(r);
+        s->setMainPly(ply, mply);
     }
 }
 
@@ -299,9 +299,9 @@ string SearchManager::decodeBoardinv(const uchar type, const int a, const uchar 
     return threadPool->getThread(0).decodeBoardinv(type, a, side);
 }
 
-void SearchManager::takeback(const _Tmove *move, const u64 oldkey,const uchar oldEnpassant, const bool rep) {
+void SearchManager::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep) {
     for (Search *s:threadPool->getPool()) {
-        s->takeback(move, oldkey, oldEnpassant,rep);
+        s->takeback(move, oldkey, oldEnpassant, rep);
     }
 }
 
