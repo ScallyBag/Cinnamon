@@ -14,7 +14,7 @@ News
 ----------
 - Reverse Futility Pruning
 - Stalemate improvement
-- Trasposition Table improvement
+- Transposition Table improvement
 - Fixed bug in castle
 - Fixed bug in en passant
 - Speeded up Perft
@@ -83,11 +83,11 @@ Setting `-F` and `-h` you can stop (Ctrl-c) and restart the perft process.
 
 `cinnamon.exe -wdl-gtb -f "fen position" -p path`
 
-#### SYZYFY DTZ (distance to zero)
+#### SYZYGY DTZ (distance to zero)
 
 `cinnamon.exe -dtz-syzygy -f "fen position" -p path`
 
-#### SYZYFY WDL (win/draw/loss)
+#### SYZYGY WDL (win/draw/loss)
 
 `cinnamon.exe -wdl-syzygy -f "fen position" -p path`
 
