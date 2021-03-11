@@ -144,6 +144,16 @@ public:
 
 private:
 
+    typedef struct {
+        u64 allPieces;
+        u64 kingAttackers[2];
+        u64 allPiecesSide[2];
+        u64 allPiecesNoPawns[2];
+        u64 posKingBit[2];
+        int kingSecurity[2];
+        uchar posKing[2];
+        u64 pinned[2];
+    } _Tboard;
     _Tboard structureEval;
     static constexpr int hashSize = 65536;
     static constexpr u64 keyMask = 0xffffffffffff0000ULL;
