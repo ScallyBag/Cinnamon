@@ -78,7 +78,7 @@ public:
 
     static unsigned short getAge(const u64 v) { return v >> (16 + 8 + 8 + 8 + 8); }
 
-    static u64 getKey(const _Thash *hash) { return (hash->key ^ (hash->data & 0xffffffffffffULL)); }
+    static u64 getKey(const u64 key, const u64 data) { return (key ^ (data & 0xffffffffffffULL)); }
 
     static int readHash(
             const int alpha,
@@ -92,8 +92,9 @@ public:
         for (int i = 0; i < BUCKETS; i++, hash++) {
             if (found)break;
             u64 data = hash->data;
+            u64 k = hash->key;
             DEBUG(d |= data)
-            if (zobristKeyR == getKey(hash)) {
+            if (zobristKeyR == getKey(k, data)) {
                 found = true;
                 checkHashStruct = data;
                 if (getDepth(checkHashStruct) >= depth) {
@@ -139,7 +140,8 @@ public:
             bool found = false;
             for (int i = 0; i < BUCKETS; i++, hash++) {
                 u64 data = hash->data;
-                if (zobristKey == getKey(hash)) {
+                u64 k = hash->key;
+                if (zobristKey == getKey(k, data)) {
                     found = true;
                     if (getDepth(data) <= getDepth(toStore.data)) {
                         hash->key = (zobristKey ^ toStore.data);
