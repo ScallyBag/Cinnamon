@@ -44,15 +44,12 @@ using namespace constants;
 int main(int argc, char **argv) {
     ASSERT(sizeof(Hash::_Thash) == 16)
     ASSERT(sizeof(_Tmove) == 8)
-
 #if defined(FULL_TEST)
     testing::InitGoogleTest(&argc, argv);
-    if (RUN_ALL_TESTS())return 1;
-    return 0;
+    return RUN_ALL_TESTS();
 #endif
 
     GetOpt::parse(argc, argv);
-
     return 0;
 }
 
