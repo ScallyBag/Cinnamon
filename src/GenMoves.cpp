@@ -88,7 +88,7 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const u64 &hash, c
             ASSERT_RANGE(move.s.to, 0, 63)
             ASSERT_RANGE(move.s.from, 0, 63)
 
-            if (GET_FROM(hash) == move.s.from && GET_TO(hash) == move.s.to) {
+            if (Hash::getFrom(hash) == move.s.from && Hash::getTo(hash) == move.s.to) {
                 return swap(list, first, i);
             }
             score += historyHeuristic[move.s.from][move.s.to];
@@ -269,7 +269,7 @@ void GenMoves::unPerformCastle(const uchar side, const uchar type) {
 
 }
 
-void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant,const bool rep) {
+void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep) {
     BENCH_AUTO_CLOSE("takeback")
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;

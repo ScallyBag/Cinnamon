@@ -40,7 +40,7 @@ using namespace _logger;
 using namespace constants;
 using namespace _def;
 
-class ChessBoard : public Bitboard {
+class ChessBoard {
 public:
     ChessBoard();
 
@@ -93,7 +93,6 @@ protected:
     string MATCH_QUEENSIDE_BLACK;
     string MATCH_KINGSIDE_BLACK;
 
-    _Tboard structureEval;
     int movesCount = 1;
     bool chess960 = false;
 

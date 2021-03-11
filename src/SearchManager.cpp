@@ -20,8 +20,10 @@
 
 using namespace _logger;
 
-SearchManager::SearchManager() {
+ThreadPool<Search> *SearchManager::threadPool;
+_TpvLine SearchManager::lineWin;
 
+SearchManager::SearchManager() {
     threadPool = new ThreadPool<Search>(1);
 #if defined(CLOP) || defined(DEBUG_MODE)
     IniFile iniFile("cinnamon.ini");
@@ -52,7 +54,7 @@ unsigned SearchManager::SZtbProbeWDL() const {
 }
 #endif
 
-string SearchManager::probeRootTB() const {
+string SearchManager::probeRootTB() {
     _Tmove bestMove;
     Search &search = threadPool->getThread(0);
     if (search.probeRootTB(&bestMove)) {
@@ -184,21 +186,17 @@ void SearchManager::startClock() {
     threadPool->getThread(0).startClock();// static variable
 }
 
-string SearchManager::boardToFen() {
-    return threadPool->getThread(0).boardToFen();
-}
-
 void SearchManager::clearHeuristic() {
     for (Search *s:threadPool->getPool()) {
         s->clearHeuristic();
     }
 }
 
-int SearchManager::getForceCheck() const {
+int SearchManager::getForceCheck() {
     return threadPool->getThread(0).getForceCheck();
 }
 
-u64 SearchManager::getZobristKey(const int id) const {
+u64 SearchManager::getZobristKey(const int id) {
     return threadPool->getThread(id).getZobristKey();
 }
 
@@ -218,11 +216,11 @@ void SearchManager::setRunning(const int i) {
     }
 }
 
-int SearchManager::getRunning(const int i) const {
+int SearchManager::getRunning(const int i) {
     return threadPool->getThread(i).getRunning();
 }
 
-void SearchManager::display() const {
+void SearchManager::display() {
     threadPool->getThread(0).display();
 }
 
@@ -257,7 +255,7 @@ void SearchManager::setPonder(const bool i) {
     }
 }
 
-int SearchManager::getSide() const {
+int SearchManager::getSide() {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).sideToMove;
     for (Search *s:threadPool->getPool()) {
@@ -268,10 +266,10 @@ int SearchManager::getSide() const {
 }
 
 int SearchManager::getScore(const uchar side) {
-    return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
+    return threadPool->getThread(0).getScore(side);
 }
 
-int SearchManager::getMaxTimeMillsec() const {
+int SearchManager::getMaxTimeMillsec() {
     return threadPool->getThread(0).getMaxTimeMillsec();
 }
 
@@ -327,7 +325,7 @@ void SearchManager::printWdlSyzygy() {
 
 #endif
 
-int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) const {
+int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {

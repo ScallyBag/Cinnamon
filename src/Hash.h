@@ -55,51 +55,59 @@ public:
     };
 
 #ifdef DEBUG_MODE
-    unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions, n_cut_hashA, n_cut_hashB, n_cut_hashE, readHashCount;
+    static unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions, n_cut_hashA, n_cut_hashB, n_cut_hashE, readHashCount;
 #endif
 
-    void setHashSize(const int mb);
+    static void setHashSize(const int mb);
 
-    void clearHash();
+    static void clearHash();
 
-#define SET_AGE(u, v) (u=(u&0xffffffffffffULL)|(((u64)v)<<(16 + 8 + 8 + 8 + 8)))
-#define GET_DEPTH(v) ((uchar)(v>>16))
-#define GET_FLAGS(v) ((uchar)(v>>(16 + 8 + 8 + 8)))
-#define GET_FROM(v) ((uchar)(v>>(16 + 8 + 8)))
-#define GET_TO(v) ((uchar)(v>>(16 + 8)))
-#define GET_SCORE(v) ((short ) v)
-#define GET_AGE(v) ((unsigned short)(v>> (16 + 8 + 8 + 8 + 8)))
-#define GET_KEY(hash) (hash->key ^ (hash->data & 0xffffffffffffULL))
+    static void setAge(u64 *u, const short v) {
+        (*u = (*u & 0xffffffffffffULL) | (((u64) v) << (16 + 8 + 8 + 8 + 8)));
+    }
 
-    inline int readHash(
+    static uchar getDepth(const u64 v) { return v >> 16; }
+
+    static uchar getFlags(const u64 v) { return v >> (16 + 8 + 8 + 8); }
+
+    static uchar getFrom(const u64 v) { return v >> (16 + 8 + 8); }
+
+    static uchar getTo(const u64 v) { return v >> (16 + 8); }
+
+    static short getScore(const u64 v) { return v; }
+
+    static unsigned short getAge(const u64 v) { return v >> (16 + 8 + 8 + 8 + 8); }
+
+    static u64 getKey(const _Thash *hash) { return (hash->key ^ (hash->data & 0xffffffffffffULL)); }
+
+    static int readHash(
             const int alpha,
             const int beta,
             const int depth,
             const u64 zobristKeyR, u64 &checkHashStruct, const bool currentPly) {
-        INC(readHashCount);
+        DEBUG(u64 d = 0;readHashCount++;)
         const Hash::_Thash *hash = &(hashArray[zobristKeyR % HASH_SIZE]);
-        DEBUG(u64 d = 0)
         checkHashStruct = 0;
         bool found = false;
         for (int i = 0; i < BUCKETS; i++, hash++) {
             if (found)break;
             u64 data = hash->data;
             DEBUG(d |= data)
-            if (zobristKeyR == GET_KEY(hash)) {
+            if (zobristKeyR == getKey(hash)) {
                 found = true;
                 checkHashStruct = data;
-                if (GET_DEPTH(checkHashStruct) >= depth) {
+                if (getDepth(checkHashStruct) >= depth) {
                     if (currentPly) { //TODO
-                        switch (GET_FLAGS(checkHashStruct)) {
+                        switch (getFlags(checkHashStruct)) {
                             case Hash::hashfEXACT:  //TODO
                             case Hash::hashfBETA:
-                                if (GET_SCORE(checkHashStruct) >= beta) {
+                                if (getScore(checkHashStruct) >= beta) {
                                     INC(n_cut_hashB);
                                     return beta;
                                 }
                                 break;
                             case Hash::hashfALPHA:
-                                if (GET_SCORE(checkHashStruct) <= alpha) {
+                                if (getScore(checkHashStruct) <= alpha) {
                                     INC(n_cut_hashA);
                                     return alpha;
                                 }
@@ -116,29 +124,27 @@ public:
         return INT_MAX;
     }
 
-    void recordHash(const u64 zobristKey, const _Thash &toStore, const int ply) {
+    static void recordHash(const u64 zobristKey, const _Thash &toStore, const int ply) {
 #ifdef DEBUG_MODE
         ASSERT(zobristKey)
-        if (GET_FLAGS(toStore.data) == hashfALPHA) nRecordHashA++;
-        else if (GET_FLAGS(toStore.data) == hashfBETA) nRecordHashB++;
+        if (getFlags(toStore.data) == hashfALPHA) nRecordHashA++;
+        else if (getFlags(toStore.data) == hashfBETA) nRecordHashB++;
         else nRecordHashE++;
+        ASSERT (getDepth(toStore.data) < MAX_PLY)
 #endif
-        ASSERT (GET_DEPTH(toStore.data) < MAX_PLY)
         const unsigned kMod = zobristKey % HASH_SIZE;
-
         _Thash *empty = nullptr;
-
         { // update
             _Thash *hash = &(hashArray[kMod]);
             bool found = false;
             for (int i = 0; i < BUCKETS; i++, hash++) {
                 u64 data = hash->data;
-                if (zobristKey == GET_KEY(hash)) {
+                if (zobristKey == getKey(hash)) {
                     found = true;
-                    if (GET_DEPTH(data) <= GET_DEPTH(toStore.data)) {
+                    if (getDepth(data) <= getDepth(toStore.data)) {
                         hash->key = (zobristKey ^ toStore.data);
                         hash->data = toStore.data;
-                        SET_AGE(hash->data, ply);
+                        setAge(&hash->data, ply);
                         return;
                     }
                 } else if (!hash->key) {
@@ -150,8 +156,7 @@ public:
         if (empty) { //empty slot
             empty->key = (zobristKey ^ toStore.data);
             empty->data = toStore.data;
-
-            SET_AGE(empty->data, ply);
+            setAge(&empty->data, ply);
             return;
         }
 
@@ -161,40 +166,34 @@ public:
             int i;
             int oldTT = -INT_MAX;
             for (i = 0; i < BUCKETS; i++, hash++) {
-                u64 data = hash->data;
-                ASSERT(GET_AGE(data) < 300)
-                ASSERT(GET_AGE(old->data) < 300)
-                ASSERT(GET_DEPTH(old->data) < MAX_PLY)
-                ASSERT(GET_DEPTH(data) < MAX_PLY)
-                const auto age = ((ply - GET_AGE(data)) & 255) * 256 + 255 - GET_DEPTH(data); //TODO
-                // const int age = ((pow(GET_DEPTH(data) - GET_DEPTH(old->data), 2)) + (ply - GET_AGE(data)));
+                const u64 data = hash->data;
+                const int age = ((pow(getDepth(data) - getDepth(old->data), 2)) + (ply - getAge(data)));
                 if (age > oldTT) {
                     old = hash;
                     oldTT = age;
                 }
             }
             if (i == BUCKETS) hash = old;
-
             DEBUG(if (hash->key && hash->key != (zobristKey ^ toStore.data)) INC(collisions))
             hash->key = (zobristKey ^ toStore.data);
             hash->data = toStore.data;
-            SET_AGE(hash->data, ply);
+            setAge(&hash->data, ply);
         }
     }
 
 private:
     Hash();
 
-    static constexpr int BUCKETS = 4; //TODO provare 3
-    unsigned HASH_SIZE;
+    static constexpr int BUCKETS = 4;
+    static unsigned HASH_SIZE;
 #ifdef JS_MODE
     static constexpr int HASH_SIZE_DEFAULT = 1;
 #else
     static constexpr int HASH_SIZE_DEFAULT = 64;
 #endif
 
-    void dispose();
+    static void dispose();
 
-    _Thash *hashArray;
+    static _Thash *hashArray;
 };
 

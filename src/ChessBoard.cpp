@@ -19,8 +19,8 @@
 #include "ChessBoard.h"
 
 ChessBoard::ChessBoard() {
+    Bitboard();
     fenString = string(STARTPOS);
-    memset(&structureEval, 0, sizeof(_Tboard));
     if ((sideToMove = loadFen(fenString)) == 2) {
         fatal("Bad FEN position format ", fenString)
         std::exit(1);
@@ -195,7 +195,7 @@ void ChessBoard::clearChessboard() {
     memset(chessboard, 0, sizeof(_Tchessboard));
     enPassant = NO_ENPASSANT;
     rightCastle = 0;
-    sideToMove=0;
+    sideToMove = 0;
 }
 
 int ChessBoard::loadFen(const string &fen) {
@@ -226,7 +226,7 @@ int ChessBoard::loadFen(const string &fen) {
     iss >> a2;
     a2 += " 1";
     if (String::isNumber(a2))
-    	movesCount = stoi(a2);
+        movesCount = stoi(a2);
 
     int ix = 0;
     array<int, 64> s;
