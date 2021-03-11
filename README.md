@@ -15,8 +15,8 @@ News
 - Reverse Futility Pruning
 - Stalemate improvement
 - Trasposition Table improvement
-- Fixed bug in castle
-- Fixed bug in en passant
+- Bug fix in castle
+- Bug fix in en passant
 - Speeded up Perft
 - Compilable with MS Visual Studio
 
