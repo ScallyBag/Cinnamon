@@ -564,18 +564,14 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     const int bonus_attack_king_white =
             phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
-//    ASSERT(getMobilityCastle<WHITE>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
-//    ASSERT(getMobilityCastle<BLACK>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
-    const int mobWhite = 0;//TODO MOB_CASTLE[phase][getMobilityCastle<WHITE>(chessboard, structureEval.allPieces)];
-    const int mobBlack = 0;//TODO MOB_CASTLE[phase][getMobilityCastle<BLACK>(chessboard, structureEval.allPieces)];
     const int attack_king_white = ATTACK_KING * bitCount(structureEval.kingAttackers[BLACK]);
     const int attack_king_black = ATTACK_KING * bitCount(structureEval.kingAttackers[WHITE]);
     side == WHITE ? lazyscore_black -= 5 : lazyscore_white += 5;
     const int result =
-            (mobBlack + attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
+            (attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
              Tresult.knights[BLACK] + Tresult.bishop[BLACK] + Tresult.rooks[BLACK] + Tresult.queens[BLACK] +
              Tresult.kings[BLACK]) -
-            (mobWhite + attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
+            (attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
              Tresult.knights[WHITE] + Tresult.bishop[WHITE] + Tresult.rooks[WHITE] + Tresult.queens[WHITE] +
              Tresult.kings[WHITE]);
 
@@ -601,8 +597,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         cout << HEADER;
         cout << "|Material:         " << setw(10) << (double) (lazyscore_white - lazyscore_black) / 100.0 << setw(15) <<
              (double) (lazyscore_white) / 100.0 << setw(10) << (double) (lazyscore_black) / 100.0 << "\n";
-        cout << "|Mobility:         " << setw(10) << (double) (mobWhite - mobBlack) / 100.0 << setw(15) <<
-             (double) (mobWhite) / 100.0 << setw(10) << (double) (mobBlack) / 100.0 << "\n";
         cout << "|Bonus attack king:" << setw(10) <<
              (double) (bonus_attack_king_white - bonus_attack_king_black) / 100.0 << setw(15) <<
              (double) (bonus_attack_king_white) / 100.0 << setw(10) << (double) (bonus_attack_king_black) / 100.0

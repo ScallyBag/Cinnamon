@@ -98,7 +98,7 @@ public:
                 found = true;
                 checkHashStruct = data;
                 if (getDepth(checkHashStruct) >= depth) {
-                    if (currentPly) { //TODO
+                    if (currentPly) {
                         switch (getFlags(checkHashStruct)) {
                             case Hash::hashfEXACT:  //TODO
                             case Hash::hashfBETA:
