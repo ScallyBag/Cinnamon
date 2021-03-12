@@ -58,11 +58,11 @@ string SearchManager::probeRootTB() {
     _Tmove bestMove;
     Search &search = threadPool->getThread(0);
     if (search.probeRootTB(&bestMove)) {
-        string best = string(search.decodeBoardinv(bestMove.s.type, bestMove.s.from, getSide())) +
-                      string(search.decodeBoardinv(bestMove.s.type, bestMove.s.to, getSide()));
+        string best = string(search.decodeBoardinv(bestMove.type, bestMove.from, getSide())) +
+                      string(search.decodeBoardinv(bestMove.type, bestMove.to, getSide()));
 
-        if (bestMove.s.promotionPiece != NO_PROMOTION)
-            best += tolower(bestMove.s.promotionPiece);
+        if (bestMove.promotionPiece != NO_PROMOTION)
+            best += tolower(bestMove.promotionPiece);
 
         return best;
     } else
@@ -118,10 +118,10 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
     for (int t = 0; t < lineWin.cmove; t++) {
         pvvTmp.clear();
         pvvTmp +=
-                decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.from,
+                decodeBoardinv(lineWin.argmove[t].type, lineWin.argmove[t].from,
                                threadPool->getThread(0).sideToMove);
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
-            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.to,
+            pvvTmp += decodeBoardinv(lineWin.argmove[t].type, lineWin.argmove[t].to,
                                      threadPool->getThread(0).sideToMove);
         }
         pvv.append(pvvTmp);
@@ -241,7 +241,7 @@ void SearchManager::setSearchMoves(const vector<string> &searchMov) {
     vector<int> searchMoves;
     for (auto it = searchMov.begin(); it != searchMov.end(); ++it) {
         getMoveFromSan(*it, &move);
-        const int x = move.s.to | (int) (move.s.from << 8);
+        const int x = move.to | (int) (move.from << 8);
         searchMoves.push_back(x);
     }
     for (Search *s:threadPool->getPool()) {

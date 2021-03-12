@@ -309,14 +309,14 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
             continue;
         }
         /// **************Delta Pruning ****************
-        if (fprune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
-            fscore + PIECES_VALUE[move->s.capturedPiece] <= alpha) {
+        if (fprune && ((move->type & 0x3) != PROMOTION_MOVE_MASK) &&
+            fscore + PIECES_VALUE[move->capturedPiece] <= alpha) {
             INC(nCutFp);
             takeback(move, oldKey, oldEnpassant, false);
             continue;
         }
         /// ************ end Delta Pruning *************
-        int val = -qsearch<X(side)>(-beta, -alpha, move->s.promotionPiece, depth - 1);
+        int val = -qsearch<X(side)>(-beta, -alpha, move->promotionPiece, depth - 1);
         score = max(score, val);
         takeback(move, oldKey, oldEnpassant, false);
         if (score > alpha) {
@@ -447,8 +447,8 @@ bool Search::probeRootTB(_Tmove *res) {
                 p = !isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
             }
             if (p &&
-                (bestMove == nullptr || move->s.capturedPiece != SQUARE_EMPTY ||
-                 move->s.promotionPiece != NO_PROMOTION)) {
+                (bestMove == nullptr || move->capturedPiece != SQUARE_EMPTY ||
+                 move->promotionPiece != NO_PROMOTION)) {
                 bestMove = move;
             }
             takeback(move, oldKey, oldEnpassant, false);
@@ -457,8 +457,8 @@ bool Search::probeRootTB(_Tmove *res) {
         decListId();
         if (bestMove) {
             memcpy(res, bestMove, sizeof(_Tmove));
-            if (res->s.pieceFrom == PAWN_WHITE && res->s.to > 55)res->s.promotionPiece = 'q';
-            else if (res->s.pieceFrom == PAWN_BLACK && res->s.to < 8)res->s.promotionPiece = 'q';
+            if (res->pieceFrom == PAWN_WHITE && res->to > 55)res->promotionPiece = 'q';
+            else if (res->pieceFrom == PAWN_BLACK && res->to < 8)res->promotionPiece = 'q';
             return true;
         }
     }
@@ -496,18 +496,18 @@ bool Search::probeRootTB(_Tmove *res) {
                 if ((int) dtz > minDtz) {
                     bestMove = move;
                     minDtz = dtz;
-                    if (move->s.promotionPiece != NO_PROMOTION || board::isOccupied(move->s.to, allPieces))
+                    if (move->promotionPiece != NO_PROMOTION || board::isOccupied(move->to, allPieces))
                         minDtz++;
                 }
             } else if (res == TB_DRAW) {
-                if (!drawMove || (move->s.promotionPiece != NO_PROMOTION || board::isOccupied(move->s.to, allPieces))) {
+                if (!drawMove || (move->promotionPiece != NO_PROMOTION || board::isOccupied(move->to, allPieces))) {
                     drawMove = move;
                 }
             } else if (res == TB_LOSS) {
                 if ((int) dtz < (int) maxDtzWorst) {
                     worstMove = move;
                     maxDtzWorst = dtz;
-                    if (move->s.promotionPiece != NO_PROMOTION || board::isOccupied(move->s.to, allPieces))
+                    if (move->promotionPiece != NO_PROMOTION || board::isOccupied(move->to, allPieces))
                         maxDtzWorst--;
                 }
             }
@@ -517,8 +517,8 @@ bool Search::probeRootTB(_Tmove *res) {
         if (worstMove) {
             debug("worstMove ***********\n")
             memcpy(res, worstMove, sizeof(_Tmove));
-            if (res->s.promotionPiece != NO_PROMOTION)
-                res->s.promotionPiece = FEN_PIECE[res->s.promotionPiece];
+            if (res->promotionPiece != NO_PROMOTION)
+                res->promotionPiece = FEN_PIECE[res->promotionPiece];
             decListId();
             return true;
         }
@@ -526,15 +526,15 @@ bool Search::probeRootTB(_Tmove *res) {
         if (drawMove) {
             debug("drawMove ***********\n")
             memcpy(res, drawMove, sizeof(_Tmove));
-            if (res->s.promotionPiece != NO_PROMOTION)res->s.promotionPiece = FEN_PIECE[res->s.promotionPiece];
+            if (res->promotionPiece != NO_PROMOTION)res->promotionPiece = FEN_PIECE[res->promotionPiece];
             decListId();
             return true;
         }
         if (bestMove) {
             debug("best ***********\n")
             memcpy(res, bestMove, sizeof(_Tmove));
-            if (res->s.promotionPiece != NO_PROMOTION)
-                res->s.promotionPiece = FEN_PIECE[res->s.promotionPiece];
+            if (res->promotionPiece != NO_PROMOTION)
+                res->promotionPiece = FEN_PIECE[res->promotionPiece];
             decListId();
             return true;
         }
@@ -606,41 +606,41 @@ bool Search::probeRootTB(_Tmove *res) {
             }
         }
 
-        res->s.type = STANDARD_MOVE_MASK;
+        res->type = STANDARD_MOVE_MASK;
 
         if (bestMove) {
             debug("best ***********\n")
-            res->s.from = _decodeSquare[TB_GET_FROM(bestMove)];
-            res->s.to = _decodeSquare[TB_GET_TO(bestMove)];
-            res->s.promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(bestMove));
+            res->from = _decodeSquare[TB_GET_FROM(bestMove)];
+            res->to = _decodeSquare[TB_GET_TO(bestMove)];
+            res->promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(bestMove));
             return true;
         }
         if (bestMove50) {
             debug("bestMove50 ***********\n")
-            res->s.from = _decodeSquare[TB_GET_FROM(bestMove50)];
-            res->s.to = _decodeSquare[TB_GET_TO(bestMove50)];
-            res->s.promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(bestMove50));
+            res->from = _decodeSquare[TB_GET_FROM(bestMove50)];
+            res->to = _decodeSquare[TB_GET_TO(bestMove50)];
+            res->promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(bestMove50));
             return true;
         }
         if (drawMove) {
             debug("drawMove ***********\n")
-            res->s.from = _decodeSquare[TB_GET_FROM(drawMove)];
-            res->s.to = _decodeSquare[TB_GET_TO(drawMove)];
-            res->s.promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(drawMove));
+            res->from = _decodeSquare[TB_GET_FROM(drawMove)];
+            res->to = _decodeSquare[TB_GET_TO(drawMove)];
+            res->promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(drawMove));
             return true;
         }
         if (worstMove50) {
             debug("worstMove50 ***********\n")
-            res->s.from = _decodeSquare[TB_GET_FROM(worstMove50)];
-            res->s.to = _decodeSquare[TB_GET_TO(worstMove50)];
-            res->s.promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(worstMove50));
+            res->from = _decodeSquare[TB_GET_FROM(worstMove50)];
+            res->to = _decodeSquare[TB_GET_TO(worstMove50)];
+            res->promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(worstMove50));
             return true;
         }
         if (worstMove) {
             debug("worstMove ***********\n")
-            res->s.from = _decodeSquare[TB_GET_FROM(worstMove)];
-            res->s.to = _decodeSquare[TB_GET_TO(worstMove)];
-            res->s.promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(worstMove));
+            res->from = _decodeSquare[TB_GET_FROM(worstMove)];
+            res->to = _decodeSquare[TB_GET_TO(worstMove)];
+            res->promotionPiece = SYZYGY::getPromotion(TB_GET_PROMOTES(worstMove));
             return true;
         }
         return false;
@@ -652,7 +652,7 @@ bool Search::probeRootTB(_Tmove *res) {
 template<bool checkMoves>
 bool Search::checkSearchMoves(const _Tmove *move) const {
     if (!checkMoves)return true;
-    int m = move->s.to | (move->s.from << 8);
+    int m = move->to | (move->from << 8);
     if (std::find(searchMovesVector.begin(), searchMovesVector.end(), m) != searchMovesVector.end()) {
         return true;
     }
@@ -866,16 +866,16 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             continue;
         }
         checkInCheck = true;
-        if (futilPrune && ((move->s.type & 0x3) != PROMOTION_MOVE_MASK) &&
-            futilScore + PIECES_VALUE[move->s.capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
+        if (futilPrune && ((move->type & 0x3) != PROMOTION_MOVE_MASK) &&
+            futilScore + PIECES_VALUE[move->capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
             INC(nCutFp);
             takeback(move, oldKey, oldEnpassant, true);
             continue;
         }
         //Late Move Reduction
         int val = INT_MAX;
-        if (countMove > 3 && !isIncheckSide && depth >= 3 && move->s.capturedPiece == SQUARE_EMPTY &&
-            move->s.promotionPiece == NO_PROMOTION) {
+        if (countMove > 3 && !isIncheckSide && depth >= 3 && move->capturedPiece == SQUARE_EMPTY &&
+            move->promotionPiece == NO_PROMOTION) {
             currentPly++;
             const int R = countMove > 6 ? 3 : 2;
             val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
@@ -896,14 +896,14 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             const int upb = (doMws ? (lwb + 1) : beta);
             currentPly++;
             val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
-                                               move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                               move->capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                nRootMoves);
             currentPly--;
             if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
                 currentPly++;
                 forceCheck = true;
                 val = -search<X(side), checkMoves>(depth + extension - 1, -upb, -lwb, &line,
-                                                   move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                   move->capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                    nRootMoves);
                 forceCheck = false;
                 currentPly--;
@@ -912,7 +912,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                 currentPly++;
                 val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                    &line,
-                                                   move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                   move->capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                    nRootMoves);
                 currentPly--;
                 if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
@@ -920,7 +920,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                     forceCheck = true;
                     val = -search<X(side), checkMoves>(depth + extension - 1, -beta, -val + 1,
                                                        &line,
-                                                       move->s.capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
+                                                       move->capturedPiece == SQUARE_EMPTY ? N_PIECE : N_PIECE - 1,
                                                        nRootMoves);
                     forceCheck = false;
                     currentPly--;
@@ -933,8 +933,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         ASSERT(chessboard[KING_WHITE])
 
         if (score > alpha) {
-            if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
-                setKiller(move->s.from, move->s.to, depth);
+            if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
+                setKiller(move->from, move->to, depth);
             }
             if (score >= beta) {
                 decListId();
@@ -944,12 +944,12 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                               (100.0 - ((double) countMove * 100.0 / (double) listcount)) +
                               (((double) countMove * 100.0 / (double) listcount) / (double) countMove))
                 if (getRunning()) {
-                    Hash::_Thash data(score, depth, move->s.from, move->s.to, Hash::hashfBETA);
+                    Hash::_Thash data(score, depth, move->from, move->to, Hash::hashfBETA);
                     hash.recordHash(zobristKeyR, data, ply);
                 }
 
-                if (move->s.capturedPiece == SQUARE_EMPTY && move->s.promotionPiece == NO_PROMOTION) {
-                    setHistoryHeuristic(move->s.from, move->s.to, depth);
+                if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
+                    setHistoryHeuristic(move->from, move->to, depth);
                 }
                 return score;
             }
@@ -960,11 +960,11 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         }
     }
     if (getRunning()) {
-        if (best->s.capturedPiece == SQUARE_EMPTY && best->s.promotionPiece == NO_PROMOTION) {
-            setHistoryHeuristic(best->s.from, best->s.to, depth - extension);
-            setKiller(best->s.from, best->s.to, depth - extension);
+        if (best->capturedPiece == SQUARE_EMPTY && best->promotionPiece == NO_PROMOTION) {
+            setHistoryHeuristic(best->from, best->to, depth - extension);
+            setKiller(best->from, best->to, depth - extension);
         }
-        Hash::_Thash data(score, depth, best->s.from, best->s.to, hashf);
+        Hash::_Thash data(score, depth, best->from, best->to, hashf);
         hash.recordHash(zobristKeyR, data, ply);
     }
     decListId();
@@ -1068,16 +1068,16 @@ bool Search::setParameter(string &param, const int value) {
 template<uchar side>
 bool Search::badCapure(const _Tmove &move, const u64 allpieces) {
 
-    if (move.s.pieceFrom == (PAWN_BLACK + side)) return false;
+    if (move.pieceFrom == (PAWN_BLACK + side)) return false;
 
-    if (PIECES_VALUE[move.s.capturedPiece] - 5 >= PIECES_VALUE[move.s.pieceFrom]) return false;
+    if (PIECES_VALUE[move.capturedPiece] - 5 >= PIECES_VALUE[move.pieceFrom]) return false;
 
-    if (PIECES_VALUE[move.s.capturedPiece] + 200 < PIECES_VALUE[move.s.pieceFrom] &&
-        (PAWN_FORK_MASK[side][move.s.to] & chessboard[PAWN_BLACK + (X(side))]))
+    if (PIECES_VALUE[move.capturedPiece] + 200 < PIECES_VALUE[move.pieceFrom] &&
+        (PAWN_FORK_MASK[side][move.to] & chessboard[PAWN_BLACK + (X(side))]))
         return true;
 
-    if (PIECES_VALUE[move.s.capturedPiece] + 500 < PIECES_VALUE[move.s.pieceFrom] &&
-        board::isAttacked(side, move.s.to, allpieces, chessboard))
+    if (PIECES_VALUE[move.capturedPiece] + 500 < PIECES_VALUE[move.pieceFrom] &&
+        board::isAttacked(side, move.to, allpieces, chessboard))
         return true;
 
     return false;
