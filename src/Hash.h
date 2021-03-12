@@ -29,7 +29,7 @@
 using namespace constants;
 using namespace _logger;
 
-class Hash : public Singleton<Hash> { //TODO cambiare nome
+class Hash : public Singleton<Hash> {
     friend class Singleton<Hash>;
 
 public:
