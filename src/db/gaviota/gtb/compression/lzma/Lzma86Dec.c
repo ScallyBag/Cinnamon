@@ -2,9 +2,10 @@
 2008-04-07
 Igor Pavlov
 Public domain */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include "Lzma86Dec.h"
-
 #include "Alloc.h"
 #include "Bra.h"
 #include "LzmaDec.h"
@@ -59,3 +60,4 @@ SRes Lzma86_Decode(Byte *dest, SizeT *destLen, const Byte *src, SizeT *srcLen)
   }
   return SZ_OK;
 }
+#pragma GCC diagnostic pop

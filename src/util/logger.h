@@ -84,7 +84,7 @@ namespace _logger {
 
     static Logger &logger = Logger::getInstance();
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 #define FILE_SEPARATOR '\\'
 #else
 #define FILE_SEPARATOR '/'

@@ -28,6 +28,10 @@ Copyright (c) 2010 Miguel A. Ballicora
 
 
 /* NBBOTF will remove the internal bitbase on the fly */
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
 #ifdef NBBOTF
                                                                                                                         #ifdef WDL_PROBE
 		#undef WDL_PROBE
@@ -8439,5 +8443,5 @@ egtb_get_wdl(tbkey_t k, unsigned stm, const SQUARE *wS, const SQUARE *bS, bool_t
 
 #endif
 
-
+#pragma GCC diagnostic pop
 

@@ -2,6 +2,8 @@
 2008-08-05
 Igor Pavlov
 Public domain */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #include <string.h>
 
@@ -111,3 +113,4 @@ int Lzma86_Encode(Byte *dest, size_t *destLen, const Byte *src, size_t srcLen,
     MyFree(filteredStream);
   return mainResult;
 }
+#pragma GCC diagnostic pop

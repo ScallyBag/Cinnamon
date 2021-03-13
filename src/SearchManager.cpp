@@ -98,7 +98,7 @@ int SearchManager::search(const int ply, const int mply) {
     auto res = mainThread.getValWindow();
 
     if (mainThread.getRunning()) {
-        memcpy(&lineWin, &mainThread.getPvLine(), sizeof(_TpvLine));
+        memcpy(&lineWin, &mainThread.getPvLine(), sizeof(lineWin));
     }
     stopAllThread();
     threadPool->joinAll();

@@ -11,7 +11,7 @@ Public domain */
 void *MyAlloc(size_t size);
 void MyFree(void *address);
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64 || _WIN64
 
 void SetLargePageSize();
 

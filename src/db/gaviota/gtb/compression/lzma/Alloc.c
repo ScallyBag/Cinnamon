@@ -3,7 +3,7 @@
 Igor Pavlov
 Public domain */
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 #include <windows.h>
 #endif
 #include <stdlib.h>
@@ -44,7 +44,7 @@ void MyFree(void *address)
   free(address);
 }
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 
 void *MidAlloc(size_t size)
 {

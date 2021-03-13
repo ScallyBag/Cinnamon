@@ -6,7 +6,7 @@
 
 #include <stddef.h>
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 #include <windows.h>
 #endif
 
@@ -30,7 +30,7 @@
 
 typedef int SRes;
 
-#ifdef _WIN32
+#if _WIN32 || _WIN64
 typedef DWORD WRes;
 #else
 typedef int WRes;

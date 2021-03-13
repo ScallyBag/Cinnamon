@@ -33,6 +33,11 @@
 
 #endif
 
+typedef struct {
+    int cmove;
+    _Tmove argmove[MAX_PLY];
+} _TpvLine;
+
 class Search : public GenMoves, public Thread<Search> {
 
 public:

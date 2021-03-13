@@ -355,6 +355,54 @@ public:
     double betaEfficiency = 0.0;
     unsigned betaEfficiencyCount = 0;
 #endif
+    
+private:
+
+    typedef struct {
+        _Tmove *moveList;
+        int size;
+    } _TmoveP;
+
+    int running;
+    bool isInCheck;
+    static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;
+
+    void writeRandomFen(const vector<int>);
+
+    _Tmove *swap(_TmoveP *list, const int i, const int j) {
+        std::swap(list->moveList[i], list->moveList[j]);
+        return &list->moveList[i];
+    }
+
+    template<uchar side>
+    void performJumpPawn(u64 x, const u64 xallpieces) {
+        BENCH_AUTO_CLOSE("performJumpPawn")
+        x &= TABJUMPPAWN;
+        if (!x) return;
+
+        if (side) {
+            x = (((x << 8) & xallpieces) << 8) & xallpieces;
+        } else {
+            x = (((x >> 8) & xallpieces) >> 8) & xallpieces;
+        }
+        for (; x; RESET_LSB(x)) {
+            const int o = BITScanForward(x);
+            BENCH_SUBPROCESS("performJumpPawn", "pushmove")
+            pushmove<STANDARD_MOVE_MASK, side>(o + (side ? -16 : 16), o, NO_PROMOTION, side, false);
+        }
+    }
+
+    void popStackMove() {
+        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1)
+        if (--repetitionMapCount && repetitionMap[repetitionMapCount - 1] == 0) {
+            repetitionMapCount--;
+        }
+    }
+
+    void pushStackMove(const u64 key) {
+        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1)
+        repetitionMap[repetitionMapCount++] = key;
+    }
 
 protected:
 
@@ -782,47 +830,6 @@ protected:
     }
 
     bool forceCheck;
-private:
-    int running;
-    bool isInCheck;
-    static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;
-
-    void writeRandomFen(const vector<int>);
-
-    _Tmove *swap(_TmoveP *list, const int i, const int j) {
-        std::swap(list->moveList[i], list->moveList[j]);
-        return &list->moveList[i];
-    }
-
-    template<uchar side>
-    void performJumpPawn(u64 x, const u64 xallpieces) {
-        BENCH_AUTO_CLOSE("performJumpPawn")
-        x &= TABJUMPPAWN;
-        if (!x) return;
-
-        if (side) {
-            x = (((x << 8) & xallpieces) << 8) & xallpieces;
-        } else {
-            x = (((x >> 8) & xallpieces) >> 8) & xallpieces;
-        }
-        for (; x; RESET_LSB(x)) {
-            const int o = BITScanForward(x);
-            BENCH_SUBPROCESS("performJumpPawn", "pushmove")
-            pushmove<STANDARD_MOVE_MASK, side>(o + (side ? -16 : 16), o, NO_PROMOTION, side, false);
-        }
-    }
-
-    void popStackMove() {
-        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1)
-        if (--repetitionMapCount && repetitionMap[repetitionMapCount - 1] == 0) {
-            repetitionMapCount--;
-        }
-    }
-
-    void pushStackMove(const u64 key) {
-        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1)
-        repetitionMap[repetitionMapCount++] = key;
-    }
 
 };
 

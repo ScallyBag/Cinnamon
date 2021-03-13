@@ -5,6 +5,8 @@
 
 /* #define SHOW_STAT */
 /* #define SHOW_STAT2 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #if defined(SHOW_STAT) || defined(SHOW_STAT2)
 #include <stdio.h>
@@ -2326,3 +2328,4 @@ SRes LzmaEncode(Byte *dest, SizeT *destLen, const Byte *src, SizeT srcLen,
   LzmaEnc_Destroy(p, alloc, allocBig);
   return res;
 }
+#pragma GCC diagnostic pop

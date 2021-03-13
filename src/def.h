@@ -36,12 +36,3 @@ typedef struct {
     uchar _dummy_; //align
 } _Tmove;
 
-typedef struct {
-    _Tmove *moveList;
-    int size;
-} _TmoveP;
-
-typedef struct {
-    int cmove;
-    _Tmove argmove[MAX_PLY];
-} _TpvLine;
