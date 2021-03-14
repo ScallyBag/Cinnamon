@@ -263,7 +263,7 @@ public:
         for (; x; RESET_LSB(x)) {
             const int o = BITScanForward(x);
             ASSERT(board::getPieceAt<side>(POW2(o + sh), chessboard) != SQUARE_EMPTY)
-            ASSERT(board::board::getBitmap(side, chessboard) & POW2(o + sh))
+            ASSERT(board::getBitmap(side, chessboard) & POW2(o + sh))
             if (o > A7 || o < H2) {
                 BENCH_SUBPROCESS("pawnShift", "pushmove")
                 pushmove<PROMOTION_MOVE_MASK, side>(o + sh, o, QUEEN_BLACK + side, side, false);
@@ -355,7 +355,7 @@ public:
     double betaEfficiency = 0.0;
     unsigned betaEfficiencyCount = 0;
 #endif
-    
+
 private:
 
     typedef struct {

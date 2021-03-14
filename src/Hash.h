@@ -36,8 +36,8 @@ public:
 
     typedef struct _Thash {
         u64 key;
-        // 123456789ABCDEF|12345678|12345678|12345678|12345678|123456789ABCDEF|
-        // age            | flags  | from   |   to   | depth  |    score      |
+        // 0123456789ABCDEF|01234567|01234567|01234567|01234567|0123456789ABCDEF|
+        // age             | flags  | from   |   to   | depth  |    score       |
         u64 data;
 
         _Thash(const short score, const char depth, const uchar from, const uchar to, const uchar flags) {
