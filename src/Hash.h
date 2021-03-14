@@ -62,23 +62,9 @@ public:
 
     static void clearHash();
 
-    static void setAge(u64 *u, const short v) {
-        (*u = (*u & 0xffffffffffffULL) | (((u64) v) << (16 + 8 + 8 + 8 + 8)));
-    }
-
-    static uchar getDepth(const u64 v) { return v >> 16; }
-
-    static uchar getFlags(const u64 v) { return v >> (16 + 8 + 8 + 8); }
-
     static uchar getFrom(const u64 v) { return v >> (16 + 8 + 8); }
 
     static uchar getTo(const u64 v) { return v >> (16 + 8); }
-
-    static short getScore(const u64 v) { return v; }
-
-    static unsigned short getAge(const u64 v) { return v >> (16 + 8 + 8 + 8 + 8); }
-
-    static u64 getKey(const u64 key, const u64 data) { return (key ^ (data & 0xffffffffffffULL)); }
 
     static int readHash(
             const int alpha,
@@ -185,6 +171,20 @@ public:
 
 private:
     Hash();
+
+    static void setAge(u64 *u, const short v) {
+        (*u = (*u & 0xffffffffffffULL) | (((u64) v) << (16 + 8 + 8 + 8 + 8)));
+    }
+
+    static uchar getDepth(const u64 v) { return v >> 16; }
+
+    static uchar getFlags(const u64 v) { return v >> (16 + 8 + 8 + 8); }
+
+    static unsigned short getAge(const u64 v) { return v >> (16 + 8 + 8 + 8 + 8); }
+
+    static short getScore(const u64 v) { return v; }
+
+    static u64 getKey(const u64 key, const u64 data) { return (key ^ (data & 0xffffffffffffULL)); }
 
     static constexpr int BUCKETS = 4;
     static unsigned HASH_SIZE;
