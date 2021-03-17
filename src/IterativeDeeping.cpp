@@ -88,18 +88,14 @@ void IterativeDeeping::run() {
         totMoves = 0;
         ++mply;
         searchManager.init();
-
         auto sc = searchManager.search(ply, mply);
-
         searchManager.setRunningThread(1);
         searchManager.setRunning(1);
         if (!searchManager.getRes(resultMove, ponderMove, pvv)) {
             debug("IterativeDeeping cmove == 0. Exit")
             break;
         }
-
         searchManager.incHistoryHeuristic(resultMove.from, resultMove.to, 0x1000);
-
         auto end1 = std::chrono::high_resolution_clock::now();
         timeTaken = Time::diffTime(end1, start1) + 1;
         totMoves += searchManager.getTotMoves();
