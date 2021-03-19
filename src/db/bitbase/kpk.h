@@ -300,7 +300,7 @@ namespace _bitbase {
         }
     };
 
-    inline bool isDraw(const int winSide, const uchar side, const int kw, const int kb, const int pawnQueenPos) {
+    inline static bool isDraw(const int winSide, const uchar side, const int kw, const int kb, const int pawnQueenPos) {
         return winSide == WHITE ? KPK_WHITE_PAWN[side][kw][kb] & (1ULL << pawnQueenPos) : KPK_BLACK_PAWN[side][kw][kb]
                                                                                           & (1ULL << pawnQueenPos);
     }

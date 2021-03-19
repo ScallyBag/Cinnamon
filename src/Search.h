@@ -33,24 +33,12 @@
 
 #endif
 
-typedef struct {
-    int cmove;
-    _Tmove argmove[MAX_PLY];
-} _TpvLine;
 
-class Search : public GenMoves, public Thread<Search> {
+class Search : public Eval, public Thread<Search> {
 
 public:
 
-    STATIC_CONST int NULL_DIVISOR = 7;
-    STATIC_CONST int NULL_DEPTH = 3;
-    STATIC_CONST int VAL_WINDOW = 50;
-
     Search();
-
-    short getScore(const uchar side) {
-        return eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
-    };
 
     Search(const Search *s) { clone(s); }
 
@@ -100,6 +88,10 @@ public:
 
     void setMainPly(const int, const int);
 
+    STATIC_CONST int NULL_DIVISOR = 7;
+    STATIC_CONST int NULL_DEPTH = 3;
+    STATIC_CONST int VAL_WINDOW = 50;
+
     static void setRunningThread(const bool t) {
         runningThread = t;
     }
@@ -122,10 +114,6 @@ public:
     static unsigned cumulativeMovesCount;
     unsigned totGen;
 
-    unsigned int getLazyEvalCuts() {
-        return eval.lazyEvalCuts;
-    }
-
 #endif
 
     void unsetSearchMoves();
@@ -133,7 +121,7 @@ public:
     void setSearchMoves(const vector<int> &v);
 
 private:
-    Eval eval;
+
     Hash &hash = Hash::getInstance();
 #ifndef JS_MODE
     SYZYGY *syzygy = &SYZYGY::getInstance();

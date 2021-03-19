@@ -27,7 +27,6 @@
 
 struct GTBchessboard {
 
-    uchar rightCastle;
     unsigned int tb_castling;
     unsigned int ws[17];    /* list of squares for white */
     unsigned int bs[17];    /* list of squares for black */

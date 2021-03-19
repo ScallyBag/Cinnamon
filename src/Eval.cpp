@@ -22,7 +22,6 @@ using namespace _eval;
 u64 *Eval::evalHash;
 
 Eval::Eval() {
-    memset(&structureEval, 0, sizeof(_Tboard));
     if (evalHash == nullptr)
         evalHash = (u64 *) calloc(hashSize, sizeof(u64));
 }
@@ -49,7 +48,7 @@ Eval::~Eval() {
 
  */
 template<uchar side, Eval::_Tphase phase>
-int Eval::evaluatePawn(const _Tchessboard &chessboard) {
+int Eval::evaluatePawn() {
     INC(evaluationCount[side]);
     int result = 0;
     constexpr int xside = X(side);
@@ -153,7 +152,7 @@ int Eval::evaluatePawn(const _Tchessboard &chessboard) {
  * 9. pinned
  */
 template<uchar side, Eval::_Tphase phase>
-int Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 enemies) {
+int Eval::evaluateBishop(const u64 enemies) {
     INC(evaluationCount[side]);
     constexpr int xside = X(side);
     u64 bishop = chessboard[BISHOP_BLACK + side];
@@ -245,7 +244,7 @@ int Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 enemies) {
  * 6. 5. bishop on queen - if there is a bishop on same diagonal add BISHOP_ON_QUEEN
  */
 template<uchar side, Eval::_Tphase phase>
-int Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 enemies) {
+int Eval::evaluateQueen(const u64 enemies) {
     INC(evaluationCount[side]);
     u64 queen = chessboard[QUEEN_BLACK + side];
     int result = 0;
@@ -306,7 +305,7 @@ int Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 enemies) {
 */
 
 template<uchar side, Eval::_Tphase phase>
-int Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 notMyBits) {
+int Eval::evaluateKnight(const u64 notMyBits) {
     INC(evaluationCount[side]);
     u64 knight = chessboard[KNIGHT_BLACK + side];
     if (!knight) return 0;
@@ -375,7 +374,7 @@ int Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 notMyBits) {
  * 8. Penalise if Rook is Blocked Horizontally
 */
 template<uchar side, Eval::_Tphase phase>
-int Eval::evaluateRook(const _Tchessboard &chessboard, const u64 king, const u64 enemies, const u64 friends) {
+int Eval::evaluateRook(const u64 king, const u64 enemies, const u64 friends) {
     INC(evaluationCount[side]);
 
     u64 rook = chessboard[ROOK_BLACK + side];
@@ -455,7 +454,7 @@ int Eval::evaluateRook(const _Tchessboard &chessboard, const u64 king, const u64
 }
 
 template<Eval::_Tphase phase>
-int Eval::evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares) {
+int Eval::evaluateKing(const uchar side, const u64 squares) {
     ASSERT(evaluationCount[side] == 5)
     int result = 0;
     uchar pos_king = structureEval.posKing[side];
@@ -494,14 +493,13 @@ short Eval::getHashValue(const u64 key) {
     return noHashValue;
 }
 
-short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar side, const int alpha, const int beta,
-                     const bool trace) {
+short Eval::getScore(const u64 key, const uchar side, const int alpha, const int beta, const bool trace) {
     const short hashValue = getHashValue(key);
     if (hashValue != noHashValue && !trace) {
         return side ? -hashValue : hashValue;
     }
-    int lazyscore_white = lazyEvalSide<WHITE>(chessboard);
-    int lazyscore_black = lazyEvalSide<BLACK>(chessboard);
+    int lazyscore_white = lazyEvalSide<WHITE>();
+    int lazyscore_black = lazyEvalSide<BLACK>();
     const int lazyscore = side ? lazyscore_white - lazyscore_black : lazyscore_black - lazyscore_white;
 
     if (lazyscore > (beta + FUTIL_MARGIN) || lazyscore < (alpha - FUTIL_MARGIN)) {
@@ -548,13 +546,13 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     _Tresult Tresult;
     switch (phase) {
         case OPEN :
-            getRes<OPEN>(chessboard, Tresult);
+            getRes<OPEN>(Tresult);
             break;
         case END :
-            getRes<END>(chessboard, Tresult);
+            getRes<END>(Tresult);
             break;
         case MIDDLE:
-            getRes<MIDDLE>(chessboard, Tresult);
+            getRes<MIDDLE>(Tresult);
             break;
         default:
             break;
@@ -564,14 +562,18 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     const int bonus_attack_king_white =
             phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
+    ASSERT(getMobilityCastle<WHITE>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
+    ASSERT(getMobilityCastle<BLACK>(structureEval.allPieces) < (int) (sizeof(MOB_CASTLE[phase]) / sizeof(int)))
+    const int mobWhite = MOB_CASTLE[phase][getMobilityCastle<WHITE>(structureEval.allPieces)];
+    const int mobBlack = MOB_CASTLE[phase][getMobilityCastle<BLACK>(structureEval.allPieces)];
     const int attack_king_white = ATTACK_KING * bitCount(structureEval.kingAttackers[BLACK]);
     const int attack_king_black = ATTACK_KING * bitCount(structureEval.kingAttackers[WHITE]);
     side == WHITE ? lazyscore_black -= 5 : lazyscore_white += 5;
     const int result =
-            (attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
+            (mobBlack + attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
              Tresult.knights[BLACK] + Tresult.bishop[BLACK] + Tresult.rooks[BLACK] + Tresult.queens[BLACK] +
              Tresult.kings[BLACK]) -
-            (attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
+            (mobWhite + attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
              Tresult.knights[WHITE] + Tresult.bishop[WHITE] + Tresult.rooks[WHITE] + Tresult.queens[WHITE] +
              Tresult.kings[WHITE]);
 
@@ -597,6 +599,8 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         cout << HEADER;
         cout << "|Material:         " << setw(10) << (double) (lazyscore_white - lazyscore_black) / 100.0 << setw(15) <<
              (double) (lazyscore_white) / 100.0 << setw(10) << (double) (lazyscore_black) / 100.0 << "\n";
+        cout << "|Mobility:         " << setw(10) << (double) (mobWhite - mobBlack) / 100.0 << setw(15) <<
+             (double) (mobWhite) / 100.0 << setw(10) << (double) (mobBlack) / 100.0 << "\n";
         cout << "|Bonus attack king:" << setw(10) <<
              (double) (bonus_attack_king_white - bonus_attack_king_black) / 100.0 << setw(15) <<
              (double) (bonus_attack_king_white) / 100.0 << setw(10) << (double) (bonus_attack_king_black) / 100.0
@@ -658,8 +662,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
              (double) (SCORE_DEBUG.KNIGHT_TRAPPED[BLACK]) / 100.0 << "\n";
         cout << "|       mobility:                 " << setw(10) << (double) (SCORE_DEBUG.MOB_KNIGHT[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.MOB_KNIGHT[BLACK]) / 100.0 << "\n";
-        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.KNIGHT_PINNED[WHITE]) / 100.0
-             <<
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.KNIGHT_PINNED[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.KNIGHT_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Bishop:           " << setw(10) << (double) (Tresult.bishop[WHITE] - Tresult.bishop[BLACK]) / 100.0 <<
@@ -679,8 +682,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         cout << "|       bonus 2 bishops:          " << setw(10) <<
              (double) (SCORE_DEBUG.BONUS2BISHOP[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.BONUS2BISHOP[BLACK]) / 100.0 << "\n";
-        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.BISHOP_PINNED[WHITE]) / 100.0
-             <<
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.BISHOP_PINNED[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.BISHOP_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|Rook:             " << setw(10) << (double) (Tresult.rooks[WHITE] - Tresult.rooks[BLACK]) / 100.0 <<
@@ -716,8 +718,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         cout << "|       bishop on queen:          " << setw(10) <<
              (double) (SCORE_DEBUG.BISHOP_ON_QUEEN[WHITE]) / 100.0 << setw(10) <<
              (double) (SCORE_DEBUG.BISHOP_ON_QUEEN[BLACK]) / 100.0 << "\n";
-        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.QUEEN_PINNED[WHITE]) / 100.0
-             <<
+        cout << "|       pinned:                   " << setw(10) << (double) (SCORE_DEBUG.QUEEN_PINNED[WHITE]) / 100.0 <<
              setw(10) << (double) (SCORE_DEBUG.QUEEN_PINNED[BLACK]) / 100.0 << "\n";
         cout << HEADER;
         cout << "|King:             " << setw(10) << (double) (Tresult.kings[WHITE] - Tresult.kings[BLACK]) / 100.0 <<

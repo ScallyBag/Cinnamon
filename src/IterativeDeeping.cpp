@@ -88,14 +88,18 @@ void IterativeDeeping::run() {
         totMoves = 0;
         ++mply;
         searchManager.init();
+
         auto sc = searchManager.search(ply, mply);
+
         searchManager.setRunningThread(1);
         searchManager.setRunning(1);
         if (!searchManager.getRes(resultMove, ponderMove, pvv)) {
             debug("IterativeDeeping cmove == 0. Exit")
             break;
         }
-        searchManager.incHistoryHeuristic(resultMove.from, resultMove.to, 0x1000);
+
+        searchManager.incHistoryHeuristic(resultMove.s.from, resultMove.s.to, 0x1000);
+
         auto end1 = std::chrono::high_resolution_clock::now();
         timeTaken = Time::diffTime(end1, start1) + 1;
         totMoves += searchManager.getTotMoves();
@@ -165,12 +169,12 @@ void IterativeDeeping::run() {
         }
         if (trace) {
 
-            resultMove.capturedPiece = searchManager.getPieceAt(X(resultMove.side), POW2(resultMove.to));
-            bestmove = searchManager.decodeBoardinv(resultMove.type, resultMove.from, resultMove.side);
-            if (!(resultMove.type & (KING_SIDE_CASTLE_MOVE_MASK | QUEEN_SIDE_CASTLE_MOVE_MASK))) {
-                bestmove += searchManager.decodeBoardinv(resultMove.type, resultMove.to, resultMove.side);
-                if (resultMove.promotionPiece != NO_PROMOTION) {
-                    bestmove += tolower(FEN_PIECE[resultMove.promotionPiece]);
+            resultMove.s.capturedPiece = searchManager.getPieceAt(X(resultMove.s.side), POW2(resultMove.s.to));
+            bestmove = searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.from, resultMove.s.side);
+            if (!(resultMove.s.type & (KING_SIDE_CASTLE_MOVE_MASK | QUEEN_SIDE_CASTLE_MOVE_MASK))) {
+                bestmove += searchManager.decodeBoardinv(resultMove.s.type, resultMove.s.to, resultMove.s.side);
+                if (resultMove.s.promotionPiece != NO_PROMOTION) {
+                    bestmove += tolower(FEN_PIECE[resultMove.s.promotionPiece]);
                 }
             }
 

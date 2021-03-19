@@ -29,7 +29,7 @@
 #include "_TPerftRes.h"
 #include <csignal>
 
-class Perft : public Thread<Perft>, public ThreadPool<PerftThread>, public Singleton<Perft> {
+class Perft : public Thread<Perft>, protected ThreadPool<PerftThread>, public Singleton<Perft> {
     friend class Singleton<Perft>;
 
 public:

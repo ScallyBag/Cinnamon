@@ -18,99 +18,106 @@
 
 #pragma once
 
+#include "unistd.h"
 #include "Search.h"
 #include "threadPool/ThreadPool.h"
+#include <condition_variable>
 #include "namespaces/String.h"
 #include "util/IniFile.h"
+#include <algorithm>
+#include <future>
+#include "namespaces/bits.h"
 
 class SearchManager : public Singleton<SearchManager> {
     friend class Singleton<SearchManager>;
 
 public:
 
+    bool getRes(_Tmove &resultMove, string &ponderMove, string &pvv);
+
     ~SearchManager();
 
-    static bool getRes(_Tmove &resultMove, string &ponderMove, string &pvv);
+    int loadFen(const string &fen = "");
 
-    static int loadFen(const string &fen = "");
+    int getPieceAt(const uchar side, const u64 i);
 
-    static int getPieceAt(const uchar side, const u64 i);
+    u64 getTotMoves();
 
-    static u64 getTotMoves();
+    void incHistoryHeuristic(const int from, const int to, const int value);
 
-    static void incHistoryHeuristic(const int from, const int to, const int value);
+    void startClock();
 
-    static void startClock();
+    string boardToFen();
 
-    static string decodeBoardinv(const uchar type, const int a, const uchar side);
+    string decodeBoardinv(const uchar type, const int a, const uchar side);
 
-    static bool setParameter(string param, const int value);
+    bool setParameter(string param, const int value);
 
-    static void clearHeuristic();
+    void clearHeuristic();
 
-    static int getForceCheck();
+    int getForceCheck() const;
 
-    static u64 getZobristKey(const int id);
+    u64 getZobristKey(const int id) const;
 
-    static u64 getEnpassant(const int id) {
+    u64 getEnpassant(const int id) const {
         return threadPool->getThread(id).getEnpassant();
     }
 
-    static void setForceCheck(const bool a);
+    void setForceCheck(const bool a);
 
-    static void setRunningThread(const bool r);
+    void setRunningThread(const bool r);
 
-    static string probeRootTB();
+    string probeRootTB() const;
 
-    static void setRunning(const int i);
+    void setRunning(const int i);
 
-    static int getRunning(const int i);
+    int getRunning(const int i) const;
 
-    static void display();
+    void display() const;
 
-    static void setMaxTimeMillsec(const int i);
+    void setMaxTimeMillsec(const int i);
 
-    static void unsetSearchMoves();
+    void unsetSearchMoves();
 
-    static void setSearchMoves(const vector<string> &searchmoves);
+    void setSearchMoves(const vector<string> &searchmoves);
 
-    static void setPonder(bool i);
+    void setPonder(bool i);
 
-    static int getSide();
+    int getSide() const;
 
-    static int getScore(const uchar side);
+    int getScore(const uchar side);
 
-    static int getMaxTimeMillsec();
+    int getMaxTimeMillsec() const;
 
-    static void setNullMove(const bool i);
+    void setNullMove(const bool i);
 
-    static void setChess960(const bool i);
+    void setChess960(const bool i);
 
-    static bool makemove(const _Tmove *i);
+    bool makemove(const _Tmove *i);
 
-    static void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep);
+    void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep);
 
-    static void setSide(const bool i);
+    void setSide(const bool i);
 
-    static int getMoveFromSan(const string &string, _Tmove *ptr);
+    int getMoveFromSan(const string &string, _Tmove *ptr) const;
 
 #ifndef JS_MODE
 
-    static int printDtmGtb(const bool dtm);
+    int printDtmGtb(const bool dtm);
 
-    static void printDtmSyzygy();
+    void printDtmSyzygy();
 
-    static void printWdlSyzygy();
+    void printWdlSyzygy();
 
 #endif
 
-    static void pushStackMove();
+    void pushStackMove();
 
-    static void init();
+    void init();
 
-    static void setRepetitionMapCount(const int i);
+    void setRepetitionMapCount(const int i);
 
-    static bool setNthread(const int);
+    bool setNthread(const int);
 
 #if defined(FULL_TEST)
 
@@ -134,11 +141,11 @@ public:
 
 #ifdef DEBUG_MODE
 
-    static unsigned getCumulativeMovesCount() {
+    unsigned getCumulativeMovesCount() const {
         return Search::cumulativeMovesCount;
     }
 
-    static unsigned getNCutAB() {
+    unsigned getNCutAB() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutAB;
@@ -146,7 +153,7 @@ public:
         return i;
     }
 
-    static double getBetaEfficiency() {
+    double getBetaEfficiency() const {
         double b = 0;
         unsigned count = 0;
         for (Search *s:threadPool->getPool()) {
@@ -156,15 +163,15 @@ public:
         return b / count;
     }
 
-    static unsigned getLazyEvalCuts() {
+    unsigned getLazyEvalCuts() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
-            i += s->getLazyEvalCuts();
+            i += s->lazyEvalCuts;
         }
         return i;
     }
 
-    static unsigned getNCutFp() {
+    unsigned getNCutFp() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutFp;
@@ -172,7 +179,7 @@ public:
         return i;
     }
 
-    static unsigned getNCutRazor() {
+    unsigned getNCutRazor() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutRazor;
@@ -180,7 +187,7 @@ public:
         return i;
     }
 
-    static unsigned getTotBadCaputure() {
+    unsigned getTotBadCaputure() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
             i += s->nCutBadCaputure;
@@ -190,21 +197,21 @@ public:
 
 #endif
 
-    static int search(const int ply, const int mply);
+    int search(const int ply,const int mply);
 
 private:
 
     SearchManager();
 
-    static ThreadPool<Search> *threadPool;
+    ThreadPool<Search> *threadPool = nullptr;
 
-    static _TpvLine lineWin;
+    _TpvLine lineWin;
 
-    static void setMainPly(const int ply, const int r);
+    void setMainPly(const int ply,const int r);
 
-    static void startThread(Search &thread, const int depth);
+    void startThread(Search &thread, const int depth);
 
-    static void stopAllThread();
+    void stopAllThread();
 
 };
 

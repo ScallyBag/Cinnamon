@@ -57,7 +57,7 @@ public:
 
     static bool see1(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
         ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
-        return board::isAttacked(move.side, move.to, allpieces, chessboard);
+        return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
     }
 
     template<uchar side>
@@ -143,7 +143,7 @@ public:
         ASSERT_RANGE(side, 0, 1)
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
-            u64 diag = Bitboard::getDiagonalAntiDiagonal(position, allpieces) & enemies;
+            u64 diag = getDiagonalAntiDiagonal(position, allpieces) & enemies;
             for (; diag; RESET_LSB(diag)) {
                 BENCH_SUBPROCESS("diagCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(diag), NO_PROMOTION, piece, true))
@@ -164,7 +164,7 @@ public:
 
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
-            u64 rankFile = Bitboard::getRankFile(position, allpieces) & enemies;
+            u64 rankFile = getRankFile(position, allpieces) & enemies;
             for (; rankFile; RESET_LSB(rankFile)) {
                 BENCH_SUBPROCESS("rankFileCapture", "pushmove")
                 if (pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(rankFile), NO_PROMOTION, piece, true))
@@ -291,7 +291,7 @@ public:
         ASSERT_RANGE(side, 0, 1)
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
-            u64 diag = Bitboard::getDiagonalAntiDiagonal(position, allpieces) & ~allpieces;
+            u64 diag = getDiagonalAntiDiagonal(position, allpieces) & ~allpieces;
             for (; diag; RESET_LSB(diag)) {
                 BENCH_SUBPROCESS("diagShift", "pushmove")
                 pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(diag), NO_PROMOTION, piece, false);
@@ -307,7 +307,7 @@ public:
 
         for (u64 x2 = chessboard[piece]; x2; RESET_LSB(x2)) {
             const int position = BITScanForward(x2);
-            u64 rankFile = Bitboard::getRankFile(position, allpieces) & ~allpieces;
+            u64 rankFile = getRankFile(position, allpieces) & ~allpieces;
             for (; rankFile; RESET_LSB(rankFile)) {
                 BENCH_SUBPROCESS("rankFileShift", "pushmove")
                 pushmove<STANDARD_MOVE_MASK, side>(position, BITScanForward(rankFile), NO_PROMOTION, piece, false);
@@ -355,54 +355,6 @@ public:
     double betaEfficiency = 0.0;
     unsigned betaEfficiencyCount = 0;
 #endif
-
-private:
-
-    typedef struct {
-        _Tmove *moveList;
-        int size;
-    } _TmoveP;
-
-    int running;
-    bool isInCheck;
-    static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;
-
-    void writeRandomFen(const vector<int>);
-
-    _Tmove *swap(_TmoveP *list, const int i, const int j) {
-        std::swap(list->moveList[i], list->moveList[j]);
-        return &list->moveList[i];
-    }
-
-    template<uchar side>
-    void performJumpPawn(u64 x, const u64 xallpieces) {
-        BENCH_AUTO_CLOSE("performJumpPawn")
-        x &= TABJUMPPAWN;
-        if (!x) return;
-
-        if (side) {
-            x = (((x << 8) & xallpieces) << 8) & xallpieces;
-        } else {
-            x = (((x >> 8) & xallpieces) >> 8) & xallpieces;
-        }
-        for (; x; RESET_LSB(x)) {
-            const int o = BITScanForward(x);
-            BENCH_SUBPROCESS("performJumpPawn", "pushmove")
-            pushmove<STANDARD_MOVE_MASK, side>(o + (side ? -16 : 16), o, NO_PROMOTION, side, false);
-        }
-    }
-
-    void popStackMove() {
-        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1)
-        if (--repetitionMapCount && repetitionMap[repetitionMapCount - 1] == 0) {
-            repetitionMapCount--;
-        }
-    }
-
-    void pushStackMove(const u64 key) {
-        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1)
-        repetitionMap[repetitionMapCount++] = key;
-    }
 
 protected:
 
@@ -783,14 +735,14 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &genList[listId].moveList[getListSize()];
         ++genList[listId].size;
-        move->type = rightCastle | type;
-        move->side = side;
-        move->capturedPiece = capturedPiece;
+        move->s.type = rightCastle | type;
+        move->s.side = side;
+        move->s.capturedPiece = capturedPiece;
         if (type & 0x3) {
-            move->from = (uchar) from;
-            move->to = (uchar) to;
-            move->pieceFrom = pieceFrom;
-            move->promotionPiece = (char) promotionPiece;
+            move->s.from = (uchar) from;
+            move->s.to = (uchar) to;
+            move->s.pieceFrom = pieceFrom;
+            move->s.promotionPiece = (char) promotionPiece;
         }
         ASSERT(getListSize() < MAX_MOVE)
         return res;
@@ -830,6 +782,47 @@ protected:
     }
 
     bool forceCheck;
+private:
+    int running;
+    bool isInCheck;
+    static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;
+
+    void writeRandomFen(const vector<int>);
+
+    _Tmove *swap(_TmoveP *list, const int i, const int j) {
+        std::swap(list->moveList[i], list->moveList[j]);
+        return &list->moveList[i];
+    }
+
+    template<uchar side>
+    void performJumpPawn(u64 x, const u64 xallpieces) {
+        BENCH_AUTO_CLOSE("performJumpPawn")
+        x &= TABJUMPPAWN;
+        if (!x) return;
+
+        if (side) {
+            x = (((x << 8) & xallpieces) << 8) & xallpieces;
+        } else {
+            x = (((x >> 8) & xallpieces) >> 8) & xallpieces;
+        }
+        for (; x; RESET_LSB(x)) {
+            const int o = BITScanForward(x);
+            BENCH_SUBPROCESS("performJumpPawn", "pushmove")
+            pushmove<STANDARD_MOVE_MASK, side>(o + (side ? -16 : 16), o, NO_PROMOTION, side, false);
+        }
+    }
+
+    void popStackMove() {
+        ASSERT_RANGE(repetitionMapCount, 1, MAX_REP_COUNT - 1)
+        if (--repetitionMapCount && repetitionMap[repetitionMapCount - 1] == 0) {
+            repetitionMapCount--;
+        }
+    }
+
+    void pushStackMove(const u64 key) {
+        ASSERT(repetitionMapCount < MAX_REP_COUNT - 1)
+        repetitionMap[repetitionMapCount++] = key;
+    }
 
 };
 

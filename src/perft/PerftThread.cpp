@@ -172,21 +172,21 @@ void PerftThread::run() {
 
         takeback(move, keyold, oldEnpassant, false);
 
-        char x = FEN_PIECE[sideToMove ? board::getPieceAt<WHITE>(POW2(move->from), chessboard)
-                                      : board::getPieceAt<BLACK>(POW2(move->from), chessboard)];
+        char x = FEN_PIECE[sideToMove ? board::getPieceAt<WHITE>(POW2(move->s.from), chessboard)
+                                      : board::getPieceAt<BLACK>(POW2(move->s.from), chessboard)];
         x = toupper(x);
         if (x == 'P') x = ' ';
 
-        const char y = (move->capturedPiece != SQUARE_EMPTY) ? '*' : '-';
+        const char y = (move->s.capturedPiece != SQUARE_EMPTY) ? '*' : '-';
 
         if (fhash)spinlockPrint.lock();
         cout << endl;
         string h;
-        if ((decodeBoardinv(move->type, move->to, sideToMove)).length() > 2) {
-            h = decodeBoardinv(move->type, move->to, sideToMove);
+        if ((decodeBoardinv(move->s.type, move->s.to, sideToMove)).length() > 2) {
+            h = decodeBoardinv(move->s.type, move->s.to, sideToMove);
         } else {
-            h = h + x + decodeBoardinv(move->type, move->from, sideToMove) + y
-                + decodeBoardinv(move->type, move->to, sideToMove);
+            h = h + x + decodeBoardinv(move->s.type, move->s.from, sideToMove) + y
+                + decodeBoardinv(move->s.type, move->s.to, sideToMove);
         }
         cout << setw(6) << h;
         cout << setw(20) << n_perft;
