@@ -23,19 +23,19 @@ using namespace constants;
 class See { // TODO
 public:
     static int see(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
-        const uchar side = move.side;
-        const int position = move.to;
-        const int capturedPiece = move.capturedPiece;
+        const uchar side = move.s.side;
+        const int position = move.s.to;
+        const int capturedPiece = move.s.capturedPiece;
         ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
         int yourCap[15];
-        int yourCount = _see(side, position, allpieces, yourCap, PIECES_VALUE[move.pieceFrom], chessboard);
+        int yourCount = _see(side, position, allpieces, yourCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
         const int pieceValue = PIECES_VALUE[capturedPiece];
         if (yourCount == 0) return pieceValue;
         int myCap[15];
-        int myCount = _see(X(side), position, allpieces, myCap, PIECES_VALUE[move.pieceFrom], chessboard);
+        int myCount = _see(X(side), position, allpieces, myCap, PIECES_VALUE[move.s.pieceFrom], chessboard);
 
         if (!myCount && yourCount) {
-            return -PIECES_VALUE[move.pieceFrom];
+            return -PIECES_VALUE[move.s.pieceFrom];
         }
 
         if (myCount > yourCount)myCount = yourCount + 1;

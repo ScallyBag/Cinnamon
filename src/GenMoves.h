@@ -357,7 +357,10 @@ public:
 #endif
 
 protected:
-
+    typedef struct {
+        _Tmove *moveList;
+        int size;
+    } _TmoveP;
     u64 pinned;
     bool perftMode;
     int listId;
@@ -783,6 +786,7 @@ protected:
 
     bool forceCheck;
 private:
+
     int running;
     bool isInCheck;
     static constexpr u64 TABJUMPPAWN = 0xFF00000000FF00ULL;

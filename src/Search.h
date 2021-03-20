@@ -34,11 +34,15 @@
 #endif
 
 
-class Search : public Eval, public Thread<Search> {
+class Search : public GenMoves, public Thread<Search> {
 
 public:
 
     Search();
+
+    short getScore(const uchar side) {
+        return eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
+    };
 
     Search(const Search *s) { clone(s); }
 
@@ -54,7 +58,7 @@ public:
 
     void setMaxTimeMillsec(const int);
 
-    bool setParameter(string &param, const int value);
+    bool setParameter(const string &param, const int value);
 
     int getMaxTimeMillsec() const;
 
@@ -114,6 +118,10 @@ public:
     static unsigned cumulativeMovesCount;
     unsigned totGen;
 
+    unsigned getLazyEvalCuts() {
+        return eval.lazyEvalCuts;
+    }
+
 #endif
 
     void unsetSearchMoves();
@@ -121,7 +129,7 @@ public:
     void setSearchMoves(const vector<int> &v);
 
 private:
-
+    Eval eval;
     Hash &hash = Hash::getInstance();
 #ifndef JS_MODE
     SYZYGY *syzygy = &SYZYGY::getInstance();

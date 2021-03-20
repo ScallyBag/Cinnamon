@@ -20,7 +20,6 @@
 
 ChessBoard::ChessBoard() {
     fenString = string(STARTPOS);
-    memset(&structureEval, 0, sizeof(_Tboard));
     if ((sideToMove = loadFen(fenString)) == 2) {
         fatal("Bad FEN position format ", fenString)
         std::exit(1);

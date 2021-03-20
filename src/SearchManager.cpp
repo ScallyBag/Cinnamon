@@ -74,11 +74,9 @@ int SearchManager::search(const int ply, const int mply) {
              1,
              1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3, 0, 1, 1, 2, 1, 1, 2, 3};
 
-    debug("start singleSearch -------------------------------")
     lineWin.cmove = -1;
     setMainPly(ply, mply);
     ASSERT(bitCount(threadPool->getBitCount()) < 2)
-    debug("start lazySMP --------------------------")
 
     for (int ii = 1; ii < threadPool->getNthread(); ii++) {
         Search &helperThread = threadPool->getNextThread();
@@ -88,7 +86,6 @@ int SearchManager::search(const int ply, const int mply) {
         startThread(helperThread, mply + SkipStep[ii]);
     }
 
-    debug("end lazySMP ---------------------------")
     Search &mainThread = threadPool->getThread(0);
     mainThread.setMainParam(mply);
     mainThread.run();
@@ -100,7 +97,7 @@ int SearchManager::search(const int ply, const int mply) {
     }
     stopAllThread();
     threadPool->joinAll();
-    debug("end singleSearch -------------------------------")
+
     return res;
 }
 
@@ -268,7 +265,7 @@ int SearchManager::getSide() const {
 }
 
 int SearchManager::getScore(const uchar side) {
-    return threadPool->getThread(0).getScore(0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
+    return threadPool->getThread(0).getScore(side);
 }
 
 int SearchManager::getMaxTimeMillsec() const {

@@ -22,7 +22,6 @@
 #pragma once
 
 #include "constants.h"
-#include "../util/bench/Times.h"
 #include "../util/Bitboard.h"
 
 using namespace constants;

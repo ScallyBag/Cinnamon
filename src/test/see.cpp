@@ -27,11 +27,11 @@ TEST(see1, test1) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     searchManager.loadFen("rnbqk1nr/pppp1ppp/8/4p3/1bP5/3P4/PP2PPPP/RNBQKBNR w KQkq - 0 1");
     _Tmove move;
-    move.side = WHITE;
-    move.from = B1;
-    move.pieceFrom = KNIGHT_WHITE;
-    move.to = A3;
-    move.capturedPiece = SQUARE_EMPTY;
+    move.s.side = WHITE;
+    move.s.from = B1;
+    move.s.pieceFrom = KNIGHT_WHITE;
+    move.s.to = A3;
+    move.s.capturedPiece = SQUARE_EMPTY;
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
     const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
@@ -41,11 +41,11 @@ TEST(see1, test1) {
 TEST(see1, test2) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = C3;
-    move.pieceFrom = ROOK_BLACK;
-    move.to = C6;
-    move.capturedPiece = PAWN_WHITE;
+    move.s.side = BLACK;
+    move.s.from = C3;
+    move.s.pieceFrom = ROOK_BLACK;
+    move.s.to = C6;
+    move.s.capturedPiece = PAWN_WHITE;
     searchManager.loadFen("k7/8/1RP5/1P1P4/8/2r5/8/6K1 b - - 0 9");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -56,11 +56,11 @@ TEST(see1, test2) {
 TEST(see1, test3) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = KING_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = KING_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5k2/6N1/8/5N2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -71,11 +71,11 @@ TEST(see1, test3) {
 TEST(see1, test4) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p2/6N1/8/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -86,11 +86,11 @@ TEST(see1, test4) {
 TEST(see1, test5) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = C8;
-    move.pieceFrom = BISHOP_BLACK;
-    move.to = G4;
-    move.capturedPiece = PAWN_BLACK;
+    move.s.side = BLACK;
+    move.s.from = C8;
+    move.s.pieceFrom = BISHOP_BLACK;
+    move.s.to = G4;
+    move.s.capturedPiece = PAWN_BLACK;
     searchManager.loadFen("rnbqkb1r/ppp1pppp/8/3p4/4P1P1/6P1/PPPP3P/RNBQKBNR w KQkq - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -101,11 +101,11 @@ TEST(see1, test5) {
 TEST(see1, test6) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F3;
-    move.pieceFrom = KING_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F3;
+    move.s.pieceFrom = KING_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -116,11 +116,11 @@ TEST(see1, test6) {
 TEST(see1, test7) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -131,11 +131,11 @@ TEST(see1, test7) {
 TEST(see1, test8) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p2/6N1/5b1P/k7/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -146,11 +146,11 @@ TEST(see1, test8) {
 TEST(see1, test9) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = WHITE;
-    move.from = E5;
-    move.pieceFrom = PAWN_WHITE;
-    move.to = E6;
-    move.capturedPiece = SQUARE_EMPTY;
+    move.s.side = WHITE;
+    move.s.from = E5;
+    move.s.pieceFrom = PAWN_WHITE;
+    move.s.to = E6;
+    move.s.capturedPiece = SQUARE_EMPTY;
     searchManager.loadFen("8/3p4/8/4P3/8/k7/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -162,11 +162,11 @@ TEST(see, test1) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     searchManager.loadFen("rnbqk1nr/pppp1ppp/8/4p3/1bP5/3P4/PP2PPPP/RNBQKBNR w KQkq - 0 1");
     _Tmove move;
-    move.side = WHITE;
-    move.from = B1;
-    move.pieceFrom = KNIGHT_WHITE;
-    move.to = A3;
-    move.capturedPiece = SQUARE_EMPTY;
+    move.s.side = WHITE;
+    move.s.from = B1;
+    move.s.pieceFrom = KNIGHT_WHITE;
+    move.s.to = A3;
+    move.s.capturedPiece = SQUARE_EMPTY;
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
     const int p = See::see(move, searchManager.getChessboard(), allpieces);
@@ -176,11 +176,11 @@ TEST(see, test1) {
 TEST(see, test2) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = C3;
-    move.pieceFrom = ROOK_BLACK;
-    move.to = C6;
-    move.capturedPiece = PAWN_WHITE;
+    move.s.side = BLACK;
+    move.s.from = C3;
+    move.s.pieceFrom = ROOK_BLACK;
+    move.s.to = C6;
+    move.s.capturedPiece = PAWN_WHITE;
     searchManager.loadFen("k7/8/1RP5/1P1P4/8/2r5/8/6K1 b - - 0 9");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -191,11 +191,11 @@ TEST(see, test2) {
 TEST(see, test3) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = KING_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = KING_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5k2/6N1/8/5N2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -206,11 +206,11 @@ TEST(see, test3) {
 TEST(see, test4) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p2/6N1/8/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -221,11 +221,11 @@ TEST(see, test4) {
 TEST(see, test5) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = C8;
-    move.pieceFrom = BISHOP_BLACK;
-    move.to = G4;
-    move.capturedPiece = PAWN_BLACK;
+    move.s.side = BLACK;
+    move.s.from = C8;
+    move.s.pieceFrom = BISHOP_BLACK;
+    move.s.to = G4;
+    move.s.capturedPiece = PAWN_BLACK;
     searchManager.loadFen("rnbqkb1r/ppp1pppp/8/3p4/4P1P1/6P1/PPPP3P/RNBQKBNR w KQkq - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -236,11 +236,11 @@ TEST(see, test5) {
 TEST(see, test6) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F3;
-    move.pieceFrom = KING_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F3;
+    move.s.pieceFrom = KING_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -251,11 +251,11 @@ TEST(see, test6) {
 TEST(see, test7) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
@@ -266,11 +266,11 @@ TEST(see, test7) {
 TEST(see, test8) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
-    move.side = BLACK;
-    move.from = F6;
-    move.pieceFrom = PAWN_BLACK;
-    move.to = G5;
-    move.capturedPiece = KNIGHT_WHITE;
+    move.s.side = BLACK;
+    move.s.from = F6;
+    move.s.pieceFrom = PAWN_BLACK;
+    move.s.to = G5;
+    move.s.capturedPiece = KNIGHT_WHITE;
     searchManager.loadFen("8/8/5p2/6N1/5b1P/k7/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());

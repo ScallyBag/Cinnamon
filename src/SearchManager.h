@@ -166,7 +166,7 @@ public:
     unsigned getLazyEvalCuts() const {
         unsigned i = 0;
         for (Search *s:threadPool->getPool()) {
-            i += s->lazyEvalCuts;
+            i += s->getLazyEvalCuts();
         }
         return i;
     }
