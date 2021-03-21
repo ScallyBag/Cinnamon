@@ -29,7 +29,7 @@
 using namespace constants;
 using namespace _logger;
 
-class Hash : public Singleton<Hash> { //TODO cambiare nome
+class Hash : public Singleton<Hash> {
     friend class Singleton<Hash>;
 
 public:
@@ -89,7 +89,7 @@ public:
                 found = true;
                 checkHashStruct = data;
                 if (GET_DEPTH(checkHashStruct) >= depth) {
-                    if (currentPly) { //TODO
+                    if (currentPly) {
                         switch (GET_FLAGS(checkHashStruct)) {
                             case Hash::hashfEXACT:  //TODO
                             case Hash::hashfBETA:
@@ -185,7 +185,7 @@ public:
 private:
     Hash();
 
-    static constexpr int BUCKETS = 4; //TODO provare 3
+    static constexpr int BUCKETS = 4;
     unsigned HASH_SIZE;
 #ifdef JS_MODE
     static constexpr int HASH_SIZE_DEFAULT = 1;

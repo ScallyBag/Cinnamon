@@ -18,17 +18,12 @@
 
 #pragma once
 
-#include "unistd.h"
 #include "Search.h"
 #include "threadPool/ThreadPool.h"
-#include <condition_variable>
 #include "namespaces/String.h"
 #include "util/IniFile.h"
-#include <algorithm>
-#include <future>
-#include "namespaces/bits.h"
 
-class SearchManager : public Singleton<SearchManager> {
+class SearchManager : private Singleton<SearchManager> {
     friend class Singleton<SearchManager>;
 
 public:

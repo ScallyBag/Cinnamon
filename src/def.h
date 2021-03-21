@@ -37,8 +37,3 @@ typedef union {
         uchar type;
     } s;
 } _Tmove;
-
-typedef struct {
-    int cmove;
-    _Tmove argmove[MAX_PLY];
-} _TpvLine;

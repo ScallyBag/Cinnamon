@@ -33,10 +33,18 @@
 
 #endif
 
+typedef struct {
+    int cmove;
+    _Tmove argmove[MAX_PLY];
+} _TpvLine;
 
 class Search : public GenMoves, public Thread<Search> {
 
 public:
+
+    STATIC_CONST int NULL_DIVISOR = 7;
+    STATIC_CONST int NULL_DEPTH = 3;
+    STATIC_CONST int VAL_WINDOW = 50;
 
     Search();
 
@@ -91,10 +99,6 @@ public:
 #endif
 
     void setMainPly(const int, const int);
-
-    STATIC_CONST int NULL_DIVISOR = 7;
-    STATIC_CONST int NULL_DEPTH = 3;
-    STATIC_CONST int VAL_WINDOW = 50;
 
     static void setRunningThread(const bool t) {
         runningThread = t;
