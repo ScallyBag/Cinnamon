@@ -762,13 +762,13 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     // ********* null move ***********
     if (!nullSearch && !pvNode && !isIncheckSide) {
-        int n_depth = (nRootMoves > 17 || depth > 3) ? 1 : 3;
-        if (n_depth == 3) {
+        int nDepth = (nRootMoves > 17 || depth > 3) ? 1 : 3;
+        if (nDepth == 3) {
             const u64 pieces = board::getPiecesNoKing<side>(chessboard);
             if (pieces != chessboard[PAWN_BLACK + side] || bitCount(pieces) > 9)
-                n_depth = 1;
+                nDepth = 1;
         }
-        if (depth > n_depth) {
+        if (depth > nDepth) {
             nullSearch = true;
             const int R = NULL_DEPTH + depth / NULL_DIVISOR;
             int nullScore;
