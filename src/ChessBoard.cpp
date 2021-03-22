@@ -19,6 +19,7 @@
 #include "ChessBoard.h"
 
 ChessBoard::ChessBoard() {
+    Bitboard();
     fenString = string(STARTPOS);
     if ((sideToMove = loadFen(fenString)) == 2) {
         fatal("Bad FEN position format ", fenString)

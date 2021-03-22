@@ -40,7 +40,7 @@ using namespace _logger;
 using namespace constants;
 using namespace _def;
 
-class ChessBoard : public Bitboard {
+class ChessBoard {
 public:
     ChessBoard();
 
