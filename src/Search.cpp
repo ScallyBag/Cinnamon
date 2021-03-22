@@ -944,8 +944,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                               (100.0 - ((double) countMove * 100.0 / (double) listcount)) +
                               (((double) countMove * 100.0 / (double) listcount) / (double) countMove))
                 if (getRunning()) {
-                    Hash::_Thash data(score, depth, move->from, move->to, Hash::hashfBETA);
-                    hash.recordHash(zobristKeyR, data, ply);
+                    Hash::_Thash data(zobristKeyR, score, depth, move->from, move->to, Hash::hashfBETA);
+                    hash.recordHash(data, ply);
                 }
 
                 if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
@@ -964,8 +964,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             setHistoryHeuristic(best->from, best->to, depth - extension);
             setKiller(best->from, best->to, depth - extension);
         }
-        Hash::_Thash data(score, depth, best->from, best->to, hashf);
-        hash.recordHash(zobristKeyR, data, ply);
+        Hash::_Thash data(zobristKeyR, score, depth, best->from, best->to, hashf);
+        hash.recordHash(data, ply);
     }
     decListId();
     return score;

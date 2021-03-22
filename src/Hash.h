@@ -40,7 +40,9 @@ public:
         // age            | flags  | from   |   to   | depth  |    score      |
         u64 data;
 
-        _Thash(const short score, const char depth, const uchar from, const uchar to, const uchar flags) {
+        _Thash(const u64 zobristKeyR, const short score, const char depth, const uchar from, const uchar to,
+               const uchar flags) {
+            key = zobristKeyR;
             data = score;
             data &= 0xffffULL;
             data |= (u64) depth << 16;
@@ -116,15 +118,15 @@ public:
         return INT_MAX;
     }
 
-   static  void recordHash(const u64 zobristKey, const _Thash &toStore, const int ply) {
+    static void recordHash(const _Thash &toStore, const int ply) {
 #ifdef DEBUG_MODE
-        ASSERT(zobristKey)
+        ASSERT(toStore.key)
         if (GET_FLAGS(toStore.data) == hashfALPHA) nRecordHashA++;
         else if (GET_FLAGS(toStore.data) == hashfBETA) nRecordHashB++;
         else nRecordHashE++;
 #endif
         ASSERT (GET_DEPTH(toStore.data) < MAX_PLY)
-        const unsigned kMod = zobristKey % HASH_SIZE;
+        const unsigned kMod = toStore.key % HASH_SIZE;
 
         _Thash *empty = nullptr;
 
@@ -133,10 +135,10 @@ public:
             bool found = false;
             for (int i = 0; i < BUCKETS; i++, hash++) {
                 u64 data = hash->data;
-                if (zobristKey == GET_KEY(hash)) {
+                if (toStore.key == GET_KEY(hash)) {
                     found = true;
                     if (GET_DEPTH(data) <= GET_DEPTH(toStore.data)) {
-                        hash->key = (zobristKey ^ toStore.data);
+                        hash->key = (toStore.key ^ toStore.data);
                         hash->data = toStore.data;
                         SET_AGE(hash->data, ply);
                         return;
@@ -148,7 +150,7 @@ public:
             }
         }
         if (empty) { //empty slot
-            empty->key = (zobristKey ^ toStore.data);
+            empty->key = (toStore.key ^ toStore.data);
             empty->data = toStore.data;
 
             SET_AGE(empty->data, ply);
@@ -175,8 +177,8 @@ public:
             }
             if (i == BUCKETS) hash = old;
 
-            DEBUG(if (hash->key && hash->key != (zobristKey ^ toStore.data)) INC(collisions))
-            hash->key = (zobristKey ^ toStore.data);
+            DEBUG(if (hash->key && hash->key != (toStore.key ^ toStore.data)) INC(collisions))
+            hash->key = (toStore.key ^ toStore.data);
             hash->data = toStore.data;
             SET_AGE(hash->data, ply);
         }
