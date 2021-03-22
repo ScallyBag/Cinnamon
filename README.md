@@ -20,7 +20,6 @@ News
 - Speeded up Perft
 - Compilable with MS Visual Studio
 
-
 Useful links
 ----------
 - [Bitboard Calculator](https://gekomad.github.io/Cinnamon/BitboardCalculator/)
