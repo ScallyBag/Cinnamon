@@ -57,7 +57,7 @@ public:
 
     static bool see1(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
         ASSERT(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)))
-        return board::isAttacked(move.s.side, move.s.to, allpieces, chessboard);
+        return board::isAttacked(move.side, move.to, allpieces, chessboard);
     }
 
     template<uchar side>
@@ -738,14 +738,14 @@ protected:
         ASSERT(getListSize() < MAX_MOVE)
         auto move = &genList[listId].moveList[getListSize()];
         ++genList[listId].size;
-        move->s.type = rightCastle | type;
-        move->s.side = side;
-        move->s.capturedPiece = capturedPiece;
+        move->type = rightCastle | type;
+        move->side = side;
+        move->capturedPiece = capturedPiece;
         if (type & 0x3) {
-            move->s.from = (uchar) from;
-            move->s.to = (uchar) to;
-            move->s.pieceFrom = pieceFrom;
-            move->s.promotionPiece = (char) promotionPiece;
+            move->from = (uchar) from;
+            move->to = (uchar) to;
+            move->pieceFrom = pieceFrom;
+            move->promotionPiece = (char) promotionPiece;
         }
         ASSERT(getListSize() < MAX_MOVE)
         return res;

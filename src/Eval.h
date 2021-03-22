@@ -51,6 +51,7 @@ public:
 
     DEBUG(unsigned lazyEvalCuts)
 
+
     STATIC_CONST int REVERSE_FUTIL_MARGIN = 120;
     STATIC_CONST int FUTIL_MARGIN = 154;
     STATIC_CONST int EXT_FUTIL_MARGIN = 392;

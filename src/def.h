@@ -25,15 +25,14 @@ typedef unsigned char uchar;
 typedef long long unsigned u64;
 typedef u64 _Tchessboard[13];
 
-typedef union {
-    u64 u; //TODO cancellare
-    struct s {
-        uchar promotionPiece;
-        uchar pieceFrom;
-        uchar capturedPiece;
-        uchar from;
-        uchar to;
-        uchar side;
-        uchar type;
-    } s;
+typedef struct {
+    uchar promotionPiece;
+    uchar pieceFrom;
+    uchar capturedPiece;
+    uchar from;
+    uchar to;
+    uchar side;
+    uchar type;
+    uchar _align_;
 } _Tmove;
+

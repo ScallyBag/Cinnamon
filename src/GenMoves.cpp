@@ -58,11 +58,11 @@ _Tmove *GenMoves::getNextMoveQ(_TmoveP *list, const int first) {
 
     for (int i = first; i < list->size; i++) {
         const auto move = list->moveList[i];
-        ASSERT_RANGE(move.s.pieceFrom, 0, 11)
-        ASSERT_RANGE(move.s.to, 0, 63)
-        ASSERT_RANGE(move.s.from, 0, 63)
+        ASSERT_RANGE(move.pieceFrom, 0, 11)
+        ASSERT_RANGE(move.to, 0, 63)
+        ASSERT_RANGE(move.from, 0, 63)
 
-        const int score = CAPTURES[move.s.pieceFrom][move.s.capturedPiece];
+        const int score = CAPTURES[move.pieceFrom][move.capturedPiece];
         if (score > bestScore) {
             bestScore = score;
             bestId = i;
@@ -82,22 +82,22 @@ _Tmove *GenMoves::getNextMove(_TmoveP *list, const int depth, const u64 &hash, c
     for (int i = first; i < list->size; i++) {
         const auto move = list->moveList[i];
         int score = 0;
-        if (move.s.type & 0x3) {
+        if (move.type & 0x3) {
 
-            ASSERT_RANGE(move.s.pieceFrom, 0, 11)
-            ASSERT_RANGE(move.s.to, 0, 63)
-            ASSERT_RANGE(move.s.from, 0, 63)
+            ASSERT_RANGE(move.pieceFrom, 0, 11)
+            ASSERT_RANGE(move.to, 0, 63)
+            ASSERT_RANGE(move.from, 0, 63)
 
-            if (GET_FROM(hash) == move.s.from && GET_TO(hash) == move.s.to) {
+            if (GET_FROM(hash) == move.from && GET_TO(hash) == move.to) {
                 return swap(list, first, i);
             }
-            score += historyHeuristic[move.s.from][move.s.to];
-            score += CAPTURES[move.s.pieceFrom][move.s.capturedPiece];
+            score += historyHeuristic[move.from][move.to];
+            score += CAPTURES[move.pieceFrom][move.capturedPiece];
 
-            if (isKiller(0, move.s.from, move.s.to, depth)) score += 90;
-            else if (isKiller(1, move.s.from, move.s.to, depth)) score += 80;
+            if (isKiller(0, move.from, move.to, depth)) score += 90;
+            else if (isKiller(1, move.from, move.to, depth)) score += 80;
 
-        } else if (move.s.type & 0xc) {    //castle
+        } else if (move.type & 0xc) {    //castle
             ASSERT(rightCastle)
             score = 100;
         }
@@ -274,29 +274,29 @@ void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnp
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;
     enPassant = oldEnpassant;
-    rightCastle = move->s.type & 0xf0;
+    rightCastle = move->type & 0xf0;
 
-    if (move->s.type & 0x1) {
-        ASSERT_RANGE(move->s.from, 0, 63)
-        ASSERT_RANGE(move->s.to, 0, 63)
-        chessboard[move->s.pieceFrom] = (chessboard[move->s.pieceFrom] & NOTPOW2(move->s.to)) | POW2(move->s.from);
-        if (move->s.capturedPiece != SQUARE_EMPTY) {
-            if (((move->s.type & 0x3) != ENPASSANT_MOVE_MASK)) chessboard[move->s.capturedPiece] |= POW2(move->s.to);
+    if (move->type & 0x1) {
+        ASSERT_RANGE(move->from, 0, 63)
+        ASSERT_RANGE(move->to, 0, 63)
+        chessboard[move->pieceFrom] = (chessboard[move->pieceFrom] & NOTPOW2(move->to)) | POW2(move->from);
+        if (move->capturedPiece != SQUARE_EMPTY) {
+            if (((move->type & 0x3) != ENPASSANT_MOVE_MASK)) chessboard[move->capturedPiece] |= POW2(move->to);
             else {
-                ASSERT(move->s.capturedPiece == X(move->s.side))
-                if (move->s.side) chessboard[move->s.capturedPiece] |= POW2(move->s.to - 8);
-                else chessboard[move->s.capturedPiece] |= POW2(move->s.to + 8);
+                ASSERT(move->capturedPiece == X(move->side))
+                if (move->side) chessboard[move->capturedPiece] |= POW2(move->to - 8);
+                else chessboard[move->capturedPiece] |= POW2(move->to + 8);
             }
         }
-    } else if ((move->s.type & 0x3) == PROMOTION_MOVE_MASK) {
-        ASSERT(move->s.to >= 0 && move->s.side >= 0 && move->s.promotionPiece >= 0)
-        chessboard[move->s.side] |= POW2(move->s.from);
-        chessboard[move->s.promotionPiece] &= NOTPOW2(move->s.to);
-        if (move->s.capturedPiece != SQUARE_EMPTY) chessboard[move->s.capturedPiece] |= POW2(move->s.to);
+    } else if ((move->type & 0x3) == PROMOTION_MOVE_MASK) {
+        ASSERT(move->to >= 0 && move->side >= 0 && move->promotionPiece >= 0)
+        chessboard[move->side] |= POW2(move->from);
+        chessboard[move->promotionPiece] &= NOTPOW2(move->to);
+        if (move->capturedPiece != SQUARE_EMPTY) chessboard[move->capturedPiece] |= POW2(move->to);
     } else {
         //castle
-        ASSERT (move->s.type & 0xc)
-        unPerformCastle(move->s.side, move->s.type);
+        ASSERT (move->type & 0xc)
+        unPerformCastle(move->side, move->type);
     }
 }
 
@@ -306,41 +306,41 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
     ASSERT(move)
     ASSERT(bitCount(chessboard[KING_WHITE]) == 1 && bitCount(chessboard[KING_BLACK]) == 1)
     const uchar rightCastleOld = rightCastle;
-    if (!(move->s.type & 0xc)) { //no castle
-        ASSERT_RANGE(move->s.from, 0, 63)
-        ASSERT_RANGE(move->s.to, 0, 63)
-        if ((move->s.type & 0x3) == PROMOTION_MOVE_MASK) {
-            chessboard[move->s.pieceFrom] &= NOTPOW2(move->s.from);
-            updateZobristKey(move->s.pieceFrom, move->s.from);
-            ASSERT(move->s.promotionPiece >= 0)
-            chessboard[move->s.promotionPiece] |= POW2(move->s.to);
-            updateZobristKey(move->s.promotionPiece, move->s.to);
+    if (!(move->type & 0xc)) { //no castle
+        ASSERT_RANGE(move->from, 0, 63)
+        ASSERT_RANGE(move->to, 0, 63)
+        if ((move->type & 0x3) == PROMOTION_MOVE_MASK) {
+            chessboard[move->pieceFrom] &= NOTPOW2(move->from);
+            updateZobristKey(move->pieceFrom, move->from);
+            ASSERT(move->promotionPiece >= 0)
+            chessboard[move->promotionPiece] |= POW2(move->to);
+            updateZobristKey(move->promotionPiece, move->to);
         } else {
-            chessboard[move->s.pieceFrom] = (chessboard[move->s.pieceFrom] | POW2(move->s.to)) & NOTPOW2(move->s.from);
-            updateZobristKey(move->s.pieceFrom, move->s.from);
-            updateZobristKey(move->s.pieceFrom, move->s.to);
+            chessboard[move->pieceFrom] = (chessboard[move->pieceFrom] | POW2(move->to)) & NOTPOW2(move->from);
+            updateZobristKey(move->pieceFrom, move->from);
+            updateZobristKey(move->pieceFrom, move->to);
         }
-        if (move->s.capturedPiece != SQUARE_EMPTY) {
-            if ((move->s.type & 0x3) != ENPASSANT_MOVE_MASK) {
-                ASSERT(chessboard[move->s.capturedPiece] & POW2(move->s.to))
-                chessboard[move->s.capturedPiece] &= NOTPOW2(move->s.to);
-                updateZobristKey(move->s.capturedPiece, move->s.to);
+        if (move->capturedPiece != SQUARE_EMPTY) {
+            if ((move->type & 0x3) != ENPASSANT_MOVE_MASK) {
+                ASSERT(chessboard[move->capturedPiece] & POW2(move->to))
+                chessboard[move->capturedPiece] &= NOTPOW2(move->to);
+                updateZobristKey(move->capturedPiece, move->to);
             } else { //en passant
-                ASSERT(move->s.capturedPiece == X(move->s.side))
-                const int y = move->s.side ? -8 : 8;
-                chessboard[move->s.capturedPiece] &= NOTPOW2(move->s.to + y);
-                updateZobristKey(move->s.capturedPiece, move->s.to + y);
+                ASSERT(move->capturedPiece == X(move->side))
+                const int y = move->side ? -8 : 8;
+                chessboard[move->capturedPiece] &= NOTPOW2(move->to + y);
+                updateZobristKey(move->capturedPiece, move->to + y);
             }
         }
         //lost castle right
-        if (POW2(move->s.to) & 0xff000000000000ffULL) {
-            if (move->s.to == startPosWhiteRookKingSide) rightCastle &= 0xef;
-            else if (move->s.to == startPosWhiteRookQueenSide) rightCastle &= 0xdf;
-            else if (move->s.to == startPosBlackRookKingSide) rightCastle &= 0xbf;
-            else if (move->s.to == startPosBlackRookQueenSide) rightCastle &= 0x7f;
+        if (POW2(move->to) & 0xff000000000000ffULL) {
+            if (move->to == startPosWhiteRookKingSide) rightCastle &= 0xef;
+            else if (move->to == startPosWhiteRookQueenSide) rightCastle &= 0xdf;
+            else if (move->to == startPosBlackRookKingSide) rightCastle &= 0xbf;
+            else if (move->to == startPosBlackRookQueenSide) rightCastle &= 0x7f;
         }
-        if (move->s.pieceFrom & 0xb) {
-            switch (move->s.pieceFrom) {
+        if (move->pieceFrom & 0xb) {
+            switch (move->pieceFrom) {
                 case KING_WHITE:
                     rightCastle &= 0xcf;
                     break;
@@ -348,31 +348,31 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
                     rightCastle &= 0x3f;
                     break;
                 case ROOK_WHITE:
-                    if (move->s.from == startPosWhiteRookKingSide)
+                    if (move->from == startPosWhiteRookKingSide)
                         rightCastle &= 0xef;
-                    else if (move->s.from == startPosWhiteRookQueenSide)
+                    else if (move->from == startPosWhiteRookQueenSide)
                         rightCastle &= 0xdf;
                     break;
                 case ROOK_BLACK:
-                    if (move->s.from == startPosBlackRookKingSide)
+                    if (move->from == startPosBlackRookKingSide)
                         rightCastle &= 0xbf;
-                    else if (move->s.from == startPosBlackRookQueenSide)
+                    else if (move->from == startPosBlackRookQueenSide)
                         rightCastle &= 0x7f;
                     break;
                 default:;
             }
             //en passant
         }
-        switch (move->s.pieceFrom) {
+        switch (move->pieceFrom) {
             case PAWN_WHITE:
-                if ((RANK_2 & POW2(move->s.from)) && (RANK_3 & POW2(move->s.to))) {
-                    enPassant = move->s.to;
+                if ((RANK_2 & POW2(move->from)) && (RANK_3 & POW2(move->to))) {
+                    enPassant = move->to;
                     updateZobristKey(ENPASSANT_IDX, enPassant);
                 }
                 break;
             case PAWN_BLACK:
-                if ((RANK_7 & POW2(move->s.from)) && (RANK_5 & POW2(move->s.to))) {
-                    enPassant = move->s.to;
+                if ((RANK_7 & POW2(move->from)) && (RANK_5 & POW2(move->to))) {
+                    enPassant = move->to;
                     updateZobristKey(ENPASSANT_IDX, enPassant);
                 }
                 break;
@@ -380,8 +380,8 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         }
 
     } else { //castle
-        performCastle(move->s.side, move->s.type);
-        if (move->s.side == WHITE) rightCastle &= 0xcf; else rightCastle &= 0x3f;
+        performCastle(move->side, move->type);
+        if (move->side == WHITE) rightCastle &= 0xcf; else rightCastle &= 0x3f;
     }
 
     for (u64 x2 = rightCastleOld ^rightCastle; x2; RESET_LSB(x2)) {
@@ -389,15 +389,15 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
         updateZobristKey(14, position);
     }
     if (rep) {
-        if (move->s.capturedPiece != SQUARE_EMPTY || move->s.pieceFrom == WHITE || move->s.pieceFrom == BLACK ||
-            move->s.type & 0xc) {
+        if (move->capturedPiece != SQUARE_EMPTY || move->pieceFrom == WHITE || move->pieceFrom == BLACK ||
+            move->type & 0xc) {
             pushStackMove(0);
         }
         pushStackMove(chessboard[ZOBRISTKEY_IDX]);
     }
     if ((forceCheck || (checkInCheck && !perftMode)) &&
-        ((move->s.side == WHITE && board::inCheck1<WHITE>(chessboard)) ||
-         (move->s.side == BLACK && board::inCheck1<BLACK>(chessboard)))) {
+        ((move->side == WHITE && board::inCheck1<WHITE>(chessboard)) ||
+         (move->side == BLACK && board::inCheck1<BLACK>(chessboard)))) {
         return false;
     }
     return true;
@@ -444,22 +444,22 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
             )
             ) {
         if (MATCH_QUEENSIDE.find(fenStr) != string::npos) {
-            move->s.type = QUEEN_SIDE_CASTLE_MOVE_MASK;
-            move->s.from = QUEEN_SIDE_CASTLE_MOVE_MASK;
+            move->type = QUEEN_SIDE_CASTLE_MOVE_MASK;
+            move->from = QUEEN_SIDE_CASTLE_MOVE_MASK;
         } else {
-            move->s.from = KING_SIDE_CASTLE_MOVE_MASK;
-            move->s.type = KING_SIDE_CASTLE_MOVE_MASK;
+            move->from = KING_SIDE_CASTLE_MOVE_MASK;
+            move->type = KING_SIDE_CASTLE_MOVE_MASK;
         }
         if (fenStr.find("1") != string::npos) {
-            move->s.side = WHITE;
+            move->side = WHITE;
         } else if (fenStr.find("8") != string::npos) {
-            move->s.side = BLACK;
+            move->side = BLACK;
         } else {
             _assert(0)
         }
-        move->s.from = -1;
-        move->s.capturedPiece = SQUARE_EMPTY;
-        return move->s.side;
+        move->from = -1;
+        move->capturedPiece = SQUARE_EMPTY;
+        return move->side;
     }
     int from = -1;
     int to = -1;
@@ -485,46 +485,46 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     }
     int pieceFrom;
     if ((pieceFrom = board::getPieceAt<WHITE>(POW2(from), chessboard)) != 12) {
-        move->s.side = WHITE;
+        move->side = WHITE;
     } else if ((pieceFrom = board::getPieceAt<BLACK>(POW2(from), chessboard)) != 12) {
-        move->s.side = BLACK;
+        move->side = BLACK;
     } else {
         display();
         cout << "fenStr: >" << fenStr << "< from: " << from << endl;
         _assert(0)
     }
-    move->s.from = from;
-    move->s.to = to;
+    move->from = from;
+    move->to = to;
     if (fenStr.length() == 4) {
-        move->s.type = STANDARD_MOVE_MASK;
+        move->type = STANDARD_MOVE_MASK;
         if (pieceFrom == PAWN_WHITE || pieceFrom == PAWN_BLACK) {
             if (FILE_AT[from] != FILE_AT[to] &&
-                (X(move->s.side) ? board::getPieceAt<WHITE>(POW2(to), chessboard) : board::getPieceAt<BLACK>(POW2(to),
+                (X(move->side) ? board::getPieceAt<WHITE>(POW2(to), chessboard) : board::getPieceAt<BLACK>(POW2(to),
                                                                                                              chessboard)) ==
                 SQUARE_EMPTY) {
-                move->s.type = ENPASSANT_MOVE_MASK;
+                move->type = ENPASSANT_MOVE_MASK;
             }
         }
     } else if (fenStr.length() == 5) {
-        move->s.type = PROMOTION_MOVE_MASK;
-        if (move->s.side == WHITE) {
-            move->s.promotionPiece = INV_FEN[toupper(fenStr.at(4))];
+        move->type = PROMOTION_MOVE_MASK;
+        if (move->side == WHITE) {
+            move->promotionPiece = INV_FEN[toupper(fenStr.at(4))];
         } else {
-            move->s.promotionPiece = INV_FEN[(uchar) fenStr.at(4)];
+            move->promotionPiece = INV_FEN[(uchar) fenStr.at(4)];
         }
-        ASSERT(move->s.promotionPiece != NO_PROMOTION)
+        ASSERT(move->promotionPiece != NO_PROMOTION)
     }
-    if (move->s.side == WHITE) {
-        move->s.capturedPiece = board::getPieceAt<BLACK>(POW2(move->s.to), chessboard);
-        move->s.pieceFrom = board::getPieceAt<WHITE>(POW2(move->s.from), chessboard);
+    if (move->side == WHITE) {
+        move->capturedPiece = board::getPieceAt<BLACK>(POW2(move->to), chessboard);
+        move->pieceFrom = board::getPieceAt<WHITE>(POW2(move->from), chessboard);
     } else {
-        move->s.capturedPiece = board::getPieceAt<WHITE>(POW2(move->s.to), chessboard);
-        move->s.pieceFrom = board::getPieceAt<BLACK>(POW2(move->s.from), chessboard);
+        move->capturedPiece = board::getPieceAt<WHITE>(POW2(move->to), chessboard);
+        move->pieceFrom = board::getPieceAt<BLACK>(POW2(move->from), chessboard);
     }
-    if (move->s.type == ENPASSANT_MOVE_MASK) {
-        move->s.capturedPiece = !move->s.side;
+    if (move->type == ENPASSANT_MOVE_MASK) {
+        move->capturedPiece = !move->side;
     }
-    return move->s.side;
+    return move->side;
 }
 
 void GenMoves::writeRandomFen(const vector<int> pieces) {

@@ -20,8 +20,10 @@
 
 using namespace _logger;
 
-SearchManager::SearchManager() {
+ThreadPool<Search> *SearchManager::threadPool;
+_TpvLine SearchManager::lineWin;
 
+SearchManager::SearchManager() {
     threadPool = new ThreadPool<Search>(1);
 #if defined(CLOP) || defined(DEBUG_MODE)
     IniFile iniFile("cinnamon.ini");
@@ -52,15 +54,15 @@ unsigned SearchManager::SZtbProbeWDL() const {
 }
 #endif
 
-string SearchManager::probeRootTB() const {
+string SearchManager::probeRootTB() {
     _Tmove bestMove;
     Search &search = threadPool->getThread(0);
     if (search.probeRootTB(&bestMove)) {
-        string best = string(search.decodeBoardinv(bestMove.s.type, bestMove.s.from, getSide())) +
-                      string(search.decodeBoardinv(bestMove.s.type, bestMove.s.to, getSide()));
+        string best = string(search.decodeBoardinv(bestMove.type, bestMove.from, getSide())) +
+                      string(search.decodeBoardinv(bestMove.type, bestMove.to, getSide()));
 
-        if (bestMove.s.promotionPiece != NO_PROMOTION)
-            best += tolower(bestMove.s.promotionPiece);
+        if (bestMove.promotionPiece != NO_PROMOTION)
+            best += tolower(bestMove.promotionPiece);
 
         return best;
     } else
@@ -93,11 +95,10 @@ int SearchManager::search(const int ply, const int mply) {
     auto res = mainThread.getValWindow();
 
     if (mainThread.getRunning()) {
-        memcpy(&lineWin, &mainThread.getPvLine(), sizeof(_TpvLine));
+        memcpy(&lineWin, &mainThread.getPvLine(), sizeof(lineWin));
     }
     stopAllThread();
     threadPool->joinAll();
-
     return res;
 }
 
@@ -113,10 +114,10 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
     for (int t = 0; t < lineWin.cmove; t++) {
         pvvTmp.clear();
         pvvTmp +=
-                decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.from,
+                decodeBoardinv(lineWin.argmove[t].type, lineWin.argmove[t].from,
                                threadPool->getThread(0).sideToMove);
         if (pvvTmp.length() != 4 && pvvTmp[0] != 'O') {
-            pvvTmp += decodeBoardinv(lineWin.argmove[t].s.type, lineWin.argmove[t].s.to,
+            pvvTmp += decodeBoardinv(lineWin.argmove[t].type, lineWin.argmove[t].to,
                                      threadPool->getThread(0).sideToMove);
         }
         pvv.append(pvvTmp);
@@ -181,21 +182,17 @@ void SearchManager::startClock() {
     threadPool->getThread(0).startClock();// static variable
 }
 
-string SearchManager::boardToFen() {
-    return threadPool->getThread(0).boardToFen();
-}
-
 void SearchManager::clearHeuristic() {
     for (Search *s:threadPool->getPool()) {
         s->clearHeuristic();
     }
 }
 
-int SearchManager::getForceCheck() const {
+int SearchManager::getForceCheck() {
     return threadPool->getThread(0).getForceCheck();
 }
 
-u64 SearchManager::getZobristKey(const int id) const {
+u64 SearchManager::getZobristKey(const int id) {
     return threadPool->getThread(id).getZobristKey();
 }
 
@@ -215,11 +212,11 @@ void SearchManager::setRunning(const int i) {
     }
 }
 
-int SearchManager::getRunning(const int i) const {
+int SearchManager::getRunning(const int i) {
     return threadPool->getThread(i).getRunning();
 }
 
-void SearchManager::display() const {
+void SearchManager::display() {
     threadPool->getThread(0).display();
 }
 
@@ -240,7 +237,7 @@ void SearchManager::setSearchMoves(const vector<string> &searchMov) {
     vector<int> searchMoves;
     for (auto it = searchMov.begin(); it != searchMov.end(); ++it) {
         getMoveFromSan(*it, &move);
-        const int x = move.s.to | (int) (move.s.from << 8);
+        const int x = move.to | (int) (move.from << 8);
         searchMoves.push_back(x);
     }
     for (Search *s:threadPool->getPool()) {
@@ -254,7 +251,7 @@ void SearchManager::setPonder(const bool i) {
     }
 }
 
-int SearchManager::getSide() const {
+int SearchManager::getSide() {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).sideToMove;
     for (Search *s:threadPool->getPool()) {
@@ -268,7 +265,7 @@ int SearchManager::getScore(const uchar side) {
     return threadPool->getThread(0).getScore(side);
 }
 
-int SearchManager::getMaxTimeMillsec() const {
+int SearchManager::getMaxTimeMillsec() {
     return threadPool->getThread(0).getMaxTimeMillsec();
 }
 
@@ -324,7 +321,7 @@ void SearchManager::printWdlSyzygy() {
 
 #endif
 
-int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) const {
+int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {
