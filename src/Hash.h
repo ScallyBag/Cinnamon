@@ -187,7 +187,7 @@ public:
 private:
     Hash();
 
-    static constexpr int BUCKETS = 4;
+    static constexpr int BUCKETS = 3;
     static unsigned HASH_SIZE;
 #ifdef JS_MODE
     static constexpr int HASH_SIZE_DEFAULT = 1;
