@@ -188,6 +188,22 @@ public:
         return i;
     }
 
+    static unsigned getNullMoveCut() {
+        unsigned i = 0;
+        for (Search *s:threadPool->getPool()) {
+            i += s->nNullMoveCut;
+        }
+        return i;
+    }
+
+    static unsigned getProbCut() {
+        unsigned i = 0;
+        for (Search *s:threadPool->getPool()) {
+            i += s->probCut;
+        }
+        return i;
+    }
+
 #endif
 
     static int search(const int ply, const int mply);

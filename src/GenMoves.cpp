@@ -269,7 +269,7 @@ void GenMoves::unPerformCastle(const uchar side, const uchar type) {
 
 }
 
-void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant,const bool rep) {
+void GenMoves::takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep) {
     BENCH_AUTO_CLOSE("takeback")
     if (rep) popStackMove();
     chessboard[ZOBRISTKEY_IDX] = oldkey;
@@ -405,7 +405,7 @@ bool GenMoves::makemove(const _Tmove *move, const bool rep, const bool checkInCh
 
 void GenMoves::init() {
     numMoves = numMovesq = listId = 0;
-    DEBUG(nCutFp = nCutRazor = nCutAB = nNullMoveCut = nCutBadCaputure = 0)
+    DEBUG(nCutFp = nCutRazor = nCutAB = nNullMoveCut = nCutBadCaputure = probCut = 0)
 }
 
 u64 GenMoves::getTotMoves() const {
@@ -500,7 +500,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
         if (pieceFrom == PAWN_WHITE || pieceFrom == PAWN_BLACK) {
             if (FILE_AT[from] != FILE_AT[to] &&
                 (X(move->side) ? board::getPieceAt<WHITE>(POW2(to), chessboard) : board::getPieceAt<BLACK>(POW2(to),
-                                                                                                             chessboard)) ==
+                                                                                                           chessboard)) ==
                 SQUARE_EMPTY) {
                 move->type = ENPASSANT_MOVE_MASK;
             }

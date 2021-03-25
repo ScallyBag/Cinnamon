@@ -756,10 +756,10 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     /// prob cut
     /* probCut
-Pairs	Stage	    a	    b	    o	    r
-(4,8)	Middlegame	1.020	2.360	82.00	0.82
-(4,8)	Endgame	    1.110	1.750	75.00	0.90
-  * */
+        Pairs	Stage	    a	    b	    o	    r
+        (4,8)	Middlegame	1.020	2.360	82.00	0.82
+        (4,8)	Endgame	    1.110	1.750	75.00	0.90
+    * */
 
     if (depth == 8 && depth != mainDepth) {
         constexpr float T(1.5);
@@ -774,12 +774,15 @@ Pairs	Stage	    a	    b	    o	    r
         }
 
         auto bound = round((T * o + beta - b) / a);
-        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, mateIn, nRootMoves) >= bound)
+        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, nRootMoves) >= bound) {
+            INC(probCut);
             return beta;
-
+        }
         bound = round((-T * o + alpha - b) / a);
-        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, mateIn, nRootMoves) <= bound)
+        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, nRootMoves) <= bound) {
+            INC(probCut);
             return alpha;
+        }
     } else if (depth == 5 && depth != mainDepth) {
         /* probCut
     Pairs	Stage	    a	    b	    o	    r
@@ -798,13 +801,17 @@ Pairs	Stage	    a	    b	    o	    r
         }
         auto bound = round((T * o + beta - b) / a);
 
-        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, mateIn, nRootMoves) >= bound)
+        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, nRootMoves) >= bound) {
+            INC(probCut);
             return beta;
-
+        }
         /* v <= α with prob. of at least p? yes => cutoff */
         bound = round((-T * o + alpha - b) / a);
-        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, mateIn, nRootMoves) <= bound)
+        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, nRootMoves) <= bound) {
+            INC(probCut);
             return alpha;
+        }
+    }
     /// prob cut
     if (!(numMoves % 2048)) setRunning(checkTime());
     ++numMoves;
