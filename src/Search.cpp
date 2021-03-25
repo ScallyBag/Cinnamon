@@ -727,8 +727,9 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 #endif
     if ((N_PIECE == 5 || N_PIECE == 4) && depth > 2 && depth != mainDepth) {
         auto v = endgame->getEndgameValue<side>(chessboard, N_PIECE);
-        if (v != INT_MAX) {
-            return v;
+        if (v != INT_MAX && v== INT_MAX-2 ) { //TODO
+            cout <<"";
+//            return v;
         }
     }
     int score = -_INFINITE;
