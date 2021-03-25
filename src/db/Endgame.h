@@ -102,7 +102,7 @@ public:
 //                        int result = KRKB(posKingBlack);
 //                        return side == WHITE ? result : -result;
 //                    } else if (chessboard[KNIGHT_BLACK]) {
-//                        int result = KRKN(posKingWhite, BITScanForward(chessboard[KNIGHT_BLACK]));
+//                        int result = KRKN(posKingBlack, BITScanForward(chessboard[KNIGHT_BLACK]));
 //                        return side == WHITE ? result : -result;
 //                    }
 //                } else if ((chessboard[BISHOP_BLACK] && chessboard[KNIGHT_BLACK])) {
