@@ -28,7 +28,7 @@ static const string DTM_GTB_HELP = "-dtm-gtb -f \"fen position\" -p path [-s sch
 static const string WDL_GTB_HELP = "-wdl-gtb -f \"fen position\" -p path [-s scheme] [-i installed pieces]";
 static const string DTZ_SYZYGY_HELP = "-dtz-syzygy -f \"fen position\" -p path";
 static const string WDL_SYZYGY_HELP = "-wdl-syzygy -f \"fen position\" -p path";
-static const string PUZZLE_HELP = "-puzzle_epd -t K?K? ex: KRKP | KQKP | KBBKN | KQKR | KRKB | KRKN ...";
+static const string PUZZLE_HELP = "-puzzle_epd -t K?K? ex: KRKP | KQKP | KBBKN | KRKQ | KRKB | KRKN ...";
 
 class GetOpt {
 
