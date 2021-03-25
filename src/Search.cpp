@@ -752,9 +752,60 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     if (hashValue != INT_MAX) {
         return hashValue;
     }
-
     /// ********** end hash ***************
 
+    /// prob cut
+    /* probCut
+Pairs	Stage	    a	    b	    o	    r
+(4,8)	Middlegame	1.020	2.360	82.00	0.82
+(4,8)	Endgame	    1.110	1.750	75.00	0.90
+  * */
+
+    if (depth == 8 && depth != mainDepth) {
+        constexpr float T(1.5);
+        constexpr int DP(4);
+        float o = 82.00;
+        float b = 2.360;
+        float a = 1.020;
+        if (N_PIECE < 6) {
+            o = 75.00;
+            b = 1.750;
+            a = 1.110;
+        }
+
+        auto bound = round((T * o + beta - b) / a);
+        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, mateIn, nRootMoves) >= bound)
+            return beta;
+
+        bound = round((-T * o + alpha - b) / a);
+        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, mateIn, nRootMoves) <= bound)
+            return alpha;
+    } else if (depth == 5 && depth != mainDepth) {
+        /* probCut
+    Pairs	Stage	    a	    b	    o	    r
+    (3,5)	Middlegame	0.998	-7.000	55.80	0.90
+    (3,5)	Endgame	    1.026	-4.100	51.80	0.94
+         * */
+        constexpr float T(1.5);
+        constexpr int DP(3);
+        float o = 55.80;
+        float b = -7.000;
+        float a = 0.998;
+        if (N_PIECE < 6) {
+            o = 51.80;
+            b = -4.100;
+            a = 1.026;
+        }
+        auto bound = round((T * o + beta - b) / a);
+
+        if (search<side ^ 1, checkMoves>(DP, bound - 1, bound, pline, N_PIECE, mateIn, nRootMoves) >= bound)
+            return beta;
+
+        /* v <= α with prob. of at least p? yes => cutoff */
+        bound = round((-T * o + alpha - b) / a);
+        if (search<side ^ 1, checkMoves>(DP, bound, bound + 1, pline, N_PIECE, mateIn, nRootMoves) <= bound)
+            return alpha;
+    /// prob cut
     if (!(numMoves % 2048)) setRunning(checkTime());
     ++numMoves;
     _TpvLine line;
