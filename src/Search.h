@@ -134,6 +134,7 @@ public:
     void setSearchMoves(const vector<int> &v);
 
 private:
+    static Endgame *endgame;
     Eval eval;
     Hash &hash = Hash::getInstance();
 #ifndef JS_MODE

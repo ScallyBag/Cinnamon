@@ -21,6 +21,7 @@
 #include "SearchManager.h"
 #include "db/bitbase/kpk.h"
 
+Endgame *Search::endgame;
 bool volatile Search::runningThread;
 high_resolution_clock::time_point Search::startTime;
 using namespace _bitbase;
@@ -71,6 +72,7 @@ void Search::aspirationWindow(const int depth, const int valWin) {
 }
 
 Search::Search() : ponder(false), nullSearch(false) {
+    endgame = &Endgame::getInstance();
     DEBUG(eval.lazyEvalCuts = cumulativeMovesCount = totGen = 0)
 
 }
@@ -724,7 +726,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     if (wdl != INT_MAX) return wdl;
 #endif
     if ((N_PIECE == 5 || N_PIECE == 4) && depth > 2 && depth != mainDepth) {
-        auto v = Endgame::getEndgameValue<side>(chessboard, N_PIECE);
+        auto v = endgame->getEndgameValue<side>(chessboard, N_PIECE);
         if (v != INT_MAX) {
             return v;
         }

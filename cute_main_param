@@ -1,7 +1,7 @@
 #TODO
 #export resign=
 #export concurrency=1
-#export opening_epd=/home/geko/chess960.epd
+export opening_epd=/home/geko/KBNK.epd
 #export second_param=option.GaviotaTbPath=/gtb4
 #export second_param=option.SyzygyPath=/syzygy
 #export second_param=option.UCI_Chess960=true
