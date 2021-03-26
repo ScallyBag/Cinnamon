@@ -32,9 +32,9 @@ KBNK    ok ko 36%
 KPK
 KRKP    ok ko 40%
 KRKB    ok ko 37%
-KRKN    ok
+KRKN    ok ko 37%
 KQKP    ok ko
-KQKR    ok
+KRKQ    ok
 KBBKN   ok
 KBPsK
 KQKRPs
@@ -65,7 +65,7 @@ public:
                     if (0 && chessboard[PAWN_WHITE]) {
                         int result = KQKP(WHITE, posKingBlack, posKingWhite, BITScanForward(chessboard[PAWN_WHITE]));
                         return side == BLACK ? result : -result;
-                    } else if (0 && chessboard[ROOK_WHITE]) {
+                    } else if (chessboard[ROOK_WHITE]) {
                         int result = KRKQ(posKingBlack, posKingWhite);
                         return side == BLACK ? result : -result;
                     }
@@ -73,7 +73,7 @@ public:
                     if (0 && chessboard[PAWN_BLACK]) {
                         int result = KQKP(BLACK, posKingWhite, posKingBlack, BITScanForward(chessboard[PAWN_BLACK]));
                         return side == WHITE ? result : -result;
-                    } else if (0 && chessboard[ROOK_BLACK]) {
+                    } else if (chessboard[ROOK_BLACK]) {
                         int result = KRKQ(posKingWhite, posKingBlack);
                         return side == WHITE ? result : -result;
                     }
@@ -86,7 +86,7 @@ public:
                     } else if (0 && chessboard[BISHOP_WHITE]) {
                         int result = KRKB(posKingWhite);
                         return side == BLACK ? result : -result;
-                    } else if (chessboard[KNIGHT_WHITE]) {
+                    } else if (0 && chessboard[KNIGHT_WHITE]) {
                         int result = KRKN(posKingWhite, BITScanForward(chessboard[KNIGHT_WHITE]));
                         return side == BLACK ? result : -result;
                     }
@@ -99,7 +99,7 @@ public:
                     } else if (0 && chessboard[BISHOP_BLACK]) {
                         int result = KRKB(posKingBlack);
                         return side == WHITE ? result : -result;
-                    } else if (chessboard[KNIGHT_BLACK]) {
+                    } else if (0 && chessboard[KNIGHT_BLACK]) {
                         int result = KRKN(posKingBlack, BITScanForward(chessboard[KNIGHT_BLACK]));
                         return side == WHITE ? result : -result;
                     }
