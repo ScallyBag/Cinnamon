@@ -34,7 +34,7 @@ KRKP    ok ko 40%
 KRKB    ok ko 37%
 KRKN    ok ko 37%
 KQKP    ok ko
-KRKQ    ok
+KRKQ    ok ko 30%
 KBBKN   ok
 KBPsK
 KQKRPs
@@ -112,11 +112,11 @@ public:
                 }
                 break;
             case 5:
-                if (0 && chessboard[KNIGHT_WHITE] && bitCount(chessboard[BISHOP_BLACK]) == 2) {
+                if (chessboard[KNIGHT_WHITE] && bitCount(chessboard[BISHOP_BLACK]) == 2) {
                     int result = KBBKN(posKingBlack, posKingWhite,
                                        BITScanForward(chessboard[KNIGHT_WHITE]));
                     return side == BLACK ? result : -result;
-                } else if (0 && chessboard[KNIGHT_BLACK] && bitCount(chessboard[BISHOP_WHITE]) == 2) {
+                } else if (chessboard[KNIGHT_BLACK] && bitCount(chessboard[BISHOP_WHITE]) == 2) {
                     int result = KBBKN(posKingWhite, posKingBlack,
                                        BITScanForward(chessboard[KNIGHT_BLACK]));
                     return side == WHITE ? result : -result;
