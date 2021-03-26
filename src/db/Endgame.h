@@ -30,7 +30,7 @@
 KXK
 KBNK    ok ko 36%
 KPK
-KRKP    ok ko 72%
+KRKP    ok
 KRKB    ok
 KRKN    ok
 KQKP    ok ko
