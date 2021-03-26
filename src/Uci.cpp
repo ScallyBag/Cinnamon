@@ -91,10 +91,7 @@ void Uci::listner(IterativeDeeping *it) {
         } else if (String::toLower(token) == "score" || String::toLower(token) == "eval") {
             uchar side = searchManager.getSide();
             int t = searchManager.getScore(side);
-
-            if (!searchManager.getSide()) {
-                t = -t;
-            }
+            if (!searchManager.getSide()) t = -t;
             cout << "Score: " << t << endl;
             knowCommand = true;
         } else if (String::toLower(token) == "perft") {
