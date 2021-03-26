@@ -30,7 +30,7 @@
 KXK
 KBNK    ok ko 36%
 KPK
-KRKP    ok
+KRKP    ok ko 40%
 KRKB    ok ko 37%
 KRKN    ok
 KQKP    ok ko
@@ -78,7 +78,7 @@ public:
                         return side == WHITE ? result : -result;
                     }
                 } else if (chessboard[ROOK_BLACK]) {
-                    if (chessboard[PAWN_WHITE]) {
+                    if (0 && chessboard[PAWN_WHITE]) {
                         int result = KRKP<WHITE>(side == BLACK, posKingBlack,
                                                  posKingWhite, BITScanForward(chessboard[ROOK_BLACK]),
                                                  BITScanForward(chessboard[PAWN_WHITE]));
@@ -86,12 +86,12 @@ public:
                     } else if (0 && chessboard[BISHOP_WHITE]) {
                         int result = KRKB(posKingWhite);
                         return side == BLACK ? result : -result;
-                    } else if (0 && chessboard[KNIGHT_WHITE]) {
+                    } else if (chessboard[KNIGHT_WHITE]) {
                         int result = KRKN(posKingWhite, BITScanForward(chessboard[KNIGHT_WHITE]));
                         return side == BLACK ? result : -result;
                     }
                 } else if (chessboard[ROOK_WHITE]) {
-                    if (chessboard[PAWN_BLACK]) {
+                    if (0 && chessboard[PAWN_BLACK]) {
                         int result = KRKP<BLACK>(side == WHITE, posKingWhite,
                                                  posKingBlack, BITScanForward(chessboard[ROOK_WHITE]),
                                                  BITScanForward(chessboard[PAWN_BLACK]));
@@ -99,7 +99,7 @@ public:
                     } else if (0 && chessboard[BISHOP_BLACK]) {
                         int result = KRKB(posKingBlack);
                         return side == WHITE ? result : -result;
-                    } else if (0 && chessboard[KNIGHT_BLACK]) {
+                    } else if (chessboard[KNIGHT_BLACK]) {
                         int result = KRKN(posKingBlack, BITScanForward(chessboard[KNIGHT_BLACK]));
                         return side == WHITE ? result : -result;
                     }
