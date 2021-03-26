@@ -35,7 +35,7 @@ KRKB    ok ko 37%
 KRKN    ok ko 37%
 KQKP    ok ko
 KRKQ    ok ko 30%
-KBBKN   ok
+KBBKN   ok ko 54%
 KBPsK
 KQKRPs
 KRPKR
