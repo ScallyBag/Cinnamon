@@ -106,12 +106,16 @@ void Uci::listner(IterativeDeeping *it) {
             it->ply = 0;
             searchManager.loadFen();
             knowCommand = true;
-        } else if (String::toLower(token) == "setvalue") {
-            getToken(uip, token);
-            string value;
-            getToken(uip, value);
-            knowCommand = searchManager.setParameter(token, stoi(value));
-        } else if (String::toLower(token) == "setoption") {
+        }
+#ifdef CLOP
+            else if (String::toLower(token) == "setvalue") {
+                getToken(uip, token);
+                string value;
+                getToken(uip, value);
+                knowCommand = searchManager.setParameter(token, stoi(value));
+            }
+#endif
+        else if (String::toLower(token) == "setoption") {
             getToken(uip, token);
             if (String::toLower(token) == "name") {
                 getToken(uip, token);
@@ -220,16 +224,21 @@ void Uci::listner(IterativeDeeping *it) {
                         knowCommand = true;
                         hash.clearHash();
                     }
-                } else {// free params
+                }
+#if defined(CLOP) || defined(DEBUG_MODE)
+                else {// free params
                     string paramName = token;
                     getToken(uip, token);
                     string value;
                     if (String::toLower(token) == "value") {
                         getToken(uip, value);
                         knowCommand = true;
-                        panic(searchManager.setParameter(paramName, stoi(value)))
+                        if (!searchManager.setParameter(paramName, stoi(value))) {
+                            cout << "error " << paramName << " undefined" << endl;
+                        }
                     }
                 }
+#endif
             }
         } else if (String::toLower(token) == "position") {
             while (it->getRunning());

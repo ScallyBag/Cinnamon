@@ -50,7 +50,7 @@ public:
 
     short getScore(const uchar side) {
         return eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
-    };
+    }
 
     Search(const Search *s) { clone(s); }
 
@@ -66,7 +66,11 @@ public:
 
     void setMaxTimeMillsec(const int);
 
+#if defined(CLOP) || defined(DEBUG_MODE)
+
     bool setParameter(const string &param, const int value);
+
+#endif
 
     int getMaxTimeMillsec() const;
 
@@ -85,7 +89,7 @@ public:
 
     void run();
 
-    void endRun() {};
+    void endRun() {}
 #ifndef JS_MODE
 
     int probeWdl(const int depth, const uchar side, const int N_PIECE);

@@ -44,11 +44,11 @@ public:
         this->time = &time;
         this->name = name;
         time.start(name);
-    };
+    }
 
     ~Bench() {
         time->stop(name);
-    };
+    }
 private:
     string name;
     Times *time;

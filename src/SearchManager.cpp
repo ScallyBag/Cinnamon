@@ -349,7 +349,6 @@ void SearchManager::setRepetitionMapCount(const int i) {
     }
 }
 
-
 bool SearchManager::setNthread(const int nthread) {
     return threadPool->setNthread(nthread);
 }
@@ -357,15 +356,6 @@ bool SearchManager::setNthread(const int nthread) {
 void SearchManager::stopAllThread() {
     Search::setRunningThread(false);
 }
-
-bool SearchManager::setParameter(string param, const int value) {
-    bool b = false;
-    for (Search *s:threadPool->getPool()) {
-        b = s->setParameter(param, value);
-    }
-    return b;
-}
-
 
 
 

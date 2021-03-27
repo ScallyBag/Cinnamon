@@ -57,12 +57,12 @@ public:
     };
 
 #ifdef DEBUG_MODE
-   static  unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions, n_cut_hashA, n_cut_hashB, n_cut_hashE, readHashCount;
+    static unsigned nRecordHashA, nRecordHashB, nRecordHashE, collisions, readCollisions, n_cut_hashA, n_cut_hashB, n_cut_hashE, readHashCount;
 #endif
 
-   static  void setHashSize(const int mb);
+    static void setHashSize(const int mb);
 
-   static  void clearHash();
+    static void clearHash();
 
 #define SET_AGE(u, v) (u=(u&0xffffffffffffULL)|(((u64)v)<<(16 + 8 + 8 + 8 + 8)))
 #define GET_DEPTH(v) ((uchar)(v>>16))
@@ -73,7 +73,7 @@ public:
 #define GET_AGE(v) ((unsigned short)(v>> (16 + 8 + 8 + 8 + 8)))
 #define GET_KEY(hash) (hash->key ^ (hash->data & 0xffffffffffffULL))
 
-   static  inline int readHash(
+    static inline int readHash(
             const int alpha,
             const int beta,
             const int depth,

@@ -992,79 +992,76 @@ void Search::setSearchMoves(const vector<int> &s) {
     searchMovesVector = s;
 }
 
-bool Search::setParameter(const string &param, const int value) {
 #if defined(CLOP) || defined(DEBUG_MODE)
+bool Search::setParameter(const string &param, const int value) {
     string p(param);
     p = String::toUpper(p);
     bool res = true;
     cout << "setParameter " << param << " " << value << endl;
-    if (param == "FUTIL_MARGIN") {
+    if (p == "FUTIL_MARGIN") {
         eval.FUTIL_MARGIN = value;
-    } else if (param == "REVERSE_FUTIL_MARGIN") {
+    } else if (p == "REVERSE_FUTIL_MARGIN") {
         eval.REVERSE_FUTIL_MARGIN = value;
-    } else if (param == "EXT_FUTIL_MARGIN") {
+    } else if (p == "EXT_FUTIL_MARGIN") {
         eval.EXT_FUTIL_MARGIN = value;
-    } else if (param == "RAZOR_MARGIN") {
+    } else if (p == "RAZOR_MARGIN") {
         eval.RAZOR_MARGIN = value;
-    } else if (param == "ATTACK_KING") {
+    } else if (p == "ATTACK_KING") {
         eval.ATTACK_KING = value;
-    } else if (param == "BACKWARD_PAWN") {
+    } else if (p == "BACKWARD_PAWN") {
         eval.BACKWARD_PAWN = value;
-    } else if (param == "BISHOP_ON_QUEEN") {
+    } else if (p == "BISHOP_ON_QUEEN") {
         eval.BISHOP_ON_QUEEN = value;
-    } else if (param == "BONUS2BISHOP") {
+    } else if (p == "BONUS2BISHOP") {
         eval.BONUS2BISHOP = value;
-    } else if (param == "CONNECTED_ROOKS") {
+    } else if (p == "CONNECTED_ROOKS") {
         eval.CONNECTED_ROOKS = value;
-    } else if (param == "DOUBLED_ISOLATED_PAWNS") {
+    } else if (p == "DOUBLED_ISOLATED_PAWNS") {
         eval.DOUBLED_ISOLATED_PAWNS = value;
-    } else if (param == "DOUBLED_PAWNS") {
+    } else if (p == "DOUBLED_PAWNS") {
         eval.DOUBLED_PAWNS = value;
-    } else if (param == "ENEMY_NEAR_KING") {
+    } else if (p == "ENEMY_NEAR_KING") {
         eval.ENEMY_NEAR_KING = value;
-    } else if (param == "FRIEND_NEAR_KING") {
+    } else if (p == "FRIEND_NEAR_KING") {
         eval.FRIEND_NEAR_KING = value;
-    } else if (param == "HALF_OPEN_FILE_Q") {
+    } else if (p == "HALF_OPEN_FILE_Q") {
         eval.HALF_OPEN_FILE_Q = value;
-    } else if (param == "OPEN_FILE") {
+    } else if (p == "OPEN_FILE") {
         eval.OPEN_FILE = value;
-    } else if (param == "OPEN_FILE_Q") {
+    } else if (p == "OPEN_FILE_Q") {
         eval.OPEN_FILE_Q = value;
-    } else if (param == "PAWN_IN_7TH") {
+    } else if (p == "PAWN_IN_7TH") {
         eval.PAWN_IN_7TH = value;
-    } else if (param == "PAWN_CENTER") {
+    } else if (p == "PAWN_CENTER") {
         eval.PAWN_CENTER = value;
-    } else if (param == "PAWN_IN_PROMOTION") {
+    } else if (p == "PAWN_IN_PROMOTION") {
         eval.PAWN_IN_PROMOTION = value;
-    } else if (param == "PAWN_ISOLATED") {
+    } else if (p == "PAWN_ISOLATED") {
         eval.PAWN_ISOLATED = value;
-    } else if (param == "PAWN_NEAR_KING") {
+    } else if (p == "PAWN_NEAR_KING") {
         eval.PAWN_NEAR_KING = value;
-    } else if (param == "PAWN_BLOCKED") {
+    } else if (p == "PAWN_BLOCKED") {
         eval.PAWN_BLOCKED = value;
-    } else if (param == "ROOK_7TH_RANK") {
+    } else if (p == "ROOK_7TH_RANK") {
         eval.ROOK_7TH_RANK = value;
-    } else if (param == "ROOK_BLOCKED") {
+    } else if (p == "ROOK_BLOCKED") {
         eval.ROOK_BLOCKED = value;
-    } else if (param == "ROOK_TRAPPED") {
+    } else if (p == "ROOK_TRAPPED") {
         eval.ROOK_TRAPPED = value;
-    } else if (param == "UNDEVELOPED_KNIGHT") {
+    } else if (p == "UNDEVELOPED_KNIGHT") {
         eval.UNDEVELOPED_KNIGHT = value;
-    } else if (param == "UNDEVELOPED_BISHOP") {
+    } else if (p == "UNDEVELOPED_BISHOP") {
         eval.UNDEVELOPED_BISHOP = value;
-    } else if (param == "VAL_WINDOW") {
+    } else if (p == "VAL_WINDOW") {
         VAL_WINDOW = value;
-    } else if (param == "UNPROTECTED_PAWNS") {
+    } else if (p == "UNPROTECTED_PAWNS") {
         eval.UNPROTECTED_PAWNS = value;
     } else {
         res = false;
     }
     return res;
-#else
-    cout << param << " " << value << endl;
-    return false;
-#endif
 }
+#endif
 
 template<uchar side>
 bool Search::badCapure(const _Tmove &move, const u64 allpieces) {

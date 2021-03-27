@@ -284,7 +284,7 @@
     <ClInclude Include=".\namespaces\random.h" />
     <ClInclude Include=".\namespaces\see.h" />
     <ClInclude Include=".\namespaces\board.h" />
-    <ClInclude Include=".\namespaces\board.cpp" />
+    <ClCompile Include=".\namespaces\board.cpp" />
     <ClInclude Include=".\perft\_TPerftRes.h" />
     <ClCompile Include=".\perft\Perft.cpp" />
     <ClInclude Include=".\perft\Perft.h" />

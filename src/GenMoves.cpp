@@ -21,13 +21,13 @@
 GenMoves::GenMoves() : perftMode(false), listId(-1) {
     currentPly = 0;
     genList = (_TmoveP *) calloc(MAX_PLY, sizeof(_TmoveP));
-    panic(genList)
+    _assert(genList)
     for (int i = 0; i < MAX_PLY; i++) {
         genList[i].moveList = (_Tmove *) calloc(MAX_MOVE, sizeof(_Tmove));
-        panic(genList[i].moveList)
+        _assert(genList[i].moveList)
     }
     repetitionMap = (u64 *) malloc(sizeof(u64) * MAX_REP_COUNT);
-    panic(repetitionMap)
+    _assert(repetitionMap)
     repetitionMapCount = 0;
     init();
 }
@@ -455,7 +455,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
         } else if (fenStr.find("8") != string::npos) {
             move->side = BLACK;
         } else {
-            panic(0)
+            _assert(0)
         }
         move->from = -1;
         move->capturedPiece = SQUARE_EMPTY;
@@ -471,7 +471,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     }
     if (from == -1) {
         cout << fenStr << endl;
-        panic(0)
+        _assert(0)
     }
     for (int i = 0; i < 64; i++) {
         if (!fenStr.compare(2, 2, BOARD[i])) {
@@ -481,7 +481,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     }
     if (to == -1) {
         cout << fenStr << endl;
-        panic(0)
+        _assert(0)
     }
     int pieceFrom;
     if ((pieceFrom = board::getPieceAt<WHITE>(POW2(from), chessboard)) != 12) {
@@ -491,7 +491,7 @@ int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     } else {
         display();
         cout << "fenStr: >" << fenStr << "< from: " << from << endl;
-        panic(0)
+        _assert(0)
     }
     move->from = from;
     move->to = to;
@@ -564,7 +564,7 @@ bool GenMoves::generatePuzzle(const string type) {
     for (unsigned k = 0; k < TOT; k++) {
         uchar side = WHITE;
         pieces.clear();
-        panic(toupper(type.at(0)) == 'K')
+        _assert(toupper(type.at(0)) == 'K')
         for (unsigned i = 1; i < type.size(); i++) {
             const char up = toupper(type.at(i));
             if (!(up == 'K' || up == 'R' || up == 'P' || up == 'Q' || up == 'B' || up == 'N')) {

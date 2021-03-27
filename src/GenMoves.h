@@ -476,7 +476,7 @@ protected:
                 break;
             }
             default:
-                panic(0)
+                _assert(0)
         }
 
         return result;
@@ -577,7 +577,7 @@ protected:
                 break;
             }
             default:
-                panic(0)
+                _assert(0)
         }
 
         assert(!memcmp(&a, chessboard, sizeof(_Tchessboard)));

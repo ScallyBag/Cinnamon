@@ -49,8 +49,6 @@ public:
         return lazyEvalSide<side>(chessboard) - lazyEvalSide<X(side)>(chessboard);
     }
 
-    DEBUG(unsigned lazyEvalCuts)
-
     STATIC_CONST int REVERSE_FUTIL_MARGIN = 120;
     STATIC_CONST int FUTIL_MARGIN = 154;
     STATIC_CONST int EXT_FUTIL_MARGIN = 392;
@@ -88,6 +86,7 @@ public:
     STATIC_CONST int PAWN_PINNED = 10;
 
 #ifdef DEBUG_MODE
+    unsigned lazyEvalCuts;
     typedef struct {
         int BAD_BISHOP[2];
         int MOB_BISHOP[2];

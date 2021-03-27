@@ -188,7 +188,7 @@ string ChessBoard::decodeBoardinv(const uchar type, const int a, const uchar sid
     if (a >= 0 && a < 64) {
         return BOARD[a];
     }
-    panic(0)
+    _assert(0)
 }
 
 void ChessBoard::clearChessboard() {

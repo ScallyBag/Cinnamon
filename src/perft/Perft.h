@@ -57,7 +57,7 @@ public:
     }
 
 private:
-    Perft() : ThreadPool(1) {};
+    Perft() : ThreadPool(1) {}
 
     _TPerftRes perftRes;
     Time time;

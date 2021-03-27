@@ -120,7 +120,7 @@ private:
 
     static uchar diagonalIdx(const int position, const u64 allpieces) {
         return (((allpieces & constants::DIAGONAL[position]) * MAGIC_KEY_DIAG_ANTIDIAG) >> 56) & 0xff;
-    };
+    }
 
     static uchar antiDiagonalIdx(const int position, const u64 allpieces) {
         return (((allpieces & constants::ANTIDIAGONAL[position]) * MAGIC_KEY_DIAG_ANTIDIAG) >> 56) & 0xff;
