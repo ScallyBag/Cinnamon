@@ -78,7 +78,7 @@ int SearchManager::search(const int ply, const int mply) {
 
     lineWin.cmove = -1;
     setMainPly(ply, mply);
-    ASSERT(bitCount(threadPool->getBitCount()) < 2)
+    assert(bitCount(threadPool->getBitCount()) < 2);
 
     for (int ii = 1; ii < threadPool->getNthread(); ii++) {
         Search &helperThread = threadPool->getNextThread();
@@ -110,7 +110,7 @@ bool SearchManager::getRes(_Tmove &resultMove, string &ponderMove, string &pvv) 
     pvv.clear();
     string pvvTmp;
 
-    ASSERT(lineWin.cmove)
+    assert(lineWin.cmove);
     for (int t = 0; t < lineWin.cmove; t++) {
         pvvTmp.clear();
         pvvTmp +=
@@ -255,7 +255,7 @@ int SearchManager::getSide() {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).sideToMove;
     for (Search *s:threadPool->getPool()) {
-        ASSERT(s->sideToMove == t)
+        assert(s->sideToMove == t);
     }
 #endif
     return threadPool->getThread(0).sideToMove;
@@ -325,7 +325,7 @@ int SearchManager::getMoveFromSan(const string &string, _Tmove *ptr) {
 #ifdef DEBUG_MODE
     int t = threadPool->getThread(0).getMoveFromSan(string, ptr);
     for (Search *s:threadPool->getPool()) {
-        ASSERT(s->getMoveFromSan(string, ptr) == t)
+        assert(s->getMoveFromSan(string, ptr) == t);
     }
 #endif
     return threadPool->getThread(0).getMoveFromSan(string, ptr);

@@ -728,8 +728,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 
-    ASSERT(chessboard[KING_BLACK])
-    ASSERT(chessboard[KING_WHITE])
+    assert(chessboard[KING_BLACK]);
+    assert(chessboard[KING_WHITE]);
 
     const bool isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
@@ -847,7 +847,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             return -eval.lazyEval<side>(chessboard) * 2;
         }
     }
-    ASSERT(genList[listId].size > 0)
+    assert(genList[listId].size > 0);
 
     _Tmove *best = &genList[listId].moveList[0];
 
@@ -929,8 +929,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         }
         score = max(score, val);
         takeback(move, oldKey, oldEnpassant, true);
-        ASSERT(chessboard[KING_BLACK])
-        ASSERT(chessboard[KING_WHITE])
+        assert(chessboard[KING_BLACK]);
+        assert(chessboard[KING_WHITE]);
 
         if (score > alpha) {
             if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
@@ -973,10 +973,10 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 }
 
 void Search::updatePv(_TpvLine *pline, const _TpvLine *line, const _Tmove *move) {
-    ASSERT(line->cmove < MAX_PLY - 1)
+    assert(line->cmove < MAX_PLY - 1);
     memcpy(&(pline->argmove[0]), move, sizeof(_Tmove));
     memcpy(pline->argmove + 1, line->argmove, line->cmove * sizeof(_Tmove));
-    ASSERT(line->cmove >= 0)
+    assert(line->cmove >= 0);
     pline->cmove = line->cmove + 1;
 }
 

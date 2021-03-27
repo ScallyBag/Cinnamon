@@ -184,11 +184,11 @@ string ChessBoard::decodeBoardinv(const uchar type, const int a, const uchar sid
     if (type & KING_SIDE_CASTLE_MOVE_MASK && side == BLACK) {
         return isChess960() ? BOARD[startPosBlackKing] + BOARD[startPosBlackRookKingSide] : "e8g8";
     }
-    ASSERT(!(type & 0xC))
+    assert(!(type & 0xC));
     if (a >= 0 && a < 64) {
         return BOARD[a];
     }
-    _assert(0)
+    panic(0)
 }
 
 void ChessBoard::clearChessboard() {
@@ -269,28 +269,28 @@ int ChessBoard::loadFen(const string &fen) {
     auto whiteRookKingSide = [&](const char c) {
         startPosWhiteRookKingSide = BITScanForward(chessboard[ROOK_WHITE] & 0xffULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 4);
-        ASSERT(4 == BITScanForward(RIGHT_KING_CASTLE_WHITE_MASK))
+        assert(4 == BITScanForward(RIGHT_KING_CASTLE_WHITE_MASK));
         rightCastle |= RIGHT_KING_CASTLE_WHITE_MASK;
         whiteRookKingSideCastle = c;
     };
     auto blackRookKingSide = [&](const char c) {
         startPosBlackRookKingSide = BITScanForward(chessboard[ROOK_BLACK] & 0xff00000000000000ULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 6);
-        ASSERT(6 == BITScanForward(RIGHT_KING_CASTLE_BLACK_MASK))
+        assert(6 == BITScanForward(RIGHT_KING_CASTLE_BLACK_MASK));
         rightCastle |= RIGHT_KING_CASTLE_BLACK_MASK;
         blackRookKingSideCastle = c;
     };
     auto whiteRookQueenSide = [&](const char c) {
         startPosWhiteRookQueenSide = BITScanReverse(chessboard[ROOK_WHITE] & 0xffULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 5);
-        ASSERT(5 == BITScanForward(RIGHT_QUEEN_CASTLE_WHITE_MASK))
+        assert(5 == BITScanForward(RIGHT_QUEEN_CASTLE_WHITE_MASK));
         rightCastle |= RIGHT_QUEEN_CASTLE_WHITE_MASK;
         whiteRookQueenSideCastle = c;
     };
     auto blackRookQueenSide = [&](const char c) {
         startPosBlackRookQueenSide = BITScanReverse(chessboard[ROOK_BLACK] & 0xff00000000000000ULL);
         updateZobristKey(RIGHT_CASTLE_IDX, 7);
-        ASSERT(7 == BITScanForward(RIGHT_QUEEN_CASTLE_BLACK_MASK))
+        assert(7 == BITScanForward(RIGHT_QUEEN_CASTLE_BLACK_MASK));
         rightCastle |= RIGHT_QUEEN_CASTLE_BLACK_MASK;
         blackRookQueenSideCastle = c;
     };

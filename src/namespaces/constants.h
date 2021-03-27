@@ -22,6 +22,7 @@
 #include <string.h>
 #include <sstream>
 #include <array>
+#include <assert.h>
 
 using namespace std;
 namespace constants {
@@ -38,20 +39,18 @@ namespace constants {
 #define STATIC_CONST static constexpr
 #endif
 
-#define _assert(a) if(!(a)){  cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
+#define panic(a) if(!(a)){  cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #define X(side) ((side)^1)
 
 #ifdef DEBUG_MODE
 #define DEBUG(a) a;
-#define ASSERT(a) _assert(a)
-#define ASSERT_RANGE(value, from, to) {if ((value)<(from) || (value)>(to)){cout<<"ASSERT_RANGE: "<<value<<endl;_assert(0)};}
+#define ASSERT_RANGE(value, from, to) {if ((value)<(from) || (value)>(to)){cout<<"ASSERT_RANGE: "<<value<<endl;panic(0)};}
 #define INC(a) (a++)
 #define SET(a, v) (a=(v))
 #define ADD(a, b) (a+=(b))
 #else
-    #define DEBUG(a)
-#define ASSERT(a)
+#define DEBUG(a)
 #define ASSERT_RANGE(value, from, to)
 #define INC(a)
 #define SET(a, v)

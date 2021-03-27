@@ -59,7 +59,7 @@ void IterativeDeeping::run() {
         searchManager.makemove(&move);
         cout << "bestmove " << tb << endl;
         ADD(checkSmp2, -1);
-        ASSERT(!checkSmp2)
+        assert(!checkSmp2);
         LOCK_RELEASE(running);
         return;
     }
@@ -216,7 +216,7 @@ void IterativeDeeping::run() {
 
     cout << endl;
     ADD(checkSmp2, -1);
-    ASSERT(!checkSmp2)
+    assert(!checkSmp2);
     LOCK_RELEASE(running);
 }
 

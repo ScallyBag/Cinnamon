@@ -169,7 +169,7 @@ int Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 enemies) {
         result -= BISHOP_PAWN_ON_SAME_COLOR * bitCount(chessboard[side] & board::colors(BITScanForward(bishop)));
     } else {
         // 2.
-        ASSERT(nBishop > 1)
+        assert(nBishop > 1);
         if (phase != OPEN) {
             result += BONUS2BISHOP;
             ADD(SCORE_DEBUG.BONUS2BISHOP[side], BONUS2BISHOP);
@@ -199,7 +199,7 @@ int Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 enemies) {
 
         const u64 x = Bitboard::getDiagonalAntiDiagonal(o, structureEval.allPieces);
         const u64 captured = x & enemies;
-        ASSERT(bitCount(captured) + bitCount(x & ~structureEval.allPieces) < (int) (sizeof(MOB_BISHOP) / sizeof(int)))
+        assert(bitCount(captured) + bitCount(x & ~structureEval.allPieces) < (int) (sizeof(MOB_BISHOP) / sizeof(int)));
         if (captured & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
 
         result += MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];
@@ -339,7 +339,7 @@ int Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 notMyBits) {
         const int pos = BITScanForward(knight);
 
         // 5. mobility
-        ASSERT(bitCount(notMyBits & KNIGHT_MASK[pos]) < (int) (sizeof(MOB_KNIGHT) / sizeof(int)))
+        assert(bitCount(notMyBits & KNIGHT_MASK[pos]) < (int) (sizeof(MOB_KNIGHT) / sizeof(int)));
         u64 mob = notMyBits & KNIGHT_MASK[pos];
         result += MOB_KNIGHT[bitCount(mob)];
         if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(pos);
@@ -429,7 +429,7 @@ int Eval::evaluateRook(const _Tchessboard &chessboard, const u64 king, const u64
         u64 mob = board::getMobilityRook(o, enemies, friends);
         if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
 
-        ASSERT(bitCount(mob) < (int) (sizeof(MOB_ROOK[phase]) / sizeof(int)))
+        assert(bitCount(mob) < (int) (sizeof(MOB_ROOK[phase]) / sizeof(int)));
         result += MOB_ROOK[phase][bitCount(mob)];
         ADD(SCORE_DEBUG.MOB_ROOK[side], MOB_ROOK[phase][bitCount(mob)]);
 
@@ -456,7 +456,7 @@ int Eval::evaluateRook(const _Tchessboard &chessboard, const u64 king, const u64
 
 template<Eval::_Tphase phase>
 int Eval::evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares) {
-    ASSERT(evaluationCount[side] == 5)
+    assert(evaluationCount[side] == 5);
     int result = 0;
     uchar pos_king = structureEval.posKing[side];
     if (phase == END) {
@@ -468,11 +468,11 @@ int Eval::evaluateKing(const _Tchessboard &chessboard, const uchar side, const u
     }
 
     //mobility
-    ASSERT(bitCount(squares & NEAR_MASK1[pos_king]) < (int) (sizeof(MOB_KING[phase]) / sizeof(int)))
+    assert(bitCount(squares & NEAR_MASK1[pos_king]) < (int) (sizeof(MOB_KING[phase]) / sizeof(int)));
     result += MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])];
     ADD(SCORE_DEBUG.MOB_KING[side], MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])]);
 
-    ASSERT(pos_king < 64)
+    assert(pos_king < 64);
     if (!(NEAR_MASK1[pos_king] & chessboard[side])) {
         ADD(SCORE_DEBUG.PAWN_NEAR_KING[side], -PAWN_NEAR_KING);
         result -= PAWN_NEAR_KING;
@@ -483,7 +483,7 @@ int Eval::evaluateKing(const _Tchessboard &chessboard, const uchar side, const u
 
 void Eval::storeHashValue(const u64 key, const short value) {
     evalHash[key % hashSize] = (key & keyMask) | (value & valueMask);
-    ASSERT(value == getHashValue(key))
+    assert(value == getHashValue(key));
 }
 
 short Eval::getHashValue(const u64 key) {

@@ -57,7 +57,7 @@ public:
             const u64 b = *(s + pos) & allpieces;
 #ifdef DEBUG_MODE
             u64 x = *(s + pos) & (allpieces & NOTPOW2(kingPosition));
-            ASSERT(b == x)
+            assert(b == x);
 #endif
             if (!(b & (b - 1))) {
                 result |= b & friends;

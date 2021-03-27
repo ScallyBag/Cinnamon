@@ -120,12 +120,12 @@ public:
 
     static void recordHash(const _Thash &toStore, const int ply) {
 #ifdef DEBUG_MODE
-        ASSERT(toStore.key)
+        assert(toStore.key);
         if (GET_FLAGS(toStore.data) == hashfALPHA) nRecordHashA++;
         else if (GET_FLAGS(toStore.data) == hashfBETA) nRecordHashB++;
         else nRecordHashE++;
 #endif
-        ASSERT (GET_DEPTH(toStore.data) < MAX_PLY)
+        assert(GET_DEPTH(toStore.data) < MAX_PLY);
         const unsigned kMod = toStore.key % HASH_SIZE;
 
         _Thash *empty = nullptr;
@@ -164,10 +164,6 @@ public:
             int oldTT = -INT_MAX;
             for (i = 0; i < BUCKETS; i++, hash++) {
                 u64 data = hash->data;
-                ASSERT(GET_AGE(data) < 300)
-                ASSERT(GET_AGE(old->data) < 300)
-                ASSERT(GET_DEPTH(old->data) < MAX_PLY)
-                ASSERT(GET_DEPTH(data) < MAX_PLY)
                 const auto age = ((ply - GET_AGE(data)) & 255) * 256 + 255 - GET_DEPTH(data); //TODO
                 // const int age = ((pow(GET_DEPTH(data) - GET_DEPTH(old->data), 2)) + (ply - GET_AGE(data)));
                 if (age > oldTT) {
