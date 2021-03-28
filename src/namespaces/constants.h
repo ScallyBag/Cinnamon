@@ -32,13 +32,6 @@ namespace constants {
     static constexpr int BLACK = 0;
     static constexpr int WHITE = 1;
 
-
-#if defined(CLOP) || defined(DEBUG_MODE)
-#define STATIC_CONST
-#else
-#define STATIC_CONST static constexpr
-#endif
-
 #define _assert(a) if(!(a)){  cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #define X(side) ((side)^1)

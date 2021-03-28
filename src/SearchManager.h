@@ -44,16 +44,6 @@ public:
 
     static string decodeBoardinv(const uchar type, const int a, const uchar side);
 
-#if defined(CLOP) || defined(DEBUG_MODE)
-    static bool setParameter(const string& param, const int value) {
-        bool b = false;
-        for (Search *s:threadPool->getPool()) {
-            b = s->setParameter(param, value);
-        }
-        return b;
-    }
-#endif
-
     static void clearHeuristic();
 
     static int getForceCheck();

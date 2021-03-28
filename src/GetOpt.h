@@ -68,9 +68,6 @@ private:
 #endif
         cout << "\nLicense GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>\n";
         cout << "Run " << exe << " -h for more commands." << endl << endl;
-#ifdef CLOP
-        cout << "CLOP ENABLED\n";
-#endif
 
         DEBUG(cout << "DEBUG_MODE" << endl)
         DEBUG(cout << "Log level: " << LOG_LEVEL_STRING[DLOG_LEVEL] << endl)

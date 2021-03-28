@@ -25,27 +25,6 @@ _TpvLine SearchManager::lineWin;
 
 SearchManager::SearchManager() {
     threadPool = new ThreadPool<Search>(1);
-#if defined(CLOP) || defined(DEBUG_MODE)
-    IniFile iniFile("cinnamon.ini");
-
-    while (true) {
-        pair<string, string> *parameters = iniFile.get();
-        if (!parameters) {
-            break;
-        }
-        string param = parameters->first;
-        int value = stoi(parameters->second);
-        cout << param << "=" << value << endl;
-
-        if (param == "threads") {
-            setNthread(value);
-        } else {
-            if (!setParameter(param, value)) {
-                cout << "error parameter " << param << " not defined\n";
-            }
-        }
-    }
-#endif
 }
 
 #if defined(FULL_TEST)

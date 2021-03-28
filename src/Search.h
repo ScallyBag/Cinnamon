@@ -42,9 +42,9 @@ class Search : public GenMoves, public Thread<Search> {
 
 public:
 
-    STATIC_CONST int NULL_DIVISOR = 7;
-    STATIC_CONST int NULL_DEPTH = 3;
-    STATIC_CONST int VAL_WINDOW = 50;
+    static constexpr int NULL_DIVISOR = 7;
+    static constexpr int NULL_DEPTH = 3;
+    static constexpr int VAL_WINDOW = 50;
 
     Search();
 
@@ -65,12 +65,6 @@ public:
     void setNullMove(const bool);
 
     void setMaxTimeMillsec(const int);
-
-#if defined(CLOP) || defined(DEBUG_MODE)
-
-    bool setParameter(const string &param, const int value);
-
-#endif
 
     int getMaxTimeMillsec() const;
 
