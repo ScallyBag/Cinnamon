@@ -55,7 +55,7 @@ public:
         performKingShiftCapture<side>(~allpieces, false);
     }
 
-    static bool see1(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
+    static bool isAttacked(const _Tmove &move, const _Tchessboard &chessboard, const u64 allpieces) {
         assert(allpieces == (board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard)));
         return board::isAttacked(move.side, move.to, allpieces, chessboard);
     }

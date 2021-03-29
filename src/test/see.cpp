@@ -23,7 +23,7 @@
 #include "../SearchManager.h"
 #include "../namespaces/see.h"
 
-TEST(see1, test1) {
+TEST(isAttacked, test1) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     searchManager.loadFen("rnbqk1nr/pppp1ppp/8/4p3/1bP5/3P4/PP2PPPP/RNBQKBNR w KQkq - 0 1");
     _Tmove move;
@@ -34,11 +34,11 @@ TEST(see1, test1) {
     move.capturedPiece = SQUARE_EMPTY;
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test2) {
+TEST(isAttacked, test2) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -49,11 +49,11 @@ TEST(see1, test2) {
     searchManager.loadFen("k7/8/1RP5/1P1P4/8/2r5/8/6K1 b - - 0 9");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test3) {
+TEST(isAttacked, test3) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -64,11 +64,11 @@ TEST(see1, test3) {
     searchManager.loadFen("8/8/5k2/6N1/8/5N2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test4) {
+TEST(isAttacked, test4) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -79,11 +79,11 @@ TEST(see1, test4) {
     searchManager.loadFen("8/8/5p2/6N1/8/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_FALSE(p);
 }
 
-TEST(see1, test5) {
+TEST(isAttacked, test5) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -94,11 +94,11 @@ TEST(see1, test5) {
     searchManager.loadFen("rnbqkb1r/ppp1pppp/8/3p4/4P1P1/6P1/PPPP3P/RNBQKBNR w KQkq - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test6) {
+TEST(isAttacked, test6) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -109,11 +109,11 @@ TEST(see1, test6) {
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test7) {
+TEST(isAttacked, test7) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -124,11 +124,11 @@ TEST(see1, test7) {
     searchManager.loadFen("8/8/5p1Q/2R3N1/7B/k4n2/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test8) {
+TEST(isAttacked, test8) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = BLACK;
@@ -139,11 +139,11 @@ TEST(see1, test8) {
     searchManager.loadFen("8/8/5p2/6N1/5b1P/k7/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
-TEST(see1, test9) {
+TEST(isAttacked, test9) {
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     _Tmove move;
     move.side = WHITE;
@@ -154,7 +154,7 @@ TEST(see1, test9) {
     searchManager.loadFen("8/3p4/8/4P3/8/k7/8/K7 w - - 0 1");
     const u64 allpieces = board::getBitmap<WHITE>(searchManager.getChessboard()) |
                           board::getBitmap<BLACK>(searchManager.getChessboard());
-    const auto p = GenMoves::see1(move, searchManager.getChessboard(), allpieces);
+    const auto p = GenMoves::isAttacked(move, searchManager.getChessboard(), allpieces);
     EXPECT_TRUE(p);
 }
 
