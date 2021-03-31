@@ -866,28 +866,28 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
             continue;
         }
         checkInCheck = true;
-        if (futilPrune && ((move->type & 0x3) != PROMOTION_MOVE_MASK) &&
-            futilScore + PIECES_VALUE[move->capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
-            INC(nCutFp);
-            takeback(move, oldKey, oldEnpassant, true);
-            continue;
-        }
-        //Late Move Reduction
         int val = INT_MAX;
-        if (countMove > 3 && !isIncheckSide && depth >= 3 && move->capturedPiece == SQUARE_EMPTY &&
-            move->promotionPiece == NO_PROMOTION) {
-            currentPly++;
-            const int R = countMove > 6 ? 3 : 2;
-            val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
-                                               nRootMoves);
-            currentPly--;
-            if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
+        if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
+            if (futilPrune && futilScore + PIECES_VALUE[move->capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
+                INC(nCutFp);
+                takeback(move, oldKey, oldEnpassant, true);
+                continue;
+            }
+            //Late Move Reduction
+            if (countMove > 3 && !isIncheckSide && depth >= 3) {
                 currentPly++;
-                forceCheck = true;
+                const int R = countMove > 6 ? 3 : 2;
                 val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
                                                    nRootMoves);
-                forceCheck = false;
                 currentPly--;
+                if (!forceCheck && abs(val) > _INFINITE - MAX_PLY) {
+                    currentPly++;
+                    forceCheck = true;
+                    val = -search<X(side), checkMoves>(depth + extension - R, -(alpha + 1), -alpha, &line, N_PIECE,
+                                                       nRootMoves);
+                    forceCheck = false;
+                    currentPly--;
+                }
             }
         }
         if (val > alpha) {
