@@ -31,7 +31,7 @@ IniFile::IniFile(const string &fileName1) {
     while (true) {
         pair<string, string> *parameters = this->get();
         if (!parameters)break;
-        map[parameters->first] = parameters->second;
+        paramMap[parameters->first] = parameters->second;
     }
     inData.close();
 }

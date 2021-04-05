@@ -22,6 +22,7 @@
 #include <regex>
 #include "logger.h"
 #include "FileUtil.h"
+#include <map>
 
 using namespace std;
 using namespace _logger;
@@ -31,7 +32,7 @@ public:
 
     IniFile(const string &fileName1);
 
-    map<string, string> map;
+    map<string, string> paramMap;
 private:
     std::regex rgxLine;
     std::regex rgxTag;

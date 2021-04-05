@@ -439,13 +439,11 @@ bool Search::probeRootTB(_Tmove *res) {
                                      BITScanForward(chessboard[QUEEN_BLACK]) | BITScanForward(chessboard[QUEEN_WHITE]);
             const int winSide = chessboard[PAWN_BLACK] | chessboard[QUEEN_BLACK] ? BLACK : WHITE;
 
-            bool p;
+            const bool p = (winSide != sideToMove) ?  // looking for draw
+                           isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos)
+                                                   :  //looking for win
+                           !isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
 
-            if (winSide != sideToMove) { // looking for draw
-                p = isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
-            } else { //looking for win
-                p = !isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
-            }
             if (p &&
                 (bestMove == nullptr || move->capturedPiece != SQUARE_EMPTY ||
                  move->promotionPiece != NO_PROMOTION)) {

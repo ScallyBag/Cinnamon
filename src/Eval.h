@@ -53,89 +53,84 @@ public:
     STATIC_CONST int FUTIL_MARGIN = 154;
     STATIC_CONST int EXT_FUTIL_MARGIN = 392;
     STATIC_CONST int RAZOR_MARGIN = 1071;
-    STATIC_CONST int ATTACK_KING = 30;
-    STATIC_CONST int BISHOP_ON_QUEEN = 2;
-    STATIC_CONST int BACKWARD_PAWN = 2;
-    STATIC_CONST int DOUBLED_ISOLATED_PAWNS = 14;
-    STATIC_CONST int DOUBLED_PAWNS = 5;
-    STATIC_CONST int PAWN_IN_7TH = 32;
-    STATIC_CONST int PAWN_CENTER = 15;
-    STATIC_CONST int PAWN_IN_PROMOTION = 114;
-    STATIC_CONST int PAWN_ISOLATED = 3;
-    STATIC_CONST int PAWN_NEAR_KING = 2;
-    STATIC_CONST int PAWN_BLOCKED = 5;
-    STATIC_CONST int UNPROTECTED_PAWNS = 5;
-    STATIC_CONST int ENEMY_NEAR_KING = 2;
-    STATIC_CONST int FRIEND_NEAR_KING = 1;
-    STATIC_CONST int HALF_OPEN_FILE_Q = 3;
-    STATIC_CONST int BONUS2BISHOP = 18;
-    STATIC_CONST int BISHOP_PAWN_ON_SAME_COLOR = 5;
-    STATIC_CONST int CONNECTED_ROOKS = 7;
-    STATIC_CONST int OPEN_FILE = 10;
-    STATIC_CONST int OPEN_FILE_Q = 3;
-    STATIC_CONST int ROOK_7TH_RANK = 10;
-    STATIC_CONST int ROOK_BLOCKED = 13;
-    STATIC_CONST int ROOK_TRAPPED = 6;
-    STATIC_CONST int UNDEVELOPED_KNIGHT = 4;
-    STATIC_CONST int UNDEVELOPED_BISHOP = 4;
-    STATIC_CONST int KNIGHT_PINNED = 20;
-    STATIC_CONST int ROOK_PINNED = 30;
-    STATIC_CONST int BISHOP_PINNED = 20;
-    STATIC_CONST int QUEEN_PINNED = 35;
-    STATIC_CONST int PAWN_PINNED = 10;
+    STATIC_CONST int ATTACK_KING = 47;
+    STATIC_CONST int BISHOP_ON_QUEEN = 8;
+    STATIC_CONST int BACKWARD_PAWN = 6;
+    STATIC_CONST int DOUBLED_ISOLATED_PAWNS = 9;
+//    STATIC_CONST int DOUBLED_PAWNS = 0;
+    STATIC_CONST int PAWN_IN_7TH = 20;
+//    STATIC_CONST int PAWN_CENTER = 0;
+    STATIC_CONST int PAWN_IN_PROMOTION = 99;
+//    STATIC_CONST int PAWN_ISOLATED = 0;
+    STATIC_CONST int PAWN_NEAR_KING = 11;
+    STATIC_CONST int PAWN_BLOCKED = 8;
+    STATIC_CONST int UNPROTECTED_PAWNS = 6;
+//    STATIC_CONST int ENEMY_NEAR_KING = 0;
+    STATIC_CONST int FRIEND_NEAR_KING = 8;
+//    STATIC_CONST int HALF_OPEN_FILE_Q = 0;
+    STATIC_CONST int BONUS2BISHOP = 33;
+    STATIC_CONST int BISHOP_PAWN_ON_SAME_COLOR = 2;
+//    STATIC_CONST int CONNECTED_ROOKS = 0;
+//    STATIC_CONST int OPEN_FILE = 0;
+    STATIC_CONST int OPEN_FILE_Q = 4;
+    STATIC_CONST int ROOK_7TH_RANK = 18;
+//    STATIC_CONST int ROOK_BLOCKED = 0;
+//    STATIC_CONST int ROOK_TRAPPED = 0;
+//    STATIC_CONST int UNDEVELOPED_KNIGHT = 0;
+//    STATIC_CONST int UNDEVELOPED_BISHOP = 0;
+    STATIC_CONST int KNIGHT_PINNED = 54;
+    STATIC_CONST int ROOK_PINNED = 28;
+    STATIC_CONST int BISHOP_PINNED = 26;
+    STATIC_CONST int QUEEN_PINNED = 1;
+//    STATIC_CONST int PAWN_PINNED = 0;
 
 #ifdef DEBUG_MODE
     unsigned lazyEvalCuts;
     typedef struct {
         int BAD_BISHOP[2];
         int MOB_BISHOP[2];
-        int UNDEVELOPED_BISHOP[2];
+//        int UNDEVELOPED_BISHOP[2];
         int OPEN_DIAG_BISHOP[2];
         int BONUS2BISHOP[2];
-        int PAWN_PINNED[2];
+//        int PAWN_PINNED[2];
         int BISHOP_PINNED[2];
         int QUEEN_PINNED[2];
         int KNIGHT_PINNED[2];
         int ROOK_PINNED[2];
         int ATTACK_KING_PAWN[2];
-        int PAWN_CENTER[2];
+//        int PAWN_CENTER[2];
         int PAWN_7H[2];
         int PAWN_IN_PROMOTION[2];
         int PAWN_BLOCKED[2];
         int UNPROTECTED_PAWNS[2];
-        int PAWN_ISOLATED[2];
-        int DOUBLED_PAWNS[2];
+//        int PAWN_ISOLATED[2];
+//        int DOUBLED_PAWNS[2];
         int DOUBLED_ISOLATED_PAWNS[2];
         int BACKWARD_PAWN[2];
         int FORK_SCORE[2];
         int PAWN_PASSED[2];
         int ENEMIES_PAWNS_ALL[2];
         int NO_PAWNS[2];
-
-        int KING_SECURITY_BISHOP[2];
+//        int KING_SECURITY_BISHOP[2];
         int KING_SECURITY_QUEEN[2];
         int KING_SECURITY_KNIGHT[2];
         int KING_SECURITY_ROOK[2];
         int DISTANCE_KING[2];
         int PAWN_NEAR_KING[2];
         int MOB_KING[2];
-
         int MOB_QUEEN[2];
         int OPEN_FILE_Q[2];
         int BISHOP_ON_QUEEN[2];
-        int HALF_OPEN_FILE_Q[2];
-
-        int UNDEVELOPED_KNIGHT[2];
+//        int HALF_OPEN_FILE_Q[2];
+//        int UNDEVELOPED_KNIGHT[2];
         int KNIGHT_TRAPPED[2];
         int MOB_KNIGHT[2];
-
-
         int ROOK_7TH_RANK[2];
-        int ROOK_TRAPPED[2];
+//        int ROOK_TRAPPED[2];
         int MOB_ROOK[2];
-        int ROOK_BLOCKED[2];
+//        int ROOK_BLOCKED[2];
         int ROOK_OPEN_FILE[2];
-        int CONNECTED_ROOKS[2];
+//        int CONNECTED_ROOKS[2];
     } _TSCORE_DEBUG;
     _TSCORE_DEBUG SCORE_DEBUG;
 #endif
@@ -198,10 +193,10 @@ private:
         BENCH_STOP("eval queen")
 
         BENCH_START("eval rook")
-        res.rooks[BLACK] = evaluateRook<BLACK, phase>(chessboard, chessboard[KING_BLACK],
+        res.rooks[BLACK] = evaluateRook<BLACK, phase>(chessboard,
                                                       structureEval.allPiecesSide[WHITE],
                                                       structureEval.allPiecesSide[BLACK]);
-        res.rooks[WHITE] = evaluateRook<WHITE, phase>(chessboard, chessboard[KING_WHITE],
+        res.rooks[WHITE] = evaluateRook<WHITE, phase>(chessboard,
                                                       structureEval.allPiecesSide[BLACK],
                                                       structureEval.allPiecesSide[WHITE]);
         BENCH_STOP("eval rook")
@@ -230,7 +225,7 @@ private:
     int evaluateKnight(const _Tchessboard &chessboard, const u64);
 
     template<uchar side, Eval::_Tphase phase>
-    int evaluateRook(const _Tchessboard &chessboard, const u64, u64 enemies, u64 friends);
+    int evaluateRook(const _Tchessboard &chessboard, u64 enemies, u64 friends);
 
     template<_Tphase phase>
     int evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares);

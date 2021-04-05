@@ -23,22 +23,6 @@
 #include <set>
 #include <array>
 
-/*
- Download a big strong main.pgn file
- pgn-extract -Tr0-1 main.pgn >win_black.pgn 2>/dev/null
- pgn-extract -Tr1-0 main.pgn >win_white.pgn 2>/dev/null
- pgn-extract -Tr1/2-1/2 main.pgn >draw.pgn 2>/dev/null
-
- pgn-extract -Wepd win_black.pgn >win_black.epd 2>/dev/null
- pgn-extract -Wepd win_white.pgn >win_white.epd 2>/dev/null
- pgn-extract -Wepd draw.pgn >draw.epd 2>/dev/null
-
- cat win_white.epd  | awk -F " " '{print $1" "$2" "$3}' >foo;sort -u foo |grep "k" > win_white.epd
- cat win_black.epd  | awk -F " " '{print $1" "$2" "$3}' >foo;sort -u foo |grep "k" > win_black.epd
- cat draw.epd       | awk -F " " '{print $1" "$2" "$3}' >foo;sort -u foo |grep "k" > draw.epd
- rm foo win_black.pgn win_white.pgn draw.pgn
-*/
-
 class Texel {
 
 private:
@@ -236,7 +220,7 @@ private:
 
     void loadParams() {
         cout << "\nload parameters from " << path + FOLDERSEP + iniFile << endl;
-        map<string, string> map = IniFile(path + FOLDERSEP + iniFile).map;
+        map<string, string> map = IniFile(path + FOLDERSEP + iniFile).paramMap;
         for (std::map<string, string>::iterator it = map.begin(); it != map.end(); ++it) {
             std::cout << it->first << " => " << it->second << endl;
             searchManager.setParameter(it->first, stoi(it->second));
