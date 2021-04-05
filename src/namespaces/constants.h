@@ -32,6 +32,13 @@ namespace constants {
     static constexpr int BLACK = 0;
     static constexpr int WHITE = 1;
 
+
+#ifdef TUNING
+#define STATIC_CONST
+#else
+#define STATIC_CONST static constexpr
+#endif
+
 #define _assert(a) if(!(a)){  cout<<dec<<endl<<Time::getLocalTime()<<" ********************************** assert error in "<<FileUtil::getFileName(__FILE__)<< ":"<<__LINE__<<" "<<" **********************************"<<endl;cerr<<flush;std::exit(1);}
 
 #define X(side) ((side)^1)
@@ -1562,5 +1569,11 @@ namespace constants {
            0x50000000ULL, 0xA0000000ULL, 0x40000000ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL,
            0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL, 0ULL,
            0ULL, 0ULL, 0ULL, 0}}};
+
+#ifdef MVSC
+#define FOLDERSEP "\\"
+#else
+#define FOLDERSEP "/"
+#endif
 
 }

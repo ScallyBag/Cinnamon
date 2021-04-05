@@ -78,7 +78,7 @@ endif
 
 cinnamon-js:
 	emcc -std=c++11 -w -DJS_MODE -DDLOG_LEVEL=_FATAL util/Bitboard.cpp -fsigned-char namespaces/board.cpp ChessBoard.cpp Eval.cpp Hash.cpp IterativeDeeping.cpp GenMoves.cpp js/main.cpp \
-	Search.cpp SearchManager.cpp perft/Perft.cpp util/IniFile.cpp util/Timer.cpp perft/PerftThread.cpp \
+	Search.cpp SearchManager.cpp perft/Perft.cpp util/Timer.cpp perft/PerftThread.cpp \
 	-s WASM=0 -s EXPORTED_FUNCTIONS="['_main','_perft','_command','_isvalid']" -s EXTRA_EXPORTED_RUNTIME_METHODS='["cwrap"]' -s NO_EXIT_RUNTIME=1 -o cinnamon.js -O3 --memory-init-file 0
 
 cinnamon32-generic:
@@ -108,8 +108,8 @@ cinnamon64-modern-INTEL:
 cinnamon64-BMI2:
 	$(MAKE) ARC="$(ARC) -mbmi2 -DUSE_BMI2 " cinnamon64-modern-INTEL
 
-all: main.o ChessBoard.o board.o Eval.o test.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o IniFile.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o
-	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IniFile.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o ${LIBS}
+all: main.o ChessBoard.o board.o Eval.o test.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o
+	$(COMP) $(ARC) ${CFLAGS} -o ${EXE} main.o test.o ChessBoard.o board.o GenMoves.o WrapperCinnamon.o Bitboard.o Timer.o Eval.o IterativeDeeping.o Perft.o PerftThread.o Search.o SearchManager.o Hash.o Uci.o GTB.o SYZYGY.o tbprobe.o Lzma86Dec.o LzFind.o Lzma86Enc.o Alloc.o LzmaDec.o Bra86.o LzmaEnc.o wrap.o gtb-dec.o gtb-att.o sysport.o gtb-probe.o ${LIBS}
 
 default:
 	help
@@ -194,9 +194,6 @@ SYZYGY.o: db/syzygy/SYZYGY.cpp
 
 tbprobe.o: db/syzygy/tbprobe.c
 	$(COMP) -c db/syzygy/tbprobe.c ${CFLAGS} ${ARC}
-
-IniFile.o: util/IniFile.cpp
-	$(COMP) -c util/IniFile.cpp ${CFLAGS} ${ARC}
 
 Timer.o: util/Timer.cpp
 	$(COMP) -c util/Timer.cpp ${CFLAGS} ${ARC}

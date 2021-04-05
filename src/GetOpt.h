@@ -204,6 +204,9 @@ private:
 public:
 
     static void parse(int argc, char **argv) {
+#ifndef DEBUG_MODE
+        assert(0);
+#endif
         if (!(argc > 1 && !strcmp("-puzzle_epd", argv[1])))
             printHeader(FileUtil::getFileName(argv[0]));
         if (argc == 2 && !strcmp(argv[1], "--help")) {

@@ -44,6 +44,28 @@ public:
 
     static string decodeBoardinv(const uchar type, const int a, const uchar side);
 
+#ifdef TUNING
+
+    const _Tchessboard &getChessboard() {
+        return threadPool->getThread(0).getChessboard();
+    }
+
+    static void setParameter(const string &param, const int value) {
+        for (Search *s:threadPool->getPool()) {
+            s->setParameter(param, value);
+        }
+    }
+
+    static int getParameter(const string &param) {
+        return threadPool->getThread(0).getParameter(param);
+    }
+
+    int getQscore() const {
+        return threadPool->getThread(0).qSearch(15, -_INFINITE, _INFINITE);
+    }
+
+#endif
+
     static void clearHeuristic();
 
     static int getForceCheck();

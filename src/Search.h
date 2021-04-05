@@ -66,6 +66,23 @@ public:
 
     void setMaxTimeMillsec(const int);
 
+#ifdef TUNING
+
+    int getParameter(const string &param);
+
+    void setParameter(const string &param, const int value);
+
+    int qSearch(const int depth, const int alpha, const int beta) {
+        ASSERT_RANGE(depth, 0, MAX_PLY)
+        auto ep = enPassant;
+
+        const auto result= sideToMove ? qsearch<WHITE>(alpha, beta, ep, depth)
+                                      : qsearch<BLACK>(alpha, beta, ep, depth);
+        return sideToMove ? result : -result;
+    }
+
+#endif
+
     int getMaxTimeMillsec() const;
 
     void startClock();
@@ -84,6 +101,7 @@ public:
     void run();
 
     void endRun() {}
+
 #ifndef JS_MODE
 
     int probeWdl(const int depth, const uchar side, const int N_PIECE);

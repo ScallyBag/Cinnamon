@@ -15,7 +15,7 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+#ifdef TUNING
 #pragma once
 
 #include <fstream>
@@ -31,18 +31,15 @@ public:
 
     IniFile(const string &fileName1);
 
-    ~IniFile();
-
-    string getValue(const string &value);
-
-    pair<string, string> *get();
-
+    map<string, string> map;
 private:
     std::regex rgxLine;
     std::regex rgxTag;
-    bool endFile = true;
     ifstream inData;
     string fileName;
     pair<string, string> params;
-};
 
+    pair<string, string> *get();
+
+};
+#endif

@@ -504,11 +504,12 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     int lazyscore_black = lazyEvalSide<BLACK>(chessboard);
     const int lazyscore = side ? lazyscore_white - lazyscore_black : lazyscore_black - lazyscore_white;
 
+#ifndef TUNING
     if (lazyscore > (beta + FUTIL_MARGIN) || lazyscore < (alpha - FUTIL_MARGIN)) {
         INC(lazyEvalCuts);
         return lazyscore;
     }
-
+#endif
     DEBUG(evaluationCount[WHITE] = evaluationCount[BLACK] = 0)
     DEBUG(memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG)))
 
@@ -736,7 +737,9 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         cout << flush;
     }
 #endif
+#ifndef TUNING
     storeHashValue(key, result);
+#endif
     return side ? -result : result;
 }
 

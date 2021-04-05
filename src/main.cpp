@@ -18,6 +18,7 @@
 
 #include "Uci.h"
 #include "GetOpt.h"
+#include "util/Texel.h"
 
 #if defined(FULL_TEST)
 
@@ -36,15 +37,23 @@
  2| 15 14 13 12 11 10 09 08
  1| 07 06 05 04 03 02 01 00
  ...a  b  c  d  e  f  g  h
-
  */
 
 using namespace constants;
 
 int main(int argc, char **argv) {
+#ifdef TUNING
+    if (argc != 2) {
+        cout << Texel::help << endl;
+        cout << "run " << FileUtil::getFileName(argv[0]) << " path" << endl;
+        return 1;
+    }
+    new Texel(argv[1]);
+    return 0;
+#endif
     assert(sizeof(Hash::_Thash) == 16);
     assert(sizeof(_Tmove) == 8);
-#if defined(FULL_TEST)
+#ifdef FULL_TEST
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 #endif

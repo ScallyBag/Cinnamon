@@ -333,8 +333,6 @@
     <ClInclude Include=".\util\Bitboard.h" />
     <ClInclude Include=".\util\FileUtil.h" />
     <ClInclude Include=".\GetOpt.h" />
-    <ClCompile Include=".\util\IniFile.cpp" />
-    <ClInclude Include=".\util\IniFile.h" />
     <ClInclude Include=".\util\logger.h" />
     <ClInclude Include=".\util\Singleton.h" />
     <ClInclude Include=".\util\String.h" />
