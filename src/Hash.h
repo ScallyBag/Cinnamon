@@ -134,7 +134,7 @@ public:
             _Thash *hash = &(hashArray[kMod]);
             bool found = false;
             for (int i = 0; i < BUCKETS; i++, hash++) {
-                u64 data = hash->data;
+                const u64 data = hash->data;
                 if (toStore.key == GET_KEY(hash)) {
                     found = true;
                     if (GET_DEPTH(data) <= GET_DEPTH(toStore.data)) {
@@ -152,7 +152,6 @@ public:
         if (empty) { //empty slot
             empty->key = (toStore.key ^ toStore.data);
             empty->data = toStore.data;
-
             SET_AGE(empty->data, ply);
             return;
         }
@@ -163,9 +162,8 @@ public:
             int i;
             int oldTT = -INT_MAX;
             for (i = 0; i < BUCKETS; i++, hash++) {
-                u64 data = hash->data;
-                const auto age = ((ply - GET_AGE(data)) & 255) * 256 + 255 - GET_DEPTH(data); //TODO
-                // const int age = ((pow(GET_DEPTH(data) - GET_DEPTH(old->data), 2)) + (ply - GET_AGE(data)));
+                const u64 data = hash->data;
+                const auto age = ((ply - GET_AGE(data)) & 0xff) * 0x100 + 0xff - GET_DEPTH(data); //TODO
                 if (age > oldTT) {
                     old = hash;
                     oldTT = age;

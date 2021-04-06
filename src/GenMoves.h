@@ -95,8 +95,6 @@ public:
 
     void init();
 
-    int loadFen(const string &fen = "");
-
     void takeback(const _Tmove *move, const u64 oldkey, const uchar oldEnpassant, const bool rep);
 
     void setRepetitionMapCount(const int i);

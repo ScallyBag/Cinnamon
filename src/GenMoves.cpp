@@ -416,16 +416,6 @@ void GenMoves::setRepetitionMapCount(const int i) {
     repetitionMapCount = i;
 }
 
-int GenMoves::loadFen(const string &fen) {
-    uchar side = ChessBoard::loadFen(fen);
-    if (side == 2) {
-        fatal("Bad FEN position format ", fen)
-        std::_Exit(1);
-    }
-
-    return side;
-}
-
 int GenMoves::getMoveFromSan(const string &fenStr, _Tmove *move) {
     enPassant = NO_ENPASSANT;
     memset(move, 0, sizeof(_Tmove));

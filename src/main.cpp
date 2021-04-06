@@ -18,7 +18,6 @@
 
 #include "Uci.h"
 #include "GetOpt.h"
-#include "util/Texel.h"
 
 #if defined(FULL_TEST)
 
@@ -42,15 +41,7 @@
 using namespace constants;
 
 int main(int argc, char **argv) {
-#ifdef TUNING
-    if (argc != 2) {
-        cout << Texel::help << endl;
-        cout << "run " << FileUtil::getFileName(argv[0]) << " path" << endl;
-        return 1;
-    }
-    new Texel(argv[1]);
-    return 0;
-#endif
+
     assert(sizeof(Hash::_Thash) == 16);
     assert(sizeof(_Tmove) == 8);
 #ifdef FULL_TEST
