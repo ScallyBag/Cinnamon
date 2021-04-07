@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.17)
 project(cinnamon_debug)
 
 # debug
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -fsanitize=address -mbmi2 -DUSE_BMI2 -g -DDEBUG_MODE -pthread -Wall -Wpedantic -W -std=c++11 -DDLOG_LEVEL=_TRACE -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -fsanitize=address -mbmi2 -DUSE_BMI2 -g -DDEBUG_MODE -pthread -Wall -Wpedantic -W -std=c++11 -DDLOG_LEVEL=_TRACE -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
 
 # bench
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -pthread -Wpedantic -W -DBENCH_MODE -std=c++11 -DDLOG_LEVEL=_FATAL -Wall -O3 -DNDEBUG -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
@@ -11,7 +11,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -fsanitize=addre
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -fsanitize=address -g -pthread -Wall -Wpedantic -W -std=c++11 -DDLOG_LEVEL=_TRACE -DFULL_TEST -DDEBUG_MODE -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
 
 # tuning
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -O3 -pthread -Wall -Wpedantic -W -std=c++11 -DTUNING -DNDEBUG -DDLOG_LEVEL=_FATAL -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-braced-scalar-init -mbmi2 -DUSE_BMI2 -O3 -pthread -Wall -Wpedantic -W -std=c++11 -DTUNING -DNDEBUG -DDLOG_LEVEL=_FATAL -funroll-loops -msse4.2 -DHAS_POPCNT -mpopcnt -msse3 -DHAS_BSF -m64 ")
 
 include_directories(db/gtb)
 include_directories(db/gtb/compression)

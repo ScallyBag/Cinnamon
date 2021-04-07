@@ -109,7 +109,7 @@ protected:
         double bestError;
         do {
             cout << "***************************************** Cycle #" << (cycle++) << " " << Time::getLocalTime()
-                 << " *****************************************" << endl;
+                 << " *****************************************" << endl << flush;
             fullImproved = false;
             const double startError = E(fens);
             for (auto &param:params) param.print(searchManager);
@@ -118,7 +118,8 @@ protected:
             for (auto &param:params) {
                 int bestValue = -1;
                 for (int dir = 0; dir < 2; dir++) {
-                    if (!dir)cout << "\nUP\n" << flush; else cout << "\nDOWN\n" << flush;
+                    if (!dir)cout << "\nUP "; else cout << "\nDOWN ";
+                    cout << Time::getLocalTime() << endl << flush;
 
                     auto oldValue = searchManager.getParameter(param.name);
                     int newValue;
@@ -154,13 +155,13 @@ protected:
                     }
                     searchManager.setParameter(param.name, oldValue);
                     if (bestValue >= 0) {
-                        cout << "\n** OK ** bestError: " << bestError << " bestValue " << bestValue << " was "
+                        cout << "\n** Improved. ** bestError: " << bestError << " bestValue " << bestValue << " was "
                              << param.getStartValue() << flush;
                         searchManager.setParameter(param.name, bestValue);
                         for (auto &param:params) param.print(searchManager);
                         saveParams(params);
                         assert(E(fens) == bestError);
-                    } else cout << "\n** ko **" << flush;
+                    } else cout << "\n** Not improved. **" << flush;
                 }
             }
         } while (fullImproved);

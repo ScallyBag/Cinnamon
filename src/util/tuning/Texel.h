@@ -27,15 +27,15 @@
 class Texel : Tune {
 
 public:
-    static constexpr auto help = "Texel method tuning\n\n"
+    static constexpr auto help = "Texel's Tuning Method\n\n"
                                  " Download a big strong main.pgn file\n"
-                                 " pgn-extract -Tr0-1 main.pgn >win_black.pgn 2>/dev/null\n"
-                                 " pgn-extract -Tr1-0 main.pgn >win_white.pgn 2>/dev/null\n"
-                                 " pgn-extract -Tr1/2-1/2 main.pgn >draw.pgn 2>/dev/null\n"
+                                 " pgn-extract -Tr0-1       main.pgn >win_black.pgn 2>/dev/null\n"
+                                 " pgn-extract -Tr1-0       main.pgn >win_white.pgn 2>/dev/null\n"
+                                 " pgn-extract -Tr1/2-1/2   main.pgn >draw.pgn      2>/dev/null\n"
                                  "\n"
-                                 " pgn-extract -Wepd win_black.pgn >win_black.epd 2>/dev/null\n"
-                                 " pgn-extract -Wepd win_white.pgn >win_white.epd 2>/dev/null\n"
-                                 " pgn-extract -Wepd draw.pgn >draw.epd 2>/dev/null\n"
+                                 " pgn-extract -Wepd win_black.pgn  >win_black.epd  2>/dev/null\n"
+                                 " pgn-extract -Wepd win_white.pgn  >win_white.epd  2>/dev/null\n"
+                                 " pgn-extract -Wepd draw.pgn       >draw.epd       2>/dev/null\n"
                                  "\n"
                                  " cat win_white.epd  | awk -F \" \" '{print $1\" \"$2\" \"$3}' >foo;sort -u foo |grep \"k\" > win_white.epd\n"
                                  " cat win_black.epd  | awk -F \" \" '{print $1\" \"$2\" \"$3}' >foo;sort -u foo |grep \"k\" > win_black.epd\n"
@@ -44,8 +44,7 @@ public:
 
     Texel(const string &path) {
         this->path = path;
-
-        cout << Time::getLocalTime() << " Start" << endl;
+        cout << "Texel's Tuning Method " << Time::getLocalTime() << " start" << endl;
         set <string> draw;
         set <string> black;
         set <string> white;
@@ -81,7 +80,7 @@ public:
 
         tune(fens);
 
-        cout << endl << endl << Time::getLocalTime() << " End\n";
+        cout << endl << endl << Time::getLocalTime() << " end\n";
         for (auto itr = fens.begin(); itr != fens.end(); itr++) delete *itr;
         fens.clear();
     }
