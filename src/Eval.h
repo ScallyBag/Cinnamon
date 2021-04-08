@@ -81,9 +81,10 @@ public:
     void p(float d1, float d2) {
         std::cout << std::fixed;
         std::cout << std::setprecision(2);
-        std::cout << "\t";
+
+        if(d1<0)std::cout << "\t";else std::cout << "\t ";
         std::cout << d1 / 100.0;
-        std::cout << "\t";
+        if(d2<0)std::cout << "\t";else std::cout << "\t ";
         std::cout << d2 / 100.0;
         std::cout << "\t|";
     }
@@ -91,31 +92,26 @@ public:
 
     unsigned lazyEvalCuts;
     typedef struct {
-        int BAD_BISHOP[2];
+
         int MOB_BISHOP[2];
-//        int UNDEVELOPED_BISHOP[2];
-        int OPEN_DIAG_BISHOP[2];
+
         int BONUS2BISHOP[2];
-//        int PAWN_PINNED[2];
+
         int BISHOP_PINNED[2];
         int QUEEN_PINNED[2];
         int KNIGHT_PINNED[2];
         int ROOK_PINNED[2];
-        int ATTACK_KING_PAWN[2];
-//        int PAWN_CENTER[2];
+
         int PAWN_7H[2];
         int PAWN_IN_PROMOTION[2];
         int PAWN_BLOCKED[2];
         int UNPROTECTED_PAWNS[2];
-//        int PAWN_ISOLATED[2];
-//        int DOUBLED_PAWNS[2];
+
         int DOUBLED_ISOLATED_PAWNS[2];
         int BACKWARD_PAWN[2];
-        int FORK_SCORE[2];
+
         int PAWN_PASSED[2];
-        int ENEMIES_PAWNS_ALL[2];
-        int NO_PAWNS[2];
-//        int KING_SECURITY_BISHOP[2];
+
         int KING_SECURITY_QUEEN[2];
         int KING_SECURITY_KNIGHT[2];
         int KING_SECURITY_ROOK[2];
@@ -125,16 +121,12 @@ public:
         int MOB_QUEEN[2];
         int OPEN_FILE_Q[2];
         int BISHOP_ON_QUEEN[2];
-//        int HALF_OPEN_FILE_Q[2];
-//        int UNDEVELOPED_KNIGHT[2];
-        int KNIGHT_TRAPPED[2];
+
         int MOB_KNIGHT[2];
         int ROOK_7TH_RANK[2];
-//        int ROOK_TRAPPED[2];
+
         int MOB_ROOK[2];
-//        int ROOK_BLOCKED[2];
-        int ROOK_OPEN_FILE[2];
-//        int CONNECTED_ROOKS[2];
+
     } _TSCORE_DEBUG;
     _TSCORE_DEBUG SCORE_DEBUG[2];
 #endif

@@ -110,8 +110,12 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
                       (structureEval.allPieces & (shiftForward<side, 8>(pos))) ? PAWN_BLOCKED[EG] : 0;
         result[MG] -= (!(PAWN_FORK_MASK[side][o] & structureEval.allPiecesSide[xside])) &&
                       (structureEval.allPieces & (shiftForward<side, 8>(pos))) ? PAWN_BLOCKED[MG] : 0;
-        ADD(SCORE_DEBUG[MG].PAWN_BLOCKED[side], (!(PAWN_FORK_MASK[side][o] & structureEval.allPiecesSide[xside])) &&(structureEval.allPieces & (shiftForward<side, 8>(pos))) ? -PAWN_BLOCKED[MG]                                                                                                     : 0);
-        ADD(SCORE_DEBUG[EG].PAWN_BLOCKED[side], (!(PAWN_FORK_MASK[side][o] & structureEval.allPiecesSide[xside])) &&(structureEval.allPieces & (shiftForward<side, 8>(pos))) ? -PAWN_BLOCKED[EG]                                                                                                     : 0);
+        ADD(SCORE_DEBUG[MG].PAWN_BLOCKED[side], (!(PAWN_FORK_MASK[side][o] & structureEval.allPiecesSide[xside])) &&
+                                                (structureEval.allPieces & (shiftForward<side, 8>(pos)))
+                                                ? -PAWN_BLOCKED[MG] : 0);
+        ADD(SCORE_DEBUG[EG].PAWN_BLOCKED[side], (!(PAWN_FORK_MASK[side][o] & structureEval.allPiecesSide[xside])) &&
+                                                (structureEval.allPieces & (shiftForward<side, 8>(pos)))
+                                                ? -PAWN_BLOCKED[EG] : 0);
         /// unprotected
         if (!(ped_friends & PAWN_PROTECTED_MASK[side][o])) {
             result[EG] -= UNPROTECTED_PAWNS[EG];
@@ -227,8 +231,10 @@ pair<int, int> Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 en
         result[MG] += MOB_BISHOP[MG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];;
         result[EG] += MOB_BISHOP[EG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];;
 
-        ADD(SCORE_DEBUG[MG].MOB_BISHOP[side],               MOB_BISHOP[MG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
-        ADD(SCORE_DEBUG[EG].MOB_BISHOP[side],               MOB_BISHOP[EG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
+        ADD(SCORE_DEBUG[MG].MOB_BISHOP[side],
+            MOB_BISHOP[MG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
+        ADD(SCORE_DEBUG[EG].MOB_BISHOP[side],
+            MOB_BISHOP[EG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
 
         // 6.
 //        if (phase != OPEN) {
@@ -285,8 +291,10 @@ pair<int, int> Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 ene
             FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
     structureEval.kingSecurity[EG][side] +=
             FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
-    ADD(SCORE_DEBUG[MG].KING_SECURITY_QUEEN[side],           FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
-    ADD(SCORE_DEBUG[EG].KING_SECURITY_QUEEN[side],           FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
+    ADD(SCORE_DEBUG[MG].KING_SECURITY_QUEEN[side],
+        FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
+    ADD(SCORE_DEBUG[EG].KING_SECURITY_QUEEN[side],
+        FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & queen);
@@ -366,8 +374,10 @@ pair<int, int> Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 no
             FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
     structureEval.kingSecurity[EG][side] +=
             FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
-    ADD(SCORE_DEBUG[MG].KING_SECURITY_KNIGHT[side],        FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
-    ADD(SCORE_DEBUG[EG].KING_SECURITY_KNIGHT[side],        FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
+    ADD(SCORE_DEBUG[MG].KING_SECURITY_KNIGHT[side],
+        FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
+    ADD(SCORE_DEBUG[EG].KING_SECURITY_KNIGHT[side],
+        FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & knight);
@@ -444,8 +454,10 @@ pair<int, int> Eval::evaluateRook(const _Tchessboard &chessboard, const u64 enem
             FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
     structureEval.kingSecurity[EG][side] +=
             FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
-    ADD(SCORE_DEBUG[MG].KING_SECURITY_ROOK[side],        FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
-    ADD(SCORE_DEBUG[EG].KING_SECURITY_ROOK[side],        FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
+    ADD(SCORE_DEBUG[MG].KING_SECURITY_ROOK[side],
+        FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
+    ADD(SCORE_DEBUG[EG].KING_SECURITY_ROOK[side],
+        FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & rook);
@@ -623,11 +635,11 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
             (attack_king_black[EG] + bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +
              tResult[EG].knights[BLACK] + tResult[EG].bishop[BLACK] + tResult[EG].rooks[BLACK] +
              tResult[EG].queens[BLACK] +
-             tResult[EG].kings[BLACK] + firstMoveBlack) -
+             tResult[EG].kings[BLACK]) -
             (attack_king_white[EG] + bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
              tResult[EG].knights[WHITE] + tResult[EG].bishop[WHITE] + tResult[EG].rooks[WHITE] +
              tResult[EG].queens[WHITE] +
-             tResult[EG].kings[WHITE] + firstMoveWhite);
+             tResult[EG].kings[WHITE]);
     const float phase =
             ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
             MAX_VALUE_TAPERED;
@@ -636,7 +648,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
 
 #ifdef DEBUG_MODE
     if (trace) {
-//        const string HEADER = "\n";//|\t\t\t\t\tWHITE\t\tBLACK\t\t  WHITE\t\tBLACK\t\t  WHITE\t\tBLACK\n";
 
         cout << "========================================================================================" << endl;
 
@@ -655,8 +666,8 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
              << (float) (bonus_attack_king_white_eg) / 100.0 << setw(10) << (float) (bonus_attack_king_black_eg) / 100.0
              << endl;
         cout << endl;
-        cout << "  Eval term\t|\t  Total\t\t|\t  White\t\t|\t  Black\t\t|\n"
-                "\t\t|\tMG\tEG\t|\tMG\tEG\t|\tMG\tEG\t|\n"
+        cout << "  Eval term\t|\t   Total\t|\t   White\t|\t   Black\t|\n"
+                "\t\t|\t  MG\t  EG\t|\t  MG\t  EG\t|\t  MG\t  EG\t|\n"
                 "----------------+-----------------------+-----------------------+-----------------------+" << endl;
         cout << "\tPAWN\t|";
 
@@ -665,12 +676,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p(tResult[MG].pawns[WHITE], tResult[MG].pawns[BLACK]);
         p(tResult[EG].pawns[WHITE], tResult[EG].pawns[BLACK]);
 
-
-        cout << endl << "attack king\t";
-        p();
-        p(SCORE_DEBUG[MG].ATTACK_KING_PAWN[WHITE], SCORE_DEBUG[MG].ATTACK_KING_PAWN[BLACK]);
-        p(SCORE_DEBUG[EG].ATTACK_KING_PAWN[WHITE], SCORE_DEBUG[EG].ATTACK_KING_PAWN[BLACK]);
-        
         cout << endl << "in 7th\t\t";
         p();
         p(SCORE_DEBUG[MG].PAWN_7H[WHITE], SCORE_DEBUG[MG].PAWN_7H[BLACK]);
@@ -696,20 +701,10 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p(SCORE_DEBUG[MG].BACKWARD_PAWN[WHITE], SCORE_DEBUG[MG].BACKWARD_PAWN[BLACK]);
         p(SCORE_DEBUG[EG].BACKWARD_PAWN[WHITE], SCORE_DEBUG[EG].BACKWARD_PAWN[BLACK]);
 
-        cout << endl << "fork\t\t";
-        p();
-        p(SCORE_DEBUG[MG].FORK_SCORE[WHITE], SCORE_DEBUG[MG].FORK_SCORE[BLACK]);
-        p(SCORE_DEBUG[EG].FORK_SCORE[WHITE], SCORE_DEBUG[EG].FORK_SCORE[BLACK]);
-
         cout << endl << "passed\t\t";
         p();
         p(SCORE_DEBUG[MG].PAWN_PASSED[WHITE], SCORE_DEBUG[MG].PAWN_PASSED[BLACK]);
         p(SCORE_DEBUG[EG].PAWN_PASSED[WHITE], SCORE_DEBUG[EG].PAWN_PASSED[BLACK]);
-
-        cout << endl << "none\t\t";
-        p();
-        p(SCORE_DEBUG[MG].NO_PAWNS[WHITE], SCORE_DEBUG[MG].NO_PAWNS[BLACK]);
-        p(SCORE_DEBUG[EG].NO_PAWNS[WHITE], SCORE_DEBUG[EG].NO_PAWNS[BLACK]);
 
         cout << endl << "\tKNIGHT\t|";
         p((tResult[MG].knights[WHITE] - tResult[MG].knights[BLACK]),
@@ -717,12 +712,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
 
         p(tResult[MG].knights[WHITE], tResult[MG].knights[BLACK]);
         p(tResult[EG].knights[WHITE], tResult[EG].knights[BLACK]);
-
-   
-        cout << endl << "trapped\t\t";
-        p();
-        p(SCORE_DEBUG[MG].KNIGHT_TRAPPED[WHITE], SCORE_DEBUG[MG].KNIGHT_TRAPPED[BLACK]);
-        p(SCORE_DEBUG[EG].KNIGHT_TRAPPED[WHITE], SCORE_DEBUG[EG].KNIGHT_TRAPPED[BLACK]);
 
         cout << endl << "mobility\t";
         p();
@@ -736,20 +725,10 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p(tResult[MG].bishop[WHITE], tResult[MG].bishop[BLACK]);
         p(tResult[EG].bishop[WHITE], tResult[EG].bishop[BLACK]);
 
-        cout << endl << "bad\t\t";
-        p();
-        p(SCORE_DEBUG[MG].BAD_BISHOP[WHITE], SCORE_DEBUG[MG].BAD_BISHOP[BLACK]);
-        p(SCORE_DEBUG[EG].BAD_BISHOP[WHITE], SCORE_DEBUG[EG].BAD_BISHOP[BLACK]);
-
         cout << endl << "mobility\t";
         p();
         p(SCORE_DEBUG[MG].MOB_BISHOP[WHITE], SCORE_DEBUG[MG].MOB_BISHOP[BLACK]);
         p(SCORE_DEBUG[EG].MOB_BISHOP[WHITE], SCORE_DEBUG[EG].MOB_BISHOP[BLACK]);
-
-        cout << endl << "open diag\t";
-        p();
-        p(SCORE_DEBUG[MG].OPEN_DIAG_BISHOP[WHITE], SCORE_DEBUG[MG].OPEN_DIAG_BISHOP[BLACK]);
-        p(SCORE_DEBUG[EG].OPEN_DIAG_BISHOP[WHITE], SCORE_DEBUG[EG].OPEN_DIAG_BISHOP[BLACK]);
 
         cout << endl << "bonus 2 bishops\t";
         p();
@@ -770,11 +749,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p();
         p(SCORE_DEBUG[MG].MOB_ROOK[WHITE], SCORE_DEBUG[MG].MOB_ROOK[BLACK]);
         p(SCORE_DEBUG[EG].MOB_ROOK[WHITE], SCORE_DEBUG[EG].MOB_ROOK[BLACK]);
-
-        cout << endl << "open file\t";
-        p();
-        p(SCORE_DEBUG[MG].ROOK_OPEN_FILE[WHITE], SCORE_DEBUG[MG].ROOK_OPEN_FILE[BLACK]);
-        p(SCORE_DEBUG[EG].ROOK_OPEN_FILE[WHITE], SCORE_DEBUG[EG].ROOK_OPEN_FILE[BLACK]);
 
         cout << endl << "\tQUEEN\t|";
         p((tResult[MG].queens[WHITE] - tResult[MG].queens[BLACK]),
@@ -806,9 +780,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p(SCORE_DEBUG[MG].PAWN_NEAR_KING[WHITE], SCORE_DEBUG[MG].PAWN_NEAR_KING[BLACK]);
         p(SCORE_DEBUG[EG].PAWN_NEAR_KING[WHITE], SCORE_DEBUG[EG].PAWN_NEAR_KING[BLACK]);
 
-//      cout << "       mobility:                 " << setw(10) <<  (SCORE_DEBUG[MG].MOB_KING[WHITE]) / 100.0 << setw(10) <<  (SCORE_DEBUG[MG].MOB_KING[BLACK]) / 100.0 << "\n";
-        cout << endl;
-        cout << endl << "Total (white)....   " << (float) ((side ? finalScore + 5 : -finalScore - 5) / 100.0) << endl;
+        cout <<endl<< endl << "Total (white)....   " << (float) ((side ? -finalScore : finalScore) / 100.0) << endl;
     }
 #endif
 #ifndef TUNING
