@@ -43,7 +43,7 @@ public:
                                  " rm foo win_black.pgn win_white.pgn draw.pgn\n";
 
     Texel(const string &path) {
-        searchManager.getParameter("abc4");
+
         this->path = path;
         cout << "Texel's Tuning Method " << Time::getLocalTime() << " start" << endl;
         set <string> draw;

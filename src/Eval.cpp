@@ -48,7 +48,7 @@ Eval::~Eval() {
  * 14. passed - if there isn't friend pawns forward and forward on sides until 8' rank add PAWN_PASSED[side][pos]
 
  */
-template<uchar side, Eval::_Tphase phase>
+template<uchar side>
 pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
     INC(evaluationCount[side]);
     int result[2] = {0, 0};
@@ -63,34 +63,33 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
 //    }
 
     // 7.
-    if (phase != OPEN) {
+
 //        if (structureEval.pinned[side] & ped_friends) result -= PAWN_PINNED;
 //        ADD(SCORE_DEBUG.PAWN_PINNED[side], -PAWN_PINNED);
-        structureEval.kingSecurity[MG][side] +=
-                FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & ped_friends);
-        structureEval.kingSecurity[EG][side] +=
-                FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & ped_friends);
+    structureEval.kingSecurity[MG][side] +=
+            FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & ped_friends);
+    structureEval.kingSecurity[EG][side] +=
+            FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & ped_friends);
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & ped_friends);
-    }
+
 
     // 8.  pawn in 8th
-    if (phase != OPEN) {
-        const u64 pawnsIn7 = PAWNS_7_2[side] & ped_friends;
-        result[MG] += PAWN_IN_7TH[MG] * bitCount(pawnsIn7);
-        result[EG] += PAWN_IN_7TH[EG] * bitCount(pawnsIn7);
-        ADD(SCORE_DEBUG.PAWN_7H[side], PAWN_IN_7TH * bitCount(pawnsIn7));
 
-        const u64 pawnsIn8 = (shiftForward<side, 8>(pawnsIn7) & (~structureEval.allPieces)) |
-                             (structureEval.allPiecesSide[xside] &
-                              (shiftForward<side, 7>(pawnsIn7) | shiftForward<side, 9>(pawnsIn7)));
+    const u64 pawnsIn7 = PAWNS_7_2[side] & ped_friends;
+    result[MG] += PAWN_IN_7TH[MG] * bitCount(pawnsIn7);
+    result[EG] += PAWN_IN_7TH[EG] * bitCount(pawnsIn7);
+    ADD(SCORE_DEBUG.PAWN_7H[side], PAWN_IN_7TH * bitCount(pawnsIn7));
 
-        result[MG] += PAWN_IN_PROMOTION[MG] * bitCount(pawnsIn8); //try to decrease PAWN_IN_PROMOTION
-        result[EG] += PAWN_IN_PROMOTION[EG] * bitCount(pawnsIn8); //try to decrease PAWN_IN_PROMOTION
-        ADD(SCORE_DEBUG.PAWN_IN_PROMOTION[side], PAWN_IN_PROMOTION * (bitCount(pawnsIn8)));
+    const u64 pawnsIn8 = (shiftForward<side, 8>(pawnsIn7) & (~structureEval.allPieces)) |
+                         (structureEval.allPiecesSide[xside] &
+                          (shiftForward<side, 7>(pawnsIn7) | shiftForward<side, 9>(pawnsIn7)));
 
-    }
+    result[MG] += PAWN_IN_PROMOTION[MG] * bitCount(pawnsIn8); //try to decrease PAWN_IN_PROMOTION
+    result[EG] += PAWN_IN_PROMOTION[EG] * bitCount(pawnsIn8); //try to decrease PAWN_IN_PROMOTION
+    ADD(SCORE_DEBUG.PAWN_IN_PROMOTION[side], PAWN_IN_PROMOTION * (bitCount(pawnsIn8)));
+
 
     for (u64 p = ped_friends; p; RESET_LSB(p)) {
         bool isolated = false;
@@ -152,7 +151,7 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
 }
 
 /**
- * evaluate bishop for color at phase
+ * evaluate bishop for color at phase TODO rivedere doc
  * 1. if no bishops returns 0
  * 2. if two bishops add BONUS2BISHOP
  * 3 *king security* - in OPEN phase substracts at kingSecurity ENEMY_NEAR_KING for each bishop close to enmey king
@@ -163,7 +162,7 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
  * 8. bishop on big diagonal
  * 9. pinned
  */
-template<uchar side, Eval::_Tphase phase>
+template<uchar side>
 pair<int, int> Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 enemies) {
     INC(evaluationCount[side]);
     constexpr int xside = X(side);
@@ -177,29 +176,31 @@ pair<int, int> Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 en
 
     // 2.
     if (nBishop == 1) {
-        result[MG] -= BISHOP_PAWN_ON_SAME_COLOR[MG] * bitCount(chessboard[side] & board::colors(BITScanForward(bishop)));
-        result[EG] -= BISHOP_PAWN_ON_SAME_COLOR[EG] * bitCount(chessboard[side] & board::colors(BITScanForward(bishop)));
+        result[MG] -=
+                BISHOP_PAWN_ON_SAME_COLOR[MG] * bitCount(chessboard[side] & board::colors(BITScanForward(bishop)));
+        result[EG] -=
+                BISHOP_PAWN_ON_SAME_COLOR[EG] * bitCount(chessboard[side] & board::colors(BITScanForward(bishop)));
     } else {
         // 2.
         assert(nBishop > 1);
-        if (phase != OPEN) {
-            result[MG] += BONUS2BISHOP[MG];
-            result[EG] += BONUS2BISHOP[EG];
-            ADD(SCORE_DEBUG.BONUS2BISHOP[side], BONUS2BISHOP);
-        }
+
+        result[MG] += BONUS2BISHOP[MG];
+        result[EG] += BONUS2BISHOP[EG];
+        ADD(SCORE_DEBUG.BONUS2BISHOP[side], BONUS2BISHOP);
+
     }
 
     // 3. *king security*
-    if (phase != OPEN) {
-        // 9. pinned
-        if (structureEval.pinned[MG][side] & bishop) result[MG] -= BISHOP_PINNED[MG];
-        if (structureEval.pinned[EG][side] & bishop) result[EG] -= BISHOP_PINNED[EG];
-        ADD(SCORE_DEBUG.BISHOP_PINNED[side], -BISHOP_PINNED);
+
+    // 9. pinned
+    if (structureEval.pinned[side] & bishop) result[MG] -= BISHOP_PINNED[MG];
+    if (structureEval.pinned[side] & bishop) result[EG] -= BISHOP_PINNED[EG];
+    ADD(SCORE_DEBUG.BISHOP_PINNED[side], -BISHOP_PINNED);
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & bishop);
 //        ADD(SCORE_DEBUG.KING_SECURITY_BISHOP[side],
 //            -ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & bishop));
-    }
+
 
     // 4. undevelop
 //    if (phase != END) {
@@ -215,9 +216,9 @@ pair<int, int> Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 en
         const u64 captured = x & enemies;
         assert(bitCount(captured) + bitCount(x & ~structureEval.allPieces) < (int) (sizeof(MOB_BISHOP) / sizeof(int)));
         if (captured & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
-        const auto mob = MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];
-        result[MG] += mob;
-        result[EG] += mob;
+
+        result[MG] += MOB_BISHOP[MG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];;
+        result[EG] += MOB_BISHOP[EG][bitCount(captured) + bitCount(x & ~structureEval.allPieces)];;
 
         ADD(SCORE_DEBUG.MOB_BISHOP[side],
             MOB_BISHOP[phase][bitCount(captured) + bitCount(x & ~structureEval.allPieces)]);
@@ -261,27 +262,29 @@ pair<int, int> Eval::evaluateBishop(const _Tchessboard &chessboard, const u64 en
  * 5. open file - if there is any pieces on same file add OPEN_FILE_Q
  * 6. 5. bishop on queen - if there is a bishop on same diagonal add BISHOP_ON_QUEEN
  */
-template<uchar side, Eval::_Tphase phase>
+template<uchar side>
 pair<int, int> Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 enemies) {
     INC(evaluationCount[side]);
     u64 queen = chessboard[QUEEN_BLACK + side];
     int result[2] = {0, 0};
     constexpr int xside = X(side);
     // 2. *king security*
-    if (phase != OPEN) {
-        if (structureEval.pinned[MG][side] & queen) result[MG] -= QUEEN_PINNED[MG];
-        if (structureEval.pinned[EG][side] & queen) result[EG] -= QUEEN_PINNED[EG];
-        ADD(SCORE_DEBUG.QUEEN_PINNED[side], -QUEEN_PINNED);
-        structureEval.kingSecurity[MG][side] +=  FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
-        structureEval.kingSecurity[EG][side] +=  FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
-        ADD(SCORE_DEBUG.KING_SECURITY_QUEEN[side],
-            FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
+
+    if (structureEval.pinned[side] & queen) result[MG] -= QUEEN_PINNED[MG];
+    if (structureEval.pinned[side] & queen) result[EG] -= QUEEN_PINNED[EG];
+    ADD(SCORE_DEBUG.QUEEN_PINNED[side], -QUEEN_PINNED);
+    structureEval.kingSecurity[MG][side] +=
+            FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
+    structureEval.kingSecurity[EG][side] +=
+            FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen);
+    ADD(SCORE_DEBUG.KING_SECURITY_QUEEN[side],
+        FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & queen));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & queen);
 //        ADD(SCORE_DEBUG.KING_SECURITY_QUEEN[xside],
 //            -ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & queen));
-    }
+
 
     for (; queen; RESET_LSB(queen)) {
         const int o = BITScanForward(queen);
@@ -289,8 +292,8 @@ pair<int, int> Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 ene
         const u64 x = board::performRankFileCaptureAndShift(o, enemies, structureEval.allPieces) |
                       board::getDiagShiftAndCapture(o, enemies, structureEval.allPieces);
 
-        result[MG] += MOB_QUEEN[phase][bitCount(x)];
-        result[EG] += MOB_QUEEN[phase][bitCount(x)];
+        result[MG] += MOB_QUEEN[MG][bitCount(x)];
+        result[EG] += MOB_QUEEN[EG][bitCount(x)];
         ADD(SCORE_DEBUG.MOB_QUEEN[side], MOB_QUEEN[phase][bitCount(x)]);
 
         if (x & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
@@ -326,7 +329,7 @@ pair<int, int> Eval::evaluateQueen(const _Tchessboard &chessboard, const u64 ene
  * 6. outposts
 */
 
-template<uchar side, Eval::_Tphase phase>
+template<uchar side>
 pair<int, int> Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 notMyBits) {
     INC(evaluationCount[side]);
     u64 knight = chessboard[KNIGHT_BLACK + side];
@@ -343,20 +346,22 @@ pair<int, int> Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 no
 //    }
 
     // 4. king security
-    if (phase != OPEN) {
-        if (structureEval.pinned[MG][side] & knight) result[MG] -= KNIGHT_PINNED[MG];
-        if (structureEval.pinned[EG][side] & knight) result[EG] -= KNIGHT_PINNED[EG];
-        ADD(SCORE_DEBUG.KNIGHT_PINNED[side], -KNIGHT_PINNED);
-        structureEval.kingSecurity[MG][side] +=                   FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
-        structureEval.kingSecurity[EG][side] +=                   FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
-        ADD(SCORE_DEBUG.KING_SECURITY_KNIGHT[side],
-            FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
+
+    if (structureEval.pinned[side] & knight) result[MG] -= KNIGHT_PINNED[MG];
+    if (structureEval.pinned[side] & knight) result[EG] -= KNIGHT_PINNED[EG];
+    ADD(SCORE_DEBUG.KNIGHT_PINNED[side], -KNIGHT_PINNED);
+    structureEval.kingSecurity[MG][side] +=
+            FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
+    structureEval.kingSecurity[EG][side] +=
+            FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight);
+    ADD(SCORE_DEBUG.KING_SECURITY_KNIGHT[side],
+        FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & knight));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & knight);
 //        ADD(SCORE_DEBUG.KING_SECURITY_KNIGHT[xside],
 //            -ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & knight));
-    }
+
     for (; knight; RESET_LSB(knight)) {
         const int pos = BITScanForward(knight);
 
@@ -399,7 +404,7 @@ pair<int, int> Eval::evaluateKnight(const _Tchessboard &chessboard, const u64 no
  * 7. 2 linked towers
  * 8. Penalise if Rook is Blocked Horizontally
 */
-template<uchar side, Eval::_Tphase phase>
+template<uchar side>
 pair<int, int> Eval::evaluateRook(const _Tchessboard &chessboard, const u64 enemies, const u64 friends) {
     INC(evaluationCount[side]);
 
@@ -411,28 +416,27 @@ pair<int, int> Eval::evaluateRook(const _Tchessboard &chessboard, const u64 enem
     int result[2] = {0, 0};
     constexpr int xside = X(side);
     // 3. in 7th
-    if (phase == MIDDLE) {
-        result[MG] += ROOK_7TH_RANK[MG] * bitCount(rook & RANK_1_7[side]);
-        result[EG] += ROOK_7TH_RANK[EG] * bitCount(rook & RANK_1_7[side]);
-        ADD(SCORE_DEBUG.ROOK_7TH_RANK[side], ROOK_7TH_RANK * bitCount(rook & RANK_1_7[side]));
-    }
+
+    result[MG] += ROOK_7TH_RANK[MG] * bitCount(rook & RANK_1_7[side]);
+    result[EG] += ROOK_7TH_RANK[EG] * bitCount(rook & RANK_1_7[side]);
+    ADD(SCORE_DEBUG.ROOK_7TH_RANK[side], ROOK_7TH_RANK * bitCount(rook & RANK_1_7[side]));
 
     // 4. king security
-    if (phase != OPEN) {
-        if (structureEval.pinned[MG][side] & rook) result[MG] -= ROOK_PINNED[MG];
-        if (structureEval.pinned[EG][side] & rook) result[EG] -= ROOK_PINNED[EG];
-        ADD(SCORE_DEBUG.ROOK_PINNED[side], -ROOK_PINNED);
-        structureEval.kingSecurity[MG][side] +=  FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
-        structureEval.kingSecurity[EG][side] +=  FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
-        ADD(SCORE_DEBUG.KING_SECURITY_ROOK[side],
-            FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
+    if (structureEval.pinned[side] & rook) result[MG] -= ROOK_PINNED[MG];
+    if (structureEval.pinned[side] & rook) result[EG] -= ROOK_PINNED[EG];
+    ADD(SCORE_DEBUG.ROOK_PINNED[side], -ROOK_PINNED);
+    structureEval.kingSecurity[MG][side] +=
+            FRIEND_NEAR_KING[MG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
+    structureEval.kingSecurity[EG][side] +=
+            FRIEND_NEAR_KING[EG] * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook);
+    ADD(SCORE_DEBUG.KING_SECURITY_ROOK[side],
+        FRIEND_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[side]] & rook));
 
 //        structureEval.kingSecurity[side] -=
 //                ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & rook);
 //        ADD(SCORE_DEBUG.KING_SECURITY_ROOK[xside],
 //            -ENEMY_NEAR_KING * bitCount(NEAR_MASK2[structureEval.posKing[xside]] & rook));
 
-    }
 
     // .6
 //    if (((F1G1bit[side] & king) && (H1H2G1bit[side] & rook)) || ((C1B1bit[side] & king) && (A1A2B1bit[side] & rook))) {
@@ -457,8 +461,8 @@ pair<int, int> Eval::evaluateRook(const _Tchessboard &chessboard, const u64 enem
         if (mob & structureEval.posKingBit[xside]) structureEval.kingAttackers[xside] |= POW2(o);
 
         assert(bitCount(mob) < (int) (sizeof(MOB_ROOK[phase]) / sizeof(int)));
-        result[MG] += MOB_ROOK[phase][bitCount(mob)];
-        result[EG] += MOB_ROOK[phase][bitCount(mob)];
+        result[MG] += MOB_ROOK[MG][bitCount(mob)];
+        result[EG] += MOB_ROOK[EG][bitCount(mob)];
         ADD(SCORE_DEBUG.MOB_ROOK[side], MOB_ROOK[phase][bitCount(mob)]);
 
 //        if (phase != OPEN) {
@@ -482,25 +486,20 @@ pair<int, int> Eval::evaluateRook(const _Tchessboard &chessboard, const u64 enem
     return pair<int, int>(result[MG], result[EG]);
 }
 
-template<Eval::_Tphase phase>
 pair<int, int> Eval::evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares) {
     assert(evaluationCount[side] == 5);
     int result[2] = {0, 0};
     uchar pos_king = structureEval.posKing[side];
-    if (phase == END) {
-        ADD(SCORE_DEBUG.DISTANCE_KING[side], DISTANCE_KING_ENDING[pos_king]);
-        result[MG] = DISTANCE_KING_ENDING[pos_king];
-        result[EG] = DISTANCE_KING_ENDING[pos_king];
-    } else {
-        ADD(SCORE_DEBUG.DISTANCE_KING[side], DISTANCE_KING_OPENING[pos_king]);
-        result[MG] = DISTANCE_KING_OPENING[pos_king];
-        result[EG] = DISTANCE_KING_OPENING[pos_king];
-    }
+
+    ADD(SCORE_DEBUG.DISTANCE_KING[side], DISTANCE_KING_ENDING[pos_king]);
+    result[MG] = DISTANCE_KING_OPENING[pos_king];
+    result[EG] = DISTANCE_KING_ENDING[pos_king];
+
 
     //mobility
     assert(bitCount(squares & NEAR_MASK1[pos_king]) < (int) (sizeof(MOB_KING[phase]) / sizeof(int)));
-    result[MG] += MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])];
-    result[EG] += MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])];
+    result[MG] += MOB_KING[MG][bitCount(squares & NEAR_MASK1[pos_king])];
+    result[EG] += MOB_KING[EG][bitCount(squares & NEAR_MASK1[pos_king])];
     ADD(SCORE_DEBUG.MOB_KING[side], MOB_KING[phase][bitCount(squares & NEAR_MASK1[pos_king])]);
 
     assert(pos_king < 64);
@@ -546,18 +545,18 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     DEBUG(evaluationCount[WHITE] = evaluationCount[BLACK] = 0)
     DEBUG(memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG)))
 
-    structureEval.kingSecurity[WHITE] = structureEval.kingSecurity[BLACK] = 0;
+    structureEval.kingSecurity[MG][WHITE] = structureEval.kingSecurity[EG][BLACK] = 0;
     const auto w = board::getBitmapNoPawnsNoKing<WHITE>(chessboard);
     const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);
-    const int npieces = bitCount(w | b);
-    _Tphase phase;
-    if (npieces < 6) {
-        phase = END;
-    } else if (npieces < 11) {
-        phase = MIDDLE;
-    } else {
-        phase = OPEN;
-    }
+//    const int npieces = bitCount(w | b);
+//    _Tphase phase;
+//    if (npieces < 6) {
+//        phase = END;
+//    } else if (npieces < 11) {
+//        phase = MIDDLE;
+//    } else {
+//        phase = OPEN;
+//    }
     structureEval.allPiecesNoPawns[BLACK] = b | chessboard[KING_BLACK];
     structureEval.allPiecesNoPawns[WHITE] = w | chessboard[KING_WHITE];
     structureEval.allPiecesSide[BLACK] = structureEval.allPiecesNoPawns[BLACK] | chessboard[PAWN_BLACK];
@@ -569,45 +568,46 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     structureEval.posKingBit[WHITE] = POW2(structureEval.posKing[WHITE]);
     structureEval.kingAttackers[WHITE] = structureEval.kingAttackers[BLACK] = 0;
 
-    if (phase != OPEN) {
-        structureEval.pinned[WHITE] = board::getPinned<WHITE>(structureEval.allPieces,
-                                                              structureEval.allPiecesSide[WHITE],
-                                                              structureEval.posKing[WHITE], chessboard);
-        structureEval.pinned[BLACK] = board::getPinned<BLACK>(structureEval.allPieces,
-                                                              structureEval.allPiecesSide[BLACK],
-                                                              structureEval.posKing[BLACK], chessboard);
-    } else {
-        structureEval.pinned[WHITE] = structureEval.pinned[BLACK] = 0;
-    }
-    _Tresult Tresult;
-    switch (phase) {
-        case OPEN :
-            getRes<OPEN>(chessboard, Tresult);
-            break;
-        case END :
-            getRes<END>(chessboard, Tresult);
-            break;
-        case MIDDLE:
-            getRes<MIDDLE>(chessboard, Tresult);
-            break;
-        default:
-            break;
-    }
-    const int bonus_attack_king_black =
-            phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
-    const int bonus_attack_king_white =
-            phase == OPEN ? 0 : BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
-    const int attack_king_white = ATTACK_KING * bitCount(structureEval.kingAttackers[BLACK]);
-    const int attack_king_black = ATTACK_KING * bitCount(structureEval.kingAttackers[WHITE]);
+    structureEval.pinned[WHITE] = board::getPinned<WHITE>(structureEval.allPieces,
+                                                          structureEval.allPiecesSide[WHITE],
+                                                          structureEval.posKing[WHITE], chessboard);
+    structureEval.pinned[BLACK] = board::getPinned<BLACK>(structureEval.allPieces,
+                                                          structureEval.allPiecesSide[BLACK],
+                                                          structureEval.posKing[BLACK], chessboard);
+
+    _Tresult tResult[2];
+
+    getRes(chessboard, tResult);
+
+    const int bonus_attack_king_black_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
+    const int bonus_attack_king_white_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
+
+    const int attack_king_white[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[WHITE]),
+                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[WHITE])};
+
+    const int attack_king_black[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[BLACK]),
+                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[BLACK])};
     side == WHITE ? lazyscore_black -= 5 : lazyscore_white += 5;
-    const int result =
-            (attack_king_black + bonus_attack_king_black + lazyscore_black + Tresult.pawns[BLACK] +
-             Tresult.knights[BLACK] + Tresult.bishop[BLACK] + Tresult.rooks[BLACK] + Tresult.queens[BLACK] +
-             Tresult.kings[BLACK]) -
-            (attack_king_white + bonus_attack_king_white + lazyscore_white + Tresult.pawns[WHITE] +
-             Tresult.knights[WHITE] + Tresult.bishop[WHITE] + Tresult.rooks[WHITE] + Tresult.queens[WHITE] +
-             Tresult.kings[WHITE]);
+
+    const int result_mg =
+            (attack_king_black[MG] + lazyscore_black + tResult[MG].pawns[BLACK] +
+             tResult[MG].knights[BLACK] + tResult[MG].bishop[BLACK] + tResult[MG].rooks[BLACK] + tResult[MG].queens[BLACK] +
+             tResult[MG].kings[BLACK]) -
+            (attack_king_white[MG] + lazyscore_white + tResult[MG].pawns[WHITE] +
+             tResult[MG].knights[WHITE] + tResult[MG].bishop[WHITE] + tResult[MG].rooks[WHITE] + tResult[MG].queens[WHITE] +
+             tResult[MG].kings[WHITE]);
+    const int result_eg =
+            (attack_king_black[EG] + bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +
+             tResult[EG].knights[BLACK] + tResult[EG].bishop[BLACK] + tResult[EG].rooks[BLACK] + tResult[EG].queens[BLACK] +
+             tResult[EG].kings[BLACK]) -
+            (attack_king_white[EG] + bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
+             tResult[EG].knights[WHITE] + tResult[EG].bishop[WHITE] + tResult[EG].rooks[WHITE] + tResult[EG].queens[WHITE] +
+             tResult[EG].kings[WHITE]);
+    const float phase =
+            ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
+            MAX_VALUE_TAPERED;
+    const short finalScore = ((result_mg * (256 - phase)) + (result_eg * phase)) / 256;
 
 #ifdef DEBUG_MODE
     if (trace) {
@@ -771,8 +771,9 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     }
 #endif
 #ifndef TUNING
-    storeHashValue(key, result);
+    storeHashValue(key, finalScore);
 #endif
-    return side ? -result : result;
+    return side ? -finalScore : finalScore;
+//    return side ? finalScore + 5 : -finalScore - 5;
 }
 

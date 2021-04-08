@@ -134,7 +134,7 @@ private:
         u64 posKingBit[2];
         int kingSecurity[2][2];
         uchar posKing[2];
-        u64 pinned[2][2];
+        u64 pinned[2];
     } _Tboard;
     _Tboard structureEval;
     static constexpr uchar MG = 0;
@@ -143,6 +143,8 @@ private:
     static constexpr u64 keyMask = 0xffffffffffff0000ULL;
     static constexpr u64 valueMask = 0xffffULL;
     static constexpr short noHashValue = (short) 0xffff;
+    static constexpr float
+            MAX_VALUE_TAPERED = 2 * (VALUEROOK * 2 + VALUEBISHOP * 2 + VALUEKNIGHT * 2 + VALUEQUEEN + VALUEPAWN * 8);
 
     static u64 *evalHash;
 
@@ -165,60 +167,78 @@ private:
 
     DEBUG(int evaluationCount[2])
 
-    template<_Tphase phase>
-    void getRes(const _Tchessboard &chessboard, _Tresult &res) {
+    void getRes(const _Tchessboard &chessboard, _Tresult res[2]) {
 
         BENCH_START("eval pawn")
-        res.pawns[BLACK] = evaluatePawn<BLACK, phase>(chessboard);
-        res.pawns[WHITE] = evaluatePawn<WHITE, phase>(chessboard);
+        auto x1 = evaluatePawn<BLACK>(chessboard);
+        res[MG].pawns[BLACK] = x1.first;
+        res[EG].pawns[BLACK] = x1.second;
+        x1 = evaluatePawn<WHITE>(chessboard);
+        res[MG].pawns[WHITE] = x1.first;
+        res[EG].pawns[WHITE] = x1.second;
         BENCH_STOP("eval pawn")
 
         BENCH_START("eval bishop")
-        res.bishop[BLACK] = evaluateBishop<BLACK, phase>(chessboard, structureEval.allPiecesSide[WHITE]);
-        res.bishop[WHITE] = evaluateBishop<WHITE, phase>(chessboard, structureEval.allPiecesSide[BLACK]);
+        x1 = evaluateBishop<BLACK>(chessboard,structureEval.allPiecesSide[WHITE]);
+        res[MG].bishop[BLACK] = x1.first;
+        res[EG].bishop[BLACK] = x1.second;
+        x1 = evaluateBishop<WHITE>(chessboard,structureEval.allPiecesSide[BLACK]);
+        res[MG].bishop[WHITE] = x1.first;
+        res[EG].bishop[WHITE] = x1.second;
         BENCH_STOP("eval bishop")
 
         BENCH_START("eval queen")
-        res.queens[BLACK] = evaluateQueen<BLACK, phase>(chessboard, structureEval.allPiecesSide[WHITE]);
-        res.queens[WHITE] = evaluateQueen<WHITE, phase>(chessboard, structureEval.allPiecesSide[BLACK]);
+        x1 = evaluateQueen<BLACK>(chessboard,structureEval.allPiecesSide[WHITE]);
+        res[MG].queens[BLACK] = x1.first;
+        res[EG].queens[BLACK] = x1.second;
+        x1 = evaluateQueen<WHITE>(chessboard,structureEval.allPiecesSide[BLACK]);
+        res[MG].queens[WHITE] = x1.first;
+        res[EG].queens[WHITE] = x1.second;
         BENCH_STOP("eval queen")
 
         BENCH_START("eval rook")
-        res.rooks[BLACK] = evaluateRook<BLACK, phase>(chessboard,
-                                                      structureEval.allPiecesSide[WHITE],
-                                                      structureEval.allPiecesSide[BLACK]);
-        res.rooks[WHITE] = evaluateRook<WHITE, phase>(chessboard,
-                                                      structureEval.allPiecesSide[BLACK],
-                                                      structureEval.allPiecesSide[WHITE]);
+        x1 = evaluateRook<BLACK>(chessboard,structureEval.allPiecesSide[WHITE],structureEval.allPiecesSide[BLACK]);
+        res[MG].rooks[BLACK] = x1.first;
+        res[EG].rooks[BLACK] = x1.second;
+        x1 = evaluateRook<WHITE>(chessboard,structureEval.allPiecesSide[BLACK],structureEval.allPiecesSide[WHITE]);
+        res[MG].rooks[WHITE] = x1.first;
+        res[EG].rooks[WHITE] = x1.second;
         BENCH_STOP("eval rook")
 
         BENCH_START("eval knight")
-        res.knights[BLACK] = evaluateKnight<BLACK, phase>(chessboard, ~structureEval.allPiecesSide[BLACK]);
-        res.knights[WHITE] = evaluateKnight<WHITE, phase>(chessboard, ~structureEval.allPiecesSide[WHITE]);
+        x1 = evaluateKnight<BLACK>(chessboard, ~structureEval.allPiecesSide[BLACK]);
+        res[MG].knights[BLACK] = x1.first;
+        res[EG].knights[BLACK] = x1.second;
+        x1 = evaluateKnight<WHITE>(chessboard, ~structureEval.allPiecesSide[WHITE]);
+        res[MG].knights[WHITE] = x1.first;
+        res[EG].knights[WHITE] = x1.second;
         BENCH_STOP("eval knight")
 
         BENCH_START("eval king")
-        res.kings[BLACK] = evaluateKing<phase>(chessboard, BLACK, ~structureEval.allPiecesSide[BLACK]);
-        res.kings[WHITE] = evaluateKing<phase>(chessboard, WHITE, ~structureEval.allPiecesSide[WHITE]);
+        x1 = evaluateKing(chessboard, BLACK, ~structureEval.allPiecesSide[BLACK]);
+        res[MG].kings[BLACK] = x1.first;
+        res[EG].kings[BLACK] = x1.second;
+        x1 = evaluateKing(chessboard, WHITE, ~structureEval.allPiecesSide[WHITE]);
+        res[MG].kings[WHITE] = x1.first;
+        res[EG].kings[WHITE] = x1.second;
         BENCH_STOP("eval king")
     }
 
-    template<uchar side, _Tphase phase>
+    template<uchar side>
     pair<int,int> evaluatePawn(const _Tchessboard &chessboard);
 
-    template<uchar side, _Tphase phase>
+    template<uchar side>
     pair<int, int> evaluateBishop(const _Tchessboard &chessboard, const u64);
 
-    template<uchar side, Eval::_Tphase phase>
+    template<uchar side>
     pair<int, int> evaluateQueen(const _Tchessboard &chessboard, const u64 enemies);
 
-    template<uchar side, _Tphase phase>
+    template<uchar side>
     pair<int, int> evaluateKnight(const _Tchessboard &chessboard, const u64);
 
-    template<uchar side, Eval::_Tphase phase>
+    template<uchar side>
     pair<int, int> evaluateRook(const _Tchessboard &chessboard, u64 enemies, u64 friends);
 
-    template<_Tphase phase>
     pair<int, int> evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares);
 
     template<uchar side>
@@ -273,9 +293,7 @@ namespace _eval {
                     0, 0, 0, 0, 0, 0, 0, 0}
     };
     static constexpr int
-            MOB_QUEEN[3][29] = //TODO EG MG
-            {{0,   1,   1,   1, 1, 1, 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1,  1,  1,  1, 1,
-                                                                                                           1,  1,  1,  1,  1},
+            MOB_QUEEN[2][29] ={
              {-10, -9,  -5,  0, 3, 6, 7, 10, 11, 12, 15, 18, 28, 30, 32, 35, 40, 50, 51,
                                                                                         52, 53, 54, 55,
                                                                                                        56, 57, 58, 59, 60, 61},
@@ -284,8 +302,7 @@ namespace _eval {
                                                                                                        43, 44, 45, 56, 47, 48}
             };
 
-    static constexpr int MOB_ROOK[3][15] = //TODO EG MG
-            {{-1,  0,   1,  4, 5, 6,  7,  9,  12, 14, 19, 22, 23, 24, 25},
+    static constexpr int MOB_ROOK[2][15] ={
              {-9,  -8,  1,  8, 9, 10, 15, 20, 28, 30, 40, 45, 50, 51, 52},
              {-15, -10, -5, 0, 9, 11, 16, 22, 30, 32, 40, 45, 50, 51, 52}
             };
@@ -307,15 +324,14 @@ namespace _eval {
              {-20, -10, -4, 0, 3, 8,  13, 18, 25, 30, 40, 45, 50, 50}
             };
 
-    static constexpr int MOB_KING[3][9] = {{1,   2,   2,   1,  0,  0,  0,  0,  0}, //TODO EG MG
-                                           {-5,  0,   5,   5,  5,  0,  0,  0,  0},
+    static constexpr int MOB_KING[2][9] = {{1,   2,   2,   1,  0,  0,  0,  0,  0},
                                            {-50, -30, -10, 10, 25, 40, 50, 55, 60}
     };
 
-    static constexpr int MOB_CASTLE[3][3] = {{-50, 30, 50},
-                                             {-1,  10, 10},
-                                             {0,   0,  0}
-    };
+//    static constexpr int MOB_CASTLE[3][3] = {{-50, 30, 50},
+//                                             {-1,  10, 10},
+//                                             {0,   0,  0}
+//    };
 
     static constexpr int BONUS_ATTACK_KING[18] =
             {-1, 2, 8, 64, 128, 512, 512, 512, 512, 512, 512, 512, 512, 512, 512,
