@@ -74,6 +74,21 @@ public:
     STATIC_CONST int QUEEN_PINNED[2] = {1,1};
 
 #ifdef DEBUG_MODE
+    void p() {
+        cout << "|.......................|";
+    }
+
+    void p(float d1, float d2) {
+        std::cout << std::fixed;
+        std::cout << std::setprecision(2);
+        std::cout << "\t";
+        std::cout << d1 / 100.0;
+        std::cout << "\t";
+        std::cout << d2 / 100.0;
+        std::cout << "\t|";
+    }
+
+
     unsigned lazyEvalCuts;
     typedef struct {
         int BAD_BISHOP[2];
@@ -121,7 +136,7 @@ public:
         int ROOK_OPEN_FILE[2];
 //        int CONNECTED_ROOKS[2];
     } _TSCORE_DEBUG;
-    _TSCORE_DEBUG SCORE_DEBUG;
+    _TSCORE_DEBUG SCORE_DEBUG[2];
 #endif
 
 private:
