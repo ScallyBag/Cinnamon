@@ -814,7 +814,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
 #ifndef TUNING
     storeHashValue(key, finalScore);
 #endif
-    return side ? -finalScore : finalScore;
+    return side ? finalScore : -finalScore;
 
 }
 
