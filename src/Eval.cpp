@@ -576,10 +576,11 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     DEBUG(evaluationCount[WHITE] = evaluationCount[BLACK] = 0)
     DEBUG(memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG)))
 
-    structureEval.kingSecurity[MG][WHITE] = structureEval.kingSecurity[EG][BLACK] = 0;
+
     const auto w = board::getBitmapNoPawnsNoKing<WHITE>(chessboard);
     const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);
 
+    memset(&structureEval.kingSecurity, 0, sizeof(structureEval.kingSecurity));
     structureEval.allPiecesNoPawns[BLACK] = b | chessboard[KING_BLACK];
     structureEval.allPiecesNoPawns[WHITE] = w | chessboard[KING_WHITE];
     structureEval.allPiecesSide[BLACK] = structureEval.allPiecesNoPawns[BLACK] | chessboard[PAWN_BLACK];
@@ -590,7 +591,6 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     structureEval.posKingBit[BLACK] = POW2(structureEval.posKing[BLACK]);
     structureEval.posKingBit[WHITE] = POW2(structureEval.posKing[WHITE]);
     structureEval.kingAttackers[WHITE] = structureEval.kingAttackers[BLACK] = 0;
-
 
     structureEval.pinned[WHITE] = board::getPinned<WHITE>(structureEval.allPieces,
                                                           structureEval.allPiecesSide[WHITE],
@@ -772,7 +772,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         p(SCORE_DEBUG[MG].PAWN_NEAR_KING[WHITE], SCORE_DEBUG[MG].PAWN_NEAR_KING[BLACK]);
         p(SCORE_DEBUG[EG].PAWN_NEAR_KING[WHITE], SCORE_DEBUG[EG].PAWN_NEAR_KING[BLACK]);
 
-        cout <<endl<< endl << "Total (white)....   " << (float) ((side ? -finalScore : finalScore) / 100.0) << endl;
+        cout << endl << endl << "Total (white)....   " << (float) ((side ? -finalScore : finalScore) / 100.0) << endl;
     }
 #endif
 #ifndef TUNING

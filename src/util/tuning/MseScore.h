@@ -98,8 +98,8 @@ private:
             while (getline(epdFile, line)) {
                 if (!((c++) % 100)) cout << "calculateOracleScore " << c << endl;
                 oracle_score << line << ";" << getCraftyScore(line, ramdisk) ;
-//                searchManager.loadFen(line);
-//                oracle_score <<";"<< searchManager.getScore(WHITE);
+                searchManager.loadFen(line);
+                oracle_score <<";"<< searchManager.getScore(WHITE)<<flush;
                 oracle_score <<endl;
             }
             epdFile.close();
