@@ -210,10 +210,9 @@ public:
         assert(0);
 #endif
 #ifdef TUNING
-        if (0) {
+        if (1) {
             if (argc != 2) {
                 cout << Texel::help << endl;
-                cout << "run " << FileUtil::getFileName(argv[0]) << " path" << endl;
                 return;
             }
             new Texel(argv[1]);
