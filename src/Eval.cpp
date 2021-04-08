@@ -579,15 +579,7 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     structureEval.kingSecurity[MG][WHITE] = structureEval.kingSecurity[EG][BLACK] = 0;
     const auto w = board::getBitmapNoPawnsNoKing<WHITE>(chessboard);
     const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);
-//    const int npieces = bitCount(w | b);
-//    _Tphase phase;
-//    if (npieces < 6) {
-//        phase = END;
-//    } else if (npieces < 11) {
-//        phase = MIDDLE;
-//    } else {
-//        phase = OPEN;
-//    }
+
     structureEval.allPiecesNoPawns[BLACK] = b | chessboard[KING_BLACK];
     structureEval.allPiecesNoPawns[WHITE] = w | chessboard[KING_WHITE];
     structureEval.allPiecesSide[BLACK] = structureEval.allPiecesNoPawns[BLACK] | chessboard[PAWN_BLACK];
