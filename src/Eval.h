@@ -53,36 +53,25 @@ public:
     STATIC_CONST int FUTIL_MARGIN = 154;
     STATIC_CONST int EXT_FUTIL_MARGIN = 392;
     STATIC_CONST int RAZOR_MARGIN = 1071;
-    STATIC_CONST int ATTACK_KING = 47;
-    STATIC_CONST int BISHOP_ON_QUEEN = 8;
-    STATIC_CONST int BACKWARD_PAWN = 6;
-    STATIC_CONST int DOUBLED_ISOLATED_PAWNS = 9;
-//    STATIC_CONST int DOUBLED_PAWNS = 0;
-    STATIC_CONST int PAWN_IN_7TH = 20;
-//    STATIC_CONST int PAWN_CENTER = 0;
-    STATIC_CONST int PAWN_IN_PROMOTION = 99;
-//    STATIC_CONST int PAWN_ISOLATED = 0;
-    STATIC_CONST int PAWN_NEAR_KING = 11;
-    STATIC_CONST int PAWN_BLOCKED = 8;
-    STATIC_CONST int UNPROTECTED_PAWNS = 6;
-//    STATIC_CONST int ENEMY_NEAR_KING = 0;
-    STATIC_CONST int FRIEND_NEAR_KING = 8;
-//    STATIC_CONST int HALF_OPEN_FILE_Q = 0;
-    STATIC_CONST int BONUS2BISHOP = 33;
-    STATIC_CONST int BISHOP_PAWN_ON_SAME_COLOR = 2;
-//    STATIC_CONST int CONNECTED_ROOKS = 0;
-//    STATIC_CONST int OPEN_FILE = 0;
-    STATIC_CONST int OPEN_FILE_Q = 4;
-    STATIC_CONST int ROOK_7TH_RANK = 18;
-//    STATIC_CONST int ROOK_BLOCKED = 0;
-//    STATIC_CONST int ROOK_TRAPPED = 0;
-//    STATIC_CONST int UNDEVELOPED_KNIGHT = 0;
-//    STATIC_CONST int UNDEVELOPED_BISHOP = 0;
-    STATIC_CONST int KNIGHT_PINNED = 54;
-    STATIC_CONST int ROOK_PINNED = 28;
-    STATIC_CONST int BISHOP_PINNED = 26;
-    STATIC_CONST int QUEEN_PINNED = 1;
-//    STATIC_CONST int PAWN_PINNED = 0;
+
+    STATIC_CONST int ATTACK_KING[2] = {47,47};
+    STATIC_CONST int BISHOP_ON_QUEEN[2] = {8,8};
+    STATIC_CONST int BACKWARD_PAWN[2] = {6,6};
+    STATIC_CONST int DOUBLED_ISOLATED_PAWNS[2] = {9,9};
+    STATIC_CONST int PAWN_IN_7TH[2] = {20,20};
+    STATIC_CONST int PAWN_IN_PROMOTION[2] = {99,99};
+    STATIC_CONST int PAWN_NEAR_KING[2] = {11,11};
+    STATIC_CONST int PAWN_BLOCKED[2] = {8,8};
+    STATIC_CONST int UNPROTECTED_PAWNS[2] = {6,6};
+    STATIC_CONST int FRIEND_NEAR_KING[2] = {8,8};
+    STATIC_CONST int BONUS2BISHOP[2] = {33,33};
+    STATIC_CONST int BISHOP_PAWN_ON_SAME_COLOR[2] = {2,2};
+    STATIC_CONST int OPEN_FILE_Q[2] = {4,4};
+    STATIC_CONST int ROOK_7TH_RANK[2] = {18,18};
+    STATIC_CONST int KNIGHT_PINNED[2] = {54,54};
+    STATIC_CONST int ROOK_PINNED[2] = {28,28};
+    STATIC_CONST int BISHOP_PINNED[2] = {26,26};
+    STATIC_CONST int QUEEN_PINNED[2] = {1,1};
 
 #ifdef DEBUG_MODE
     unsigned lazyEvalCuts;
@@ -143,11 +132,13 @@ private:
         u64 allPiecesSide[2];
         u64 allPiecesNoPawns[2];
         u64 posKingBit[2];
-        int kingSecurity[2];
+        int kingSecurity[2][2];
         uchar posKing[2];
-        u64 pinned[2];
+        u64 pinned[2][2];
     } _Tboard;
     _Tboard structureEval;
+    static constexpr uchar MG = 0;
+    static constexpr uchar EG = 1;
     static constexpr int hashSize = 65536;
     static constexpr u64 keyMask = 0xffffffffffff0000ULL;
     static constexpr u64 valueMask = 0xffffULL;
@@ -159,9 +150,9 @@ private:
 
     static inline short getHashValue(const u64 key);
 
-    enum _Tphase {
-        OPEN, MIDDLE, END
-    };
+//    enum _Tphase {
+//        OPEN, MIDDLE, END
+//    };
 
     typedef struct {
         int pawns[2];
@@ -213,22 +204,22 @@ private:
     }
 
     template<uchar side, _Tphase phase>
-    int evaluatePawn(const _Tchessboard &chessboard);
+    pair<int,int> evaluatePawn(const _Tchessboard &chessboard);
 
     template<uchar side, _Tphase phase>
-    int evaluateBishop(const _Tchessboard &chessboard, const u64);
+    pair<int, int> evaluateBishop(const _Tchessboard &chessboard, const u64);
 
     template<uchar side, Eval::_Tphase phase>
-    int evaluateQueen(const _Tchessboard &chessboard, const u64 enemies);
+    pair<int, int> evaluateQueen(const _Tchessboard &chessboard, const u64 enemies);
 
     template<uchar side, _Tphase phase>
-    int evaluateKnight(const _Tchessboard &chessboard, const u64);
+    pair<int, int> evaluateKnight(const _Tchessboard &chessboard, const u64);
 
     template<uchar side, Eval::_Tphase phase>
-    int evaluateRook(const _Tchessboard &chessboard, u64 enemies, u64 friends);
+    pair<int, int> evaluateRook(const _Tchessboard &chessboard, u64 enemies, u64 friends);
 
     template<_Tphase phase>
-    int evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares);
+    pair<int, int> evaluateKing(const _Tchessboard &chessboard, const uchar side, const u64 squares);
 
     template<uchar side>
     int lazyEvalSide(const _Tchessboard &chessboard) const {
@@ -282,7 +273,7 @@ namespace _eval {
                     0, 0, 0, 0, 0, 0, 0, 0}
     };
     static constexpr int
-            MOB_QUEEN[3][29] =
+            MOB_QUEEN[3][29] = //TODO EG MG
             {{0,   1,   1,   1, 1, 1, 1, 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 1,  1,  1,  1, 1,
                                                                                                            1,  1,  1,  1,  1},
              {-10, -9,  -5,  0, 3, 6, 7, 10, 11, 12, 15, 18, 28, 30, 32, 35, 40, 50, 51,
@@ -293,7 +284,7 @@ namespace _eval {
                                                                                                        43, 44, 45, 56, 47, 48}
             };
 
-    static constexpr int MOB_ROOK[3][15] =
+    static constexpr int MOB_ROOK[3][15] = //TODO EG MG
             {{-1,  0,   1,  4, 5, 6,  7,  9,  12, 14, 19, 22, 23, 24, 25},
              {-9,  -8,  1,  8, 9, 10, 15, 20, 28, 30, 40, 45, 50, 51, 52},
              {-15, -10, -5, 0, 9, 11, 16, 22, 30, 32, 40, 45, 50, 51, 52}
@@ -316,7 +307,7 @@ namespace _eval {
              {-20, -10, -4, 0, 3, 8,  13, 18, 25, 30, 40, 45, 50, 50}
             };
 
-    static constexpr int MOB_KING[3][9] = {{1,   2,   2,   1,  0,  0,  0,  0,  0},
+    static constexpr int MOB_KING[3][9] = {{1,   2,   2,   1,  0,  0,  0,  0,  0}, //TODO EG MG
                                            {-5,  0,   5,   5,  5,  0,  0,  0,  0},
                                            {-50, -30, -10, 10, 25, 40, 50, 55, 60}
     };
@@ -507,7 +498,7 @@ namespace _eval {
              -8, -8, -8, -8
             };
 
-    static constexpr char DISTANCE_KING_ENDING[64] =
+    static constexpr char DISTANCE_KING_ENDING[64] = //TODO EG MG
             {12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
              12, 12, 16, 16, 16, 16, 12, 12, 12, 12, 16, 20, 20, 16, 12, 12,
              12, 12, 16, 20, 20, 16, 12, 12, 12, 12, 16, 16, 16, 16, 12, 12,

@@ -26,7 +26,7 @@
 class Tune {
 
 protected:
-    constexpr static int N_PARAM = 18;
+    constexpr static int N_PARAM = 36;
     SearchManager &searchManager = Singleton<SearchManager>::getInstance();
     const string iniFile = "tuning.ini";
 
@@ -80,29 +80,49 @@ protected:
     }
 
     void tune(const set<FEN *> &fens) {
+
         searchManager.setMaxTimeMillsec(2500);
         cout.precision(17);
 
         loadParams();
         const array<PARAMS, N_PARAM> params{
-                PARAMS("ATTACK_KING", searchManager),
-                PARAMS("BISHOP_ON_QUEEN", searchManager),
-                PARAMS("BACKWARD_PAWN", searchManager),
-                PARAMS("DOUBLED_ISOLATED_PAWNS", searchManager),
-                PARAMS("PAWN_IN_7TH", searchManager),
-                PARAMS("PAWN_IN_PROMOTION", searchManager),
-                PARAMS("PAWN_NEAR_KING", searchManager),
-                PARAMS("PAWN_BLOCKED", searchManager),
-                PARAMS("UNPROTECTED_PAWNS", searchManager),
-                PARAMS("FRIEND_NEAR_KING", searchManager),
-                PARAMS("BONUS2BISHOP", searchManager),
-                PARAMS("BISHOP_PAWN_ON_SAME_COLOR", searchManager),
-                PARAMS("OPEN_FILE_Q", searchManager),
-                PARAMS("ROOK_7TH_RANK", searchManager),
-                PARAMS("KNIGHT_PINNED", searchManager),
-                PARAMS("ROOK_PINNED", searchManager),
-                PARAMS("BISHOP_PINNED", searchManager),
-                PARAMS("QUEEN_PINNED", searchManager)
+                PARAMS("ATTACK_KING0", searchManager),
+                PARAMS("BISHOP_ON_QUEEN0", searchManager),
+                PARAMS("BACKWARD_PAWN0", searchManager),
+                PARAMS("DOUBLED_ISOLATED_PAWNS0", searchManager),
+                PARAMS("PAWN_IN_7TH0", searchManager),
+                PARAMS("PAWN_IN_PROMOTION0", searchManager),
+                PARAMS("PAWN_NEAR_KING0", searchManager),
+                PARAMS("PAWN_BLOCKED0", searchManager),
+                PARAMS("UNPROTECTED_PAWNS0", searchManager),
+                PARAMS("FRIEND_NEAR_KING0", searchManager),
+                PARAMS("BONUS2BISHOP0", searchManager),
+                PARAMS("BISHOP_PAWN_ON_SAME_COLOR0", searchManager),
+                PARAMS("OPEN_FILE_Q0", searchManager),
+                PARAMS("ROOK_7TH_RANK0", searchManager),
+                PARAMS("KNIGHT_PINNED0", searchManager),
+                PARAMS("ROOK_PINNED0", searchManager),
+                PARAMS("BISHOP_PINNED0", searchManager),
+                PARAMS("QUEEN_PINNED0", searchManager),
+                PARAMS("ATTACK_KING1", searchManager),
+                PARAMS("BISHOP_ON_QUEEN1", searchManager),
+                PARAMS("BACKWARD_PAWN1", searchManager),
+                PARAMS("DOUBLED_ISOLATED_PAWNS1", searchManager),
+                PARAMS("PAWN_IN_7TH1", searchManager),
+                PARAMS("PAWN_IN_PROMOTION1", searchManager),
+                PARAMS("PAWN_NEAR_KING1", searchManager),
+                PARAMS("PAWN_BLOCKED1", searchManager),
+                PARAMS("UNPROTECTED_PAWNS1", searchManager),
+                PARAMS("FRIEND_NEAR_KING1", searchManager),
+                PARAMS("BONUS2BISHOP1", searchManager),
+                PARAMS("BISHOP_PAWN_ON_SAME_COLOR1", searchManager),
+                PARAMS("OPEN_FILE_Q1", searchManager),
+                PARAMS("ROOK_7TH_RANK1", searchManager),
+                PARAMS("KNIGHT_PINNED1", searchManager),
+                PARAMS("ROOK_PINNED1", searchManager),
+                PARAMS("BISHOP_PINNED1", searchManager),
+                PARAMS("QUEEN_PINNED1", searchManager)
+
         };
         bool fullImproved;
         int cycle = 1;
