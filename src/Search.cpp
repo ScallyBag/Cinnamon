@@ -996,7 +996,6 @@ int Search::getParameter(const string &p1) {
     const string p=p1.substr (0,p1.size()-1);
     const int idx=atoi(p1.substr (p1.size()-1,p1.size()-1).c_str());
 
-    if (p == "ATTACK_KING")return eval.ATTACK_KING[idx];
     if (p == "BISHOP_ON_QUEEN")return eval.BISHOP_ON_QUEEN[idx];
     if (p == "BACKWARD_PAWN")return eval.BACKWARD_PAWN[idx];
     if (p == "DOUBLED_ISOLATED_PAWNS")return eval.DOUBLED_ISOLATED_PAWNS[idx];
@@ -1031,12 +1030,11 @@ int Search::getParameter(const string &p1) {
 }
 
 void Search::setParameter(const string &p1, const int value) {
-    //cout << "setParameter " << param << " " << value << endl;
+
     const string p=p1.substr (0,p1.size()-1);
     const int idx=atoi(p1.substr (p1.size()-1,p1.size()-1).c_str());
-   
-    if (p == "ATTACK_KING")eval.ATTACK_KING[idx]=value;
-    else if (p == "BISHOP_ON_QUEEN")eval.BISHOP_ON_QUEEN[idx]=value;
+
+    if (p == "BISHOP_ON_QUEEN")eval.BISHOP_ON_QUEEN[idx]=value;
     else if (p == "BACKWARD_PAWN")eval.BACKWARD_PAWN[idx]=value;
     else if (p == "DOUBLED_ISOLATED_PAWNS")eval.DOUBLED_ISOLATED_PAWNS[idx]=value;
 //    else if (p == "DOUBLED_PAWNS")eval.DOUBLED_PAWNS[idx]=value;

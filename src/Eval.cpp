@@ -101,8 +101,8 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
         // 4. attack king
         if (structureEval.posKingBit[xside] & PAWN_FORK_MASK[side][o]) {
             structureEval.kingAttackers[xside] |= pos;
-            result[EG] += ATTACK_KING[EG];
-            result[MG] += ATTACK_KING[MG];
+//            result[EG] += ATTACK_KING[EG];
+//            result[MG] += ATTACK_KING[MG];
         }
 
         /// blocked
@@ -606,29 +606,29 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     const int bonus_attack_king_black_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
     const int bonus_attack_king_white_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
-    const int attack_king_white[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[WHITE]),
-                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[WHITE])};
-
-    const int attack_king_black[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[BLACK]),
-                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[BLACK])};
+//    const int attack_king_white[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[WHITE]),
+//                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[WHITE])};
+//
+//    const int attack_king_black[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[BLACK]),
+//                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[BLACK])};
     const int firstMoveWhite = side == WHITE ? 5 : 0;
     const int firstMoveBlack = side == BLACK ? 5 : 0;
 
     const int result_mg =
-            (attack_king_black[MG] + lazyscore_black + tResult[MG].pawns[BLACK] +
+            (lazyscore_black + tResult[MG].pawns[BLACK] +
              tResult[MG].knights[BLACK] + tResult[MG].bishop[BLACK] + tResult[MG].rooks[BLACK] +
              tResult[MG].queens[BLACK] +
              tResult[MG].kings[BLACK] + firstMoveBlack) -
-            (attack_king_white[MG] + lazyscore_white + tResult[MG].pawns[WHITE] +
+            (lazyscore_white + tResult[MG].pawns[WHITE] +
              tResult[MG].knights[WHITE] + tResult[MG].bishop[WHITE] + tResult[MG].rooks[WHITE] +
              tResult[MG].queens[WHITE] +
              tResult[MG].kings[WHITE] + firstMoveWhite);
     const int result_eg =
-            (attack_king_black[EG] + bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +
+            (bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +
              tResult[EG].knights[BLACK] + tResult[EG].bishop[BLACK] + tResult[EG].rooks[BLACK] +
              tResult[EG].queens[BLACK] +
              tResult[EG].kings[BLACK]) -
-            (attack_king_white[EG] + bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
+            (bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
              tResult[EG].knights[WHITE] + tResult[EG].bishop[WHITE] + tResult[EG].rooks[WHITE] +
              tResult[EG].queens[WHITE] +
              tResult[EG].kings[WHITE]);

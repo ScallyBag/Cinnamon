@@ -53,7 +53,7 @@ protected:
         PARAMS(string n, const SearchManager &searchManager) : name(n) { startValue = searchManager.getParameter(n); }
 
         void print(SearchManager &searchManager) const {
-            printf("\nname: %s, startValue: %d, newValue: %d", name.c_str(), startValue,
+            printf("\n%s startValue: %d newValue: %d", name.c_str(), startValue,
                    searchManager.getParameter(name));
             if (startValue != searchManager.getParameter(name))cout << " (*)";
         }
