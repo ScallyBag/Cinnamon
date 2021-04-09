@@ -17,6 +17,7 @@
 */
 
 #include "Eval.h"
+#include "db/Endgame.h"
 
 using namespace _eval;
 u64 *Eval::evalHash;
@@ -495,21 +496,33 @@ short Eval::getHashValue(const u64 key) {
 }
 
 short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar side, const int alpha, const int beta,
+                     const int N_PIECE,
                      const bool trace) {
+#ifndef TUNING
     const short hashValue = getHashValue(key);
     if (hashValue != noHashValue && !trace) {
         return side ? -hashValue : hashValue;
     }
+#endif
+    /// endgame
+//    if (N_PIECE == 5 || N_PIECE == 4) {
+//        const auto result = Endgame::getEndgameValue(side, chessboard, N_PIECE);
+//        if (result != INT_MAX) {
+//#ifndef TUNING
+//            storeHashValue(key, result);
+//#endif
+//            return side ? -result : result;
+//        }
+//    }
     int lazyscore_white = lazyEvalSide<WHITE>(chessboard);
     int lazyscore_black = lazyEvalSide<BLACK>(chessboard);
 
-#ifndef TUNING
     const int lazyscore = side ? lazyscore_white - lazyscore_black : lazyscore_black - lazyscore_white;
     if (lazyscore > (beta + FUTIL_MARGIN) || lazyscore < (alpha - FUTIL_MARGIN)) {
         INC(lazyEvalCuts);
         return lazyscore;
     }
-#endif
+
     DEBUG(evaluationCount[WHITE] = evaluationCount[BLACK] = 0)
     DEBUG(memset(&SCORE_DEBUG, 0, sizeof(_TSCORE_DEBUG)))
 
@@ -518,13 +531,10 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     const auto b = board::getBitmapNoPawnsNoKing<BLACK>(chessboard);
     const int npieces = bitCount(w | b);
     _Tphase phase;
-    if (npieces < 6) {
-        phase = END;
-    } else if (npieces < 11) {
-        phase = MIDDLE;
-    } else {
-        phase = OPEN;
-    }
+    if (npieces < 6) phase = END;
+    else if (npieces < 11) phase = MIDDLE;
+    else phase = OPEN;
+
     structureEval.allPiecesNoPawns[BLACK] = b | chessboard[KING_BLACK];
     structureEval.allPiecesNoPawns[WHITE] = w | chessboard[KING_WHITE];
     structureEval.allPiecesSide[BLACK] = structureEval.allPiecesNoPawns[BLACK] | chessboard[PAWN_BLACK];

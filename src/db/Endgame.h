@@ -53,8 +53,7 @@ class Endgame : public Singleton<Endgame> { //TODO
 
 public:
 
-    template<int side>
-    static int getEndgameValue(const _Tchessboard &chessboard, const int nPieces) {
+    static int getEndgameValue(int side, const _Tchessboard &chessboard, const int nPieces) {
         assert(nPieces != 999);
         ASSERT_RANGE(side, 0, 1);
         auto posKingBlack = BITScanForward(chessboard[KING_BLACK]);

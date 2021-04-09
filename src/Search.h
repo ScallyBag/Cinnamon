@@ -25,7 +25,6 @@
 #include "namespaces/board.h"
 #include <climits>
 #include "threadPool/Thread.h"
-#include "db/Endgame.h"
 
 #ifndef JS_MODE
 
@@ -185,7 +184,7 @@ private:
     bool checkSearchMoves(const _Tmove *move) const;
 
     template<uchar side>
-    int qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth);
+    int qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth, const int N_PIECES);
 
     void updatePv(_TpvLine *pline, const _TpvLine *line, const _Tmove *move);
 

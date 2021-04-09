@@ -260,12 +260,12 @@ Search::~Search() {
 }
 
 template<uchar side>
-int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth) {
+int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const int depth, const int N_PIECES) {
     const u64 zobristKeyR = chessboard[ZOBRISTKEY_IDX] ^_random::RANDSIDE[side];
     if (!getRunning()) return 0;
 
     ++numMovesq;
-    int score = eval.getScore(chessboard, zobristKeyR, side, alpha, beta);
+    int score = eval.getScore(chessboard, zobristKeyR, side, alpha, beta, N_PIECES);
     if (score > alpha) {
         if (score >= beta) return score;
         alpha = score;
@@ -316,7 +316,7 @@ int Search::qsearch(int alpha, const int beta, const uchar promotionPiece, const
             continue;
         }
         /// ************ end Delta Pruning *************
-        int val = -qsearch<X(side)>(-beta, -alpha, move->promotionPiece, depth - 1);
+        int val = -qsearch<X(side)>(-beta, -alpha, move->promotionPiece, depth - 1, N_PIECES - 1);
         score = max(score, val);
         takeback(move, oldKey, oldEnpassant, false);
         if (score > alpha) {
@@ -715,20 +715,14 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     u64 oldKey = chessboard[ZOBRISTKEY_IDX];
     uchar oldEnpassant = enPassant;
     if (depth >= MAX_PLY - 1) {
-        return eval.getScore(chessboard, oldKey, side, alpha, beta);
+        return eval.getScore(chessboard, oldKey, side, alpha, beta, N_PIECE);
     }
     INC(cumulativeMovesCount);
 #ifndef JS_MODE
     int wdl = probeWdl(depth, side, N_PIECE);
     if (wdl != INT_MAX) return wdl;
 #endif
-//    if ((N_PIECE == 5 || N_PIECE == 4) && depth > 2 && depth != mainDepth) {
-//        auto v = Endgame::getEndgameValue<side>(chessboard, N_PIECE);
-//        if (v != INT_MAX) {
-//            DEBUG(cout << "standard score: "<<v << " endgame score: " << eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, false) << endl)
-//            return v;
-//        }
-//    }
+
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 
@@ -746,7 +740,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     }
     int extension = isIncheckSide; // TODO pawn in 7th
     if (depth + extension == 0) {
-        return qsearch<side>(alpha, beta, NO_PROMOTION, 0);
+        return qsearch<side>(alpha, beta, NO_PROMOTION, 0, N_PIECE);
     }
 
     /// ************* hash ****************
@@ -789,7 +783,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
                     currentPly--;
                 }
             } else {
-                nullScore = -qsearch<X(side)>(-beta, -beta + 1, -1, 0);
+                nullScore = -qsearch<X(side)>(-beta, -beta + 1, -1, 0, N_PIECE);
             }
             nullSearch = false;
             if (nullScore >= beta) {
