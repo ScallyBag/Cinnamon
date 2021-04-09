@@ -722,7 +722,13 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
     int wdl = probeWdl(depth, side, N_PIECE);
     if (wdl != INT_MAX) return wdl;
 #endif
-
+//    if ((N_PIECE == 5 || N_PIECE == 4) && depth > 2 && depth != mainDepth) {
+//        auto v = Endgame::getEndgameValue<side>(chessboard, N_PIECE);
+//        if (v != INT_MAX) {
+//            DEBUG(cout << "standard score: "<<v << " endgame score: " << eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, false) << endl)
+//            return v;
+//        }
+//    }
     int score = -_INFINITE;
     const bool pvNode = alpha != beta - 1;
 
@@ -866,7 +872,8 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
         checkInCheck = true;
         int val = INT_MAX;
         if (move->capturedPiece == SQUARE_EMPTY && move->promotionPiece == NO_PROMOTION) {
-            if (futilPrune && futilScore + PIECES_VALUE[move->capturedPiece] <= alpha && !board::inCheck1<side>(chessboard)) {
+            if (futilPrune && futilScore + PIECES_VALUE[move->capturedPiece] <= alpha &&
+                !board::inCheck1<side>(chessboard)) {
                 INC(nCutFp);
                 takeback(move, oldKey, oldEnpassant, true);
                 continue;
