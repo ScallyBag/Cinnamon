@@ -150,8 +150,8 @@ private:
     static constexpr u64 keyMask = 0xffffffffffff0000ULL;
     static constexpr u64 valueMask = 0xffffULL;
     static constexpr short noHashValue = (short) 0xffff;
-    static constexpr float
-            MAX_VALUE_TAPERED = 2 * (VALUEROOK * 2 + VALUEBISHOP * 2 + VALUEKNIGHT * 2 + VALUEQUEEN + VALUEPAWN * 8);
+//    static constexpr float
+//            MAX_VALUE_TAPERED = 2 * (VALUEROOK * 2 + VALUEBISHOP * 2 + VALUEKNIGHT * 2 + VALUEQUEEN + VALUEPAWN * 8);
 
     static u64 *evalHash;
 

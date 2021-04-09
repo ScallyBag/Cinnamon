@@ -631,10 +631,48 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
             (bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
              tResult[EG].knights[WHITE] + tResult[EG].bishop[WHITE] + tResult[EG].rooks[WHITE] +
              tResult[EG].queens[WHITE] +
-             tResult[EG].kings[WHITE]);
-    const float phase =
-            ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
-            MAX_VALUE_TAPERED;
+             tResult[EG].kings[WHITE]);;
+    const int PawnPhase = 0;
+    const int KnightPhase = 1;
+    const int BishopPhase = 1;
+    const int RookPhase = 2;
+    const int QueenPhase = 4;
+    const int TotalPhase = PawnPhase * 16 + KnightPhase * 4 + BishopPhase * 4 + RookPhase * 4 + QueenPhase * 2;;
+
+    const int wp = bitCount(chessboard[PAWN_WHITE]);
+    const int bp = bitCount(chessboard[PAWN_BLACK]);
+
+    const int wn = bitCount(chessboard[KNIGHT_WHITE]);
+    const int bn = bitCount(chessboard[KNIGHT_BLACK]);
+
+    const int wb = bitCount(chessboard[BISHOP_WHITE]);
+    const int bb = bitCount(chessboard[BISHOP_BLACK]);
+
+    const int wq = bitCount(chessboard[QUEEN_WHITE]);
+    const int bq = bitCount(chessboard[QUEEN_BLACK]);
+
+    const int wr = bitCount(chessboard[ROOK_WHITE]);
+    const int br = bitCount(chessboard[ROOK_BLACK]);
+    int phase = TotalPhase;
+    phase -= wp * PawnPhase;
+    phase -= bp * PawnPhase;
+
+    phase -= wn * KnightPhase;
+    phase -= bn * KnightPhase;
+
+    phase -= wb * BishopPhase;
+    phase -= bb * BishopPhase;
+
+    phase -= wr * RookPhase;
+    phase -= br * RookPhase;
+
+    phase -= wq * QueenPhase;
+    phase -= bq * QueenPhase;
+
+    phase = (phase * 256 + (TotalPhase / 2)) / TotalPhase;
+//    const float phase1 =
+//            ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
+//            MAX_VALUE_TAPERED;
     const short finalScore = ((result_mg * (256 - phase)) + (result_eg * phase)) / 256;
 
 
