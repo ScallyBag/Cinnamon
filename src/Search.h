@@ -49,7 +49,8 @@ public:
     Search();
 
     short getScore(const uchar side) {
-        return eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, true);
+        const int n = bitCount(board::getBitmap<WHITE>(chessboard) | board::getBitmap<BLACK>(chessboard));
+        return eval.getScore(chessboard, 0xffffffffffffffffULL, side, -_INFINITE, _INFINITE, n, true);
     }
 
     Search(const Search *s) { clone(s); }

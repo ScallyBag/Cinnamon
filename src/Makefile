@@ -21,7 +21,7 @@ ifndef SystemRoot
 		LIBS= -static-libstdc++ -lpthread
 		OS=OSX
 	else
-	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive -static
+	    LIBS=-s -Wl,--whole-archive -lpthread -Wl,--no-whole-archive # TODO -static
 	    OS=Linux
 	endif
 

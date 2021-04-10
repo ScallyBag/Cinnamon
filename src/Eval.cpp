@@ -18,6 +18,7 @@
 
 #include "Eval.h"
 #include "db/Endgame.h"
+#include "db/bitbase/kpk.h"
 
 using namespace _eval;
 u64 *Eval::evalHash;
@@ -504,6 +505,19 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
         return side ? -hashValue : hashValue;
     }
 #endif
+    // KPK
+    if (N_PIECE == 3 && (chessboard[PAWN_BLACK] | chessboard[PAWN_WHITE])) {
+        const int kb = BITScanForward(chessboard[KING_BLACK]);
+        const int kw = BITScanForward(chessboard[KING_WHITE]);
+        for (int i = 0; i < 2; i++) {
+            if (chessboard[PAWN_BLACK + i]) {
+                const int pawn = BITScanForward(chessboard[PAWN_BLACK + i]);
+                const bool isDraw = _bitbase::isDrawKPK(i, side, kw, kb, pawn);
+                if (isDraw)return 0;
+                return side ? -_INFINITE : _INFINITE;
+            }
+        }
+    }
     /// endgame
 //    if (N_PIECE == 5 || N_PIECE == 4) {
 //        const auto result = Endgame::getEndgameValue(side, chessboard, N_PIECE);
