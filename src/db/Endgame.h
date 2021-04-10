@@ -26,34 +26,68 @@
 
 #endif
 
-/*
-KXK
-KBNK    ?
-KPK
-KRKP    ok
-KRKB    ok
-KRKN    ok
-KQKP    ok
-KQKR    ok
-KBBKN   ok
-KBPsK
-KQKRPs
-KRPKR
-KRPPKRP
-KPsK
-KBPKB
-KBPPKB
-KBPKN
-KNPK
-KNPKB
-KPKP
-*/
-class Endgame  { //TODO
+class Endgame { //TODO
 
 public:
 
+    /*
+     * returns WHITE, BLACK or -1
+     */
+    static int win(const int nPieces, const _Tchessboard &chessboard) {
+        switch (nPieces) {
+            case 3 :
+                if (chessboard[QUEEN_WHITE])return WHITE;
+                if (chessboard[QUEEN_BLACK])return BLACK;
+                if (chessboard[ROOK_WHITE])return WHITE;
+                if (chessboard[ROOK_BLACK])return WHITE;
+            case 4:
+                // KBBK
+                if (bitCount(chessboard[BISHOP_WHITE]) == 2)return WHITE;
+                if (bitCount(chessboard[BISHOP_BLACK]) == 2)return BLACK;
+                // KBNK
+                if (chessboard[BISHOP_WHITE] && chessboard[KNIGHT_WHITE])return WHITE;
+                if (chessboard[BISHOP_BLACK] && chessboard[KNIGHT_BLACK])return BLACK;
+                // KBKP TODO
+                // KBPK TODO
+                // KNKP TODO
+                // KNPK TODO
+                // KQBK
+                if (chessboard[QUEEN_WHITE] && chessboard[BISHOP_WHITE])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[BISHOP_BLACK])return BLACK;
+                // KQKB
+                if (chessboard[QUEEN_WHITE] && chessboard[BISHOP_BLACK])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[BISHOP_WHITE])return BLACK;
+                // KQKN
+                if (chessboard[QUEEN_WHITE] && chessboard[KNIGHT_BLACK])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[KNIGHT_WHITE])return BLACK;
+                // KQNK
+                if (chessboard[QUEEN_WHITE] && chessboard[KNIGHT_WHITE])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[KNIGHT_BLACK])return BLACK;
+                // KQPK TODO
+                // KQQK
+                if (bitCount(chessboard[QUEEN_WHITE]) == 2)return WHITE;
+                if (bitCount(chessboard[QUEEN_BLACK]) == 2)return BLACK;
+                // KQRK
+                if (chessboard[QUEEN_WHITE] && chessboard[ROOK_WHITE])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[ROOK_BLACK])return BLACK;
+                // KRBK
+                if (chessboard[QUEEN_WHITE] && chessboard[BISHOP_WHITE])return WHITE;
+                if (chessboard[QUEEN_BLACK] && chessboard[BISHOP_BLACK])return BLACK;
+
+                // KRNK
+                if (chessboard[ROOK_WHITE] && chessboard[KNIGHT_WHITE])return WHITE;
+                if (chessboard[ROOK_BLACK] && chessboard[KNIGHT_BLACK])return BLACK;
+                // KRPK TODO
+                // KRRK
+                if (bitCount(chessboard[ROOK_WHITE]) == 2)return WHITE;
+                if (bitCount(chessboard[ROOK_BLACK]) == 2)return BLACK;
+
+            default:
+                return -1;
+        }
+    }
+
     static bool isDraw(const int nPieces, const _Tchessboard &chessboard) {
-        //regexp: KN?B*KB*
         switch (nPieces) {
             case 2 :
                 //KK
@@ -82,7 +116,7 @@ public:
         return false;
     }
 
-    static int getEndgameValue(int side, const _Tchessboard &chessboard, const int nPieces) {
+    static int getEndgameValue(int side, const _Tchessboard &chessboard, const int nPieces) { //TODO
         assert(nPieces != 999);
         ASSERT_RANGE(side, 0, 1);
         auto posKingBlack = BITScanForward(chessboard[KING_BLACK]);
@@ -113,24 +147,12 @@ public:
                                                  posKingWhite, BITScanForward(chessboard[ROOK_BLACK]),
                                                  BITScanForward(chessboard[PAWN_WHITE]));
                         return side == BLACK ? result : -result;
-                    } else if (chessboard[BISHOP_WHITE]) {
-                        int result = KRKB(posKingWhite);
-                        return side == BLACK ? result : -result;
-                    } else if (chessboard[KNIGHT_WHITE]) {
-                        int result = KRKN(posKingWhite, BITScanForward(chessboard[KNIGHT_WHITE]));
-                        return side == BLACK ? result : -result;
                     }
                 } else if (chessboard[ROOK_WHITE]) {
                     if (chessboard[PAWN_BLACK]) {
                         int result = KRKP<BLACK>(side == WHITE, posKingWhite,
                                                  posKingBlack, BITScanForward(chessboard[ROOK_WHITE]),
                                                  BITScanForward(chessboard[PAWN_BLACK]));
-                        return side == WHITE ? result : -result;
-                    } else if (chessboard[BISHOP_BLACK]) {
-                        int result = KRKB(posKingBlack);
-                        return side == WHITE ? result : -result;
-                    } else if (chessboard[KNIGHT_BLACK]) {
-                        int result = KRKN(posKingWhite, BITScanForward(chessboard[KNIGHT_BLACK]));
                         return side == WHITE ? result : -result;
                     }
                 }

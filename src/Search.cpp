@@ -732,6 +732,11 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     const bool isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
+        const auto win = Endgame::win(N_PIECE, chessboard);
+        if (win != -1) {
+            if (win == side)return _INFINITE - (mainDepth - depth + 1);
+            else return -_INFINITE + (mainDepth - depth + 1);
+        }
         if (Endgame::isDraw(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
             if (board::inCheck1<X(side)>(chessboard)) {
                 return _INFINITE - (mainDepth - depth + 1);
