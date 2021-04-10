@@ -48,10 +48,39 @@ KNPK
 KNPKB
 KPKP
 */
-class Endgame : public Singleton<Endgame> { //TODO
-    friend class Singleton<Endgame>;
+class Endgame  { //TODO
 
 public:
+
+    static bool isDraw(const int nPieces, const _Tchessboard &chessboard) {
+        //regexp: KN?B*KB*
+        switch (nPieces) {
+            case 2 :
+                //KK
+                return true;
+            case 3:
+                //KBK
+                if (chessboard[BISHOP_BLACK] || chessboard[BISHOP_WHITE])return true;
+                //KNK
+                if (chessboard[KNIGHT_BLACK] || chessboard[KNIGHT_WHITE])return true;
+                break;
+            case 4 :
+                //KBKB
+                if (chessboard[BISHOP_BLACK] && chessboard[BISHOP_WHITE])return true;
+                //KNKN
+                if (chessboard[KNIGHT_BLACK] && chessboard[KNIGHT_WHITE])return true;
+                //KBKN
+                if (chessboard[BISHOP_BLACK] && chessboard[KNIGHT_WHITE])return true;
+                if (chessboard[BISHOP_WHITE] && chessboard[KNIGHT_BLACK])return true;
+                //KNNK
+                if (bitCount(chessboard[KNIGHT_BLACK]) == 2)return true;
+                if (bitCount(chessboard[KNIGHT_WHITE]) == 2)return true;
+                break;
+            default:
+                return false;
+        }
+        return false;
+    }
 
     static int getEndgameValue(int side, const _Tchessboard &chessboard, const int nPieces) {
         assert(nPieces != 999);
@@ -132,7 +161,7 @@ public:
     }
 
 private:
-    // Endgame();
+    Endgame();
 
     constexpr static int DistanceBonus[8] = {0, 0, 100, 80, 60, 40, 20, 10};    //TODO stockfish
     constexpr static int VALUE_KNOWN_WIN = 15000;    //TODO stockfish

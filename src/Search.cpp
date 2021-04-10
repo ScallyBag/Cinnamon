@@ -20,6 +20,7 @@
 #include "Search.h"
 #include "SearchManager.h"
 #include "db/bitbase/kpk.h"
+#include "db/Endgame.h"
 
 bool volatile Search::runningThread;
 high_resolution_clock::time_point Search::startTime;
@@ -440,9 +441,9 @@ bool Search::probeRootTB(_Tmove *res) {
             const int winSide = chessboard[PAWN_BLACK] | chessboard[QUEEN_BLACK] ? BLACK : WHITE;
 
             const bool p = (winSide != sideToMove) ?  // looking for draw
-                           isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos)
+                           isDrawTB(winSide, X(sideToMove), kw, kb, pawnQueenPos)
                                                    :  //looking for win
-                           !isDraw(winSide, X(sideToMove), kw, kb, pawnQueenPos);
+                           !isDrawTB(winSide, X(sideToMove), kw, kb, pawnQueenPos);
 
             if (p &&
                 (bestMove == nullptr || move->capturedPiece != SQUARE_EMPTY ||
@@ -731,7 +732,7 @@ int Search::search(const int depth, int alpha, const int beta, _TpvLine *pline, 
 
     const bool isIncheckSide = board::inCheck1<side>(chessboard);
     if (!isIncheckSide && depth != mainDepth) {
-        if (board::checkInsufficientMaterial(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
+        if (Endgame::isDraw(N_PIECE, chessboard) || checkDraw(chessboard[ZOBRISTKEY_IDX])) {
             if (board::inCheck1<X(side)>(chessboard)) {
                 return _INFINITE - (mainDepth - depth + 1);
             }
