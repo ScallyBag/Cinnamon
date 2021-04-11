@@ -101,8 +101,8 @@ pair<int, int> Eval::evaluatePawn(const _Tchessboard &chessboard) {
         // 4. attack king
         if (structureEval.posKingBit[xside] & PAWN_FORK_MASK[side][o]) {
             structureEval.kingAttackers[xside] |= pos;
-//            result[EG] += ATTACK_KING[EG];
-//            result[MG] += ATTACK_KING[MG];
+            result[EG] += ATTACK_KING[EG];
+            result[MG] += ATTACK_KING[MG];
         }
 
         /// blocked
@@ -606,73 +606,74 @@ short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar 
     const int bonus_attack_king_black_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[WHITE])];
     const int bonus_attack_king_white_eg = BONUS_ATTACK_KING[bitCount(structureEval.kingAttackers[BLACK])];
 
-//    const int attack_king_white[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[WHITE]),
-//                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[WHITE])};
-//
-//    const int attack_king_black[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[BLACK]),
-//                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[BLACK])};
+    const int attack_king_white[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[WHITE]),
+                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[WHITE])};
+
+    const int attack_king_black[2] = {ATTACK_KING[MG] * bitCount(structureEval.kingAttackers[BLACK]),
+                                      ATTACK_KING[EG] * bitCount(structureEval.kingAttackers[BLACK])};
     const int firstMoveWhite = side == WHITE ? 5 : 0;
     const int firstMoveBlack = side == BLACK ? 5 : 0;
 
     const int result_mg =
-            (lazyscore_black + tResult[MG].pawns[BLACK] +
+            (lazyscore_black + tResult[MG].pawns[BLACK] +attack_king_black[MG]+
              tResult[MG].knights[BLACK] + tResult[MG].bishop[BLACK] + tResult[MG].rooks[BLACK] +
              tResult[MG].queens[BLACK] +
              tResult[MG].kings[BLACK] + firstMoveBlack) -
-            (lazyscore_white + tResult[MG].pawns[WHITE] +
+            (lazyscore_white + tResult[MG].pawns[WHITE] +attack_king_white[MG]+
              tResult[MG].knights[WHITE] + tResult[MG].bishop[WHITE] + tResult[MG].rooks[WHITE] +
              tResult[MG].queens[WHITE] +
              tResult[MG].kings[WHITE] + firstMoveWhite);
     const int result_eg =
-            (bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +
+            (bonus_attack_king_black_eg + lazyscore_black + tResult[EG].pawns[BLACK] +attack_king_black[EG]+
              tResult[EG].knights[BLACK] + tResult[EG].bishop[BLACK] + tResult[EG].rooks[BLACK] +
              tResult[EG].queens[BLACK] +
              tResult[EG].kings[BLACK]) -
-            (bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +
+            (bonus_attack_king_white_eg + lazyscore_white + tResult[EG].pawns[WHITE] +attack_king_white[EG]+
              tResult[EG].knights[WHITE] + tResult[EG].bishop[WHITE] + tResult[EG].rooks[WHITE] +
              tResult[EG].queens[WHITE] +
-             tResult[EG].kings[WHITE]);;
-    const int PawnPhase = 0;
-    const int KnightPhase = 1;
-    const int BishopPhase = 1;
-    const int RookPhase = 2;
-    const int QueenPhase = 4;
-    const int TotalPhase = PawnPhase * 16 + KnightPhase * 4 + BishopPhase * 4 + RookPhase * 4 + QueenPhase * 2;;
+             tResult[EG].kings[WHITE]);
+//    const int PawnPhase = 0;
+//    const int KnightPhase = 1;
+//    const int BishopPhase = 1;
+//    const int RookPhase = 2;
+//    const int QueenPhase = 4;
+//    const int TotalPhase = PawnPhase * 16 + KnightPhase * 4 + BishopPhase * 4 + RookPhase * 4 + QueenPhase * 2;;
+//
+//    const int wp = bitCount(chessboard[PAWN_WHITE]);
+//    const int bp = bitCount(chessboard[PAWN_BLACK]);
+//
+//    const int wn = bitCount(chessboard[KNIGHT_WHITE]);
+//    const int bn = bitCount(chessboard[KNIGHT_BLACK]);
+//
+//    const int wb = bitCount(chessboard[BISHOP_WHITE]);
+//    const int bb = bitCount(chessboard[BISHOP_BLACK]);
+//
+//    const int wq = bitCount(chessboard[QUEEN_WHITE]);
+//    const int bq = bitCount(chessboard[QUEEN_BLACK]);
+//
+//    const int wr = bitCount(chessboard[ROOK_WHITE]);
+//    const int br = bitCount(chessboard[ROOK_BLACK]);
+//    int phase = TotalPhase;
+//    phase -= wp * PawnPhase;
+//    phase -= bp * PawnPhase;
+//
+//    phase -= wn * KnightPhase;
+//    phase -= bn * KnightPhase;
+//
+//    phase -= wb * BishopPhase;
+//    phase -= bb * BishopPhase;
+//
+//    phase -= wr * RookPhase;
+//    phase -= br * RookPhase;
+//
+//    phase -= wq * QueenPhase;
+//    phase -= bq * QueenPhase;
 
-    const int wp = bitCount(chessboard[PAWN_WHITE]);
-    const int bp = bitCount(chessboard[PAWN_BLACK]);
+//    phase = (phase * 256 + (TotalPhase / 2)) / TotalPhase;
 
-    const int wn = bitCount(chessboard[KNIGHT_WHITE]);
-    const int bn = bitCount(chessboard[KNIGHT_BLACK]);
-
-    const int wb = bitCount(chessboard[BISHOP_WHITE]);
-    const int bb = bitCount(chessboard[BISHOP_BLACK]);
-
-    const int wq = bitCount(chessboard[QUEEN_WHITE]);
-    const int bq = bitCount(chessboard[QUEEN_BLACK]);
-
-    const int wr = bitCount(chessboard[ROOK_WHITE]);
-    const int br = bitCount(chessboard[ROOK_BLACK]);
-    int phase = TotalPhase;
-    phase -= wp * PawnPhase;
-    phase -= bp * PawnPhase;
-
-    phase -= wn * KnightPhase;
-    phase -= bn * KnightPhase;
-
-    phase -= wb * BishopPhase;
-    phase -= bb * BishopPhase;
-
-    phase -= wr * RookPhase;
-    phase -= br * RookPhase;
-
-    phase -= wq * QueenPhase;
-    phase -= bq * QueenPhase;
-
-    phase = (phase * 256 + (TotalPhase / 2)) / TotalPhase;
-//    const float phase1 =
-//            ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
-//            MAX_VALUE_TAPERED;
+    int phase =
+            ((MAX_VALUE_TAPERED - (lazyscore_white + lazyscore_black)) * 256 + (MAX_VALUE_TAPERED / 2)) /
+            MAX_VALUE_TAPERED;
     const short finalScore = ((result_mg * (256 - phase)) + (result_eg * phase)) / 256;
 
 

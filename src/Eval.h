@@ -54,12 +54,12 @@ public:
     STATIC_CONST int EXT_FUTIL_MARGIN = 392;
     STATIC_CONST int RAZOR_MARGIN = 1071;
 
-//    STATIC_CONST int ATTACK_KING[2] = {47,47};
+    STATIC_CONST int ATTACK_KING[2] = {0,0}; //TODO eliminare
     STATIC_CONST int BISHOP_ON_QUEEN[2] = {10,11};
     STATIC_CONST int BACKWARD_PAWN[2] = {5,7};
     STATIC_CONST int DOUBLED_ISOLATED_PAWNS[2] = {0,19};
-    STATIC_CONST int PAWN_IN_7TH[2] = {19,23};
-    STATIC_CONST int PAWN_IN_PROMOTION[2] = {116,81};
+    STATIC_CONST int PAWN_IN_7TH[2] = {17,23};
+    STATIC_CONST int PAWN_IN_PROMOTION[2] = {124,80};
     STATIC_CONST int PAWN_NEAR_KING[2] = {23,4};
     STATIC_CONST int PAWN_BLOCKED[2] = {9,13};
     STATIC_CONST int UNPROTECTED_PAWNS[2] = {9,0};
@@ -67,11 +67,14 @@ public:
     STATIC_CONST int BONUS2BISHOP[2] = {33,23};
     STATIC_CONST int BISHOP_PAWN_ON_SAME_COLOR[2] = {0,5};
     STATIC_CONST int OPEN_FILE_Q[2] = {3,4};
-    STATIC_CONST int ROOK_7TH_RANK[2] = {13,11};
-    STATIC_CONST int KNIGHT_PINNED[2] = {54,60};
-    STATIC_CONST int ROOK_PINNED[2] = {30,28};
-    STATIC_CONST int BISHOP_PINNED[2] = {25,27};
-    STATIC_CONST int QUEEN_PINNED[2] = {28,1};
+    STATIC_CONST int ROOK_7TH_RANK[2] = {14,11};
+    STATIC_CONST int KNIGHT_PINNED[2] = {55,60};
+    STATIC_CONST int ROOK_PINNED[2] = {31,29};
+    STATIC_CONST int BISHOP_PINNED[2] = {26,27};
+    STATIC_CONST int QUEEN_PINNED[2] = {29,0};
+
+    STATIC_CONST float
+            MAX_VALUE_TAPERED = 8297;//2 * (VALUEROOK * 2 + VALUEBISHOP * 2 + VALUEKNIGHT * 2 + VALUEQUEEN + VALUEPAWN * 8);
 
 #ifdef DEBUG_MODE
     void p() {
@@ -150,8 +153,6 @@ private:
     static constexpr u64 keyMask = 0xffffffffffff0000ULL;
     static constexpr u64 valueMask = 0xffffULL;
     static constexpr short noHashValue = (short) 0xffff;
-//    static constexpr float
-//            MAX_VALUE_TAPERED = 2 * (VALUEROOK * 2 + VALUEBISHOP * 2 + VALUEKNIGHT * 2 + VALUEQUEEN + VALUEPAWN * 8);
 
     static u64 *evalHash;
 
