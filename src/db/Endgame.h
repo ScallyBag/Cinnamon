@@ -52,36 +52,6 @@ class Endgame  { //TODO
 
 public:
 
-    static bool isDraw(const int nPieces, const _Tchessboard &chessboard) {
-        //regexp: KN?B*KB*
-        switch (nPieces) {
-            case 2 :
-                //KK
-                return true;
-            case 3:
-                //KBK
-                if (chessboard[BISHOP_BLACK] || chessboard[BISHOP_WHITE])return true;
-                //KNK
-                if (chessboard[KNIGHT_BLACK] || chessboard[KNIGHT_WHITE])return true;
-                break;
-            case 4 :
-                //KBKB
-                if (chessboard[BISHOP_BLACK] && chessboard[BISHOP_WHITE])return true;
-                //KNKN
-                if (chessboard[KNIGHT_BLACK] && chessboard[KNIGHT_WHITE])return true;
-                //KBKN
-                if (chessboard[BISHOP_BLACK] && chessboard[KNIGHT_WHITE])return true;
-                if (chessboard[BISHOP_WHITE] && chessboard[KNIGHT_BLACK])return true;
-                //KNNK
-                if (bitCount(chessboard[KNIGHT_BLACK]) == 2)return true;
-                if (bitCount(chessboard[KNIGHT_WHITE]) == 2)return true;
-                break;
-            default:
-                return false;
-        }
-        return false;
-    }
-
     static int getEndgameValue(int side, const _Tchessboard &chessboard, const int nPieces) {
         assert(nPieces != 999);
         ASSERT_RANGE(side, 0, 1);
