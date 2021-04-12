@@ -41,8 +41,8 @@ public:
 
     ~Eval();
 
-    short getScore(const _Tchessboard &chessboard, const u64 key, const uchar side, const int alpha, const int beta,const int N_PIECE,
-                   const bool trace = false);
+    short getScore(const _Tchessboard &chessboard, const u64 key, const uchar side, const int alpha, const int beta,
+                   const bool trace);
 
     template<uchar side>
     int lazyEval(const _Tchessboard &chessboard) const {

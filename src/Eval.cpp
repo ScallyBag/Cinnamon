@@ -496,7 +496,6 @@ short Eval::getHashValue(const u64 key) {
 }
 
 short Eval::getScore(const _Tchessboard &chessboard, const u64 key, const uchar side, const int alpha, const int beta,
-                     const int N_PIECE,
                      const bool trace) {
 #ifndef TUNING
     const short hashValue = getHashValue(key);
